@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "name": "users",
+    "title": "Пользователи",
+    "type": "LIST",
+    "definition": {
+      "id": {
+        "order": 1,
+        "name": "id",
+        "width": "80px",
+        "visible": true
+      },
+      "fullname": {
+        "order": 2,
+        "name": "ФИО",
+        "width": "250px",
+        "visible": true
+      },
+      "role": {
+        "order": 3,
+        "name": "Роль",
+        "width": "200px",
+        "visible": true
+      },
+      "login": {
+        "order": 4,
+        "name": "Логин",
+        "width": "250px",
+        "visible": true
+      },
+      "created": {
+        "order": 5,
+        "name": "Дата регистрации",
+        "width": "200px",
+        "visible": true
+      }
+    }
+  },
+  "data": [
+    {
+      "id": 1,
+      "fullname": "Тестов Тест",
+      "role": "Пользователь",
+      "login": "test@test.com",
+      "created": "11/11/99"
+    },
+    {
+      "id": 2,
+      "fullname": "Mr Smith",
+      "role": "Администратор",
+      "login": "agent@matrix.com",
+      "created": "00/00/00"
+    },
+    {
+      "id": 3,
+      "fullname": "Neo",
+      "role": "Администратор",
+      "login": "mr_anderson@zeon.com",
+      "created": "12/12/80"
+    }
+  ],
+  "system_messages": []
+}
