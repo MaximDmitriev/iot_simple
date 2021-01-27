@@ -14,18 +14,16 @@ import { useStyles } from './style';
 
 const fetchService = new FetchData();
 
-export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id }) => {
+export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, height, definition }) => {
   const classes = useStyles();
   const [data, setData] = useState(null);
   const [status, setStatus] = useState('loading'); //loaded, error
 
   useEffect(() => {
-    console.log(title, titleField, id);
     if (id) {
       fetchService
         .getOneRecord(tableName, id)
         .then(res => {
-          console.log(res);
           setData(res);
         });
     }
@@ -61,8 +59,24 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id }
                 <Button variant='contained' className={classes.headerBtn}>Сохранить</Button>
               </div>
             </AppBar>
-            <div className={classes.grid}>
-              content
+            <div className={classes.grid} style={{height: height + 'px'}}>
+              {definition.map((cell, idx) => {
+                return (
+                  <div
+                    key={idx}
+                    className={classes.cell}
+                    style={{
+                      height: cell.height,
+                      width: cell.width,
+                      top: cell.top,
+                      left: cell.left
+                    }}
+                  >
+                    <Typography className={classes.label}>{cell.label}</Typography>
+                    {status === 'loading' ? <Skeleton variant="rect" width='100%' height='40px'/> : null}
+                  </div>
+                )
+              })}
             </div>
           </div>
         </Slide>

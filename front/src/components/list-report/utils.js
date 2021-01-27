@@ -1,5 +1,9 @@
 import dayjs from 'dayjs';
 
+
+const ROW_HEIGHT = 70;
+const NUMBER_COLUMNS = 12;
+
 function convertWidth(str, totalWidth) {
   const index = str.indexOf('px');
   return +str.substring(0, index);
@@ -46,4 +50,42 @@ export function formatData(data, columns) {
   return data.map(row => {
     return formatCell(row, stylesMap);
   });
+}
+
+export function getFormDefinition({ definition: {columns}}) {
+  const rowPositions = columns.reduce((obj, widget) => {
+    if (!obj[widget.position[1]] || obj[widget.position[1]] < widget.size[1]) {
+      obj[widget.position[1]] = widget.size[1];
+    }
+    return obj;
+  }, {});
+  const maxRowNumber = Math.max(...Object.keys(rowPositions).map(k => parseInt(k)));
+
+  //общая высота сетки
+  const totalHeight = rowPositions[maxRowNumber] > 1
+    ? (maxRowNumber + rowPositions[maxRowNumber]) * ROW_HEIGHT
+    : (maxRowNumber + 1) * ROW_HEIGHT;
+
+  //параметры одной ячейки в процентах
+  const colHeight = (100 * ROW_HEIGHT)/totalHeight;
+  const colWidth = 100/NUMBER_COLUMNS;
+
+  const definition = columns
+    .filter(c => c.show_in_form)
+    .map(c => ({
+      fieldName: c.systemname,
+      label: c.name || c.systemname,
+      fieldFormat: c.style,
+      pattern: c.pattern || null,
+      readonly: c.readonly || false,
+      required: c.required || false,
+      width: `${colWidth * c.size[0]}%`,
+      height: `${colHeight * c.size[1]}%`,
+      top: c.position[1] * colHeight + '%',
+      left: c.position[0] * colWidth + '%'
+    }));
+  return {
+    totalHeight,
+    definition
+  }
 }

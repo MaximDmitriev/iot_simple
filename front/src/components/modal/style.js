@@ -4,9 +4,11 @@ export const useStyles = makeStyles((theme) => ({
   container: {
     position: 'relative',
     width: '90%',
+    maxWidth: '1200px',
     minHeight: '300px',
     margin: '50px auto',
     backgroundColor: '#fff',
+    paddingBottom: '10px',
     '&:focus': {
       outline: 'none'
     }
@@ -18,6 +20,7 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     minHeight: '60px',
     padding: '10px 20px',
+    marginBottom: '10px',
     backgroundColor: '#1976d2'
   },
   btnGroup: {
@@ -34,8 +37,8 @@ export const useStyles = makeStyles((theme) => ({
     marginRight: '10px',
   },
   grid: {
+    position: 'relative',
     width: '100%',
-    padding: '20px'
   },
   displayName: {
     display: 'flex',
@@ -44,6 +47,14 @@ export const useStyles = makeStyles((theme) => ({
   },
   titleMock: {
     minWidth: '100px'
+  },
+  cell: {
+    position: 'absolute',
+    borderRadius: '3px',
+    padding: '5px 10px'
+  },
+  label: {
+    fontSize: '14px'
   }
 
 }));

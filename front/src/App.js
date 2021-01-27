@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: 'no-repeat',
     backgroundPositionY: 'center',
     height: '100vh',
-    width: '100vw',
+    width: '100%',
     margin: 0,
     padding: 0
   },

@@ -16,11 +16,11 @@ const columnsSchema = new Schema({
     required: true,
     unique: true
   },
-  name: {
+  systemname: {
     type: String,
     required: true
   },
-  displayname: {
+  name: {
     type: String
   },
   width: {
@@ -30,6 +30,33 @@ const columnsSchema = new Schema({
   visible: {
     type: Boolean,
     default: true
+  },
+  show_in_form: {
+    type: Boolean,
+    default: true
+  },
+  pattern: {
+    type: Array
+  },
+  position: {
+    type: [Number, Number],
+    required: true
+  },
+  size: {
+    type: [Number, Number],
+    required: true
+  },
+  style: {
+    type: String,
+    default: 'text'
+  },
+  required: {
+    type: Boolean,
+    default: false
+  },
+  readonly: {
+    type: Boolean,
+    default: false
   }
 });
 
