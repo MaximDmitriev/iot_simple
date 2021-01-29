@@ -6,7 +6,7 @@ import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Skeleton from '@material-ui/lab/Skeleton'
-
+import { WidgetContainer } from '../widgets';
 import FetchData from '../../services/fetchData';
 
 import { useStyles } from './style';
@@ -21,14 +21,19 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
 
   useEffect(() => {
     if (id) {
+      setStatus('loading');
       fetchService
         .getOneRecord(tableName, id)
         .then(res => {
           setData(res);
-        });
+          setTimeout(() => {
+            setStatus('loaded');
+          }, 500);
+        })
+        .catch(err => setStatus('error'));
     }
     return () => {
-      console.log('unmount');
+      // console.log('unmount');
     }
   }, [id]);
 
@@ -51,7 +56,9 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
                   {title}:
                 </Typography>
                 <Typography className={classes.title}>
-                  {status === 'loading' ? <Skeleton variant='text' className={classes.titleMock}/> : 'Admin'}
+                  {status === 'loading'
+                    ? <Skeleton variant='text' className={classes.titleMock}/>
+                    : data[titleField]}
                 </Typography>
               </div>
               <div className={classes.btnGroup}>
@@ -73,7 +80,9 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
                     }}
                   >
                     <Typography className={classes.label}>{cell.label}</Typography>
-                    {status === 'loading' ? <Skeleton variant="rect" width='100%' height='40px'/> : null}
+                    {status === 'loading'
+                      ? <Skeleton variant="rect" width='100%' height='40px'/>
+                      : <WidgetContainer definition={cell} data={data[cell.fieldName]}/>}
                   </div>
                 )
               })}
@@ -83,5 +92,4 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
       </Modal>
     </div>
   )
-
 }

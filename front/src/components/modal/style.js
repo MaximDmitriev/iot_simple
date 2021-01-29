@@ -56,5 +56,4 @@ export const useStyles = makeStyles((theme) => ({
   label: {
     fontSize: '14px'
   }
-
 }));

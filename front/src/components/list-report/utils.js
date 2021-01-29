@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 
-const ROW_HEIGHT = 70;
+const ROW_HEIGHT = 85;
 const NUMBER_COLUMNS = 12;
 
 function convertWidth(str, totalWidth) {

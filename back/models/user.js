@@ -29,9 +29,9 @@ const schema = new Schema({
     required: true
   },
   created: {
-    type: Date,
-    default: Date.now()
-  }
+    type: Number,
+    default: new Date().getTime()
+  },
 },
   {
     toJSON: {

@@ -3,6 +3,8 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 import { MainPage, LoginPage, NotFoundPage } from './pages';
 import { useProvideAuth } from './services/auth';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import dayjsUtils from '@date-io/dayjs';
 
 import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
@@ -47,26 +49,28 @@ function App() {
   const classes = useStyles();
 
   return (
-    <Container maxWidth="lg">
-      <Container maxWidth="lg" className={classes.root} >
-        <ProvideAuth>
-          <Switch>
-            <PrivateRoute path="/report">
-              <MainPage />
-            </PrivateRoute>
-            <PrivateRoute path="/" exact>
-              <MainPage />
-            </PrivateRoute>
-            <Route path="/login">
-              <LoginPage />
-            </Route>
-            <Route>
-              <NotFoundPage />
-            </Route>
-          </Switch>
-        </ProvideAuth>
+    <MuiPickersUtilsProvider utils={dayjsUtils}>
+      <Container maxWidth="lg">
+        <Container maxWidth="lg" className={classes.root} >
+          <ProvideAuth>
+            <Switch>
+              <PrivateRoute path="/report">
+                <MainPage />
+              </PrivateRoute>
+              <PrivateRoute path="/" exact>
+                <MainPage />
+              </PrivateRoute>
+              <Route path="/login">
+                <LoginPage />
+              </Route>
+              <Route>
+                <NotFoundPage />
+              </Route>
+            </Switch>
+          </ProvideAuth>
+        </Container>
       </Container>
-    </Container>
+    </MuiPickersUtilsProvider>
   );
 }
 
