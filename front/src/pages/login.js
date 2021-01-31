@@ -42,11 +42,6 @@ export const LoginPage = () => {
 
   const changeFormType = () => {
     setType({ newUser: !type.newUser });
-    // fetch('http://127.0.0.1:3001/json/test').then(res => {
-    //   console.log(res);
-    //   return res;
-    // }).
-    // then(res => console.log(res));
   }
 
   const login = () => {

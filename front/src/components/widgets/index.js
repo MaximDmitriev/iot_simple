@@ -4,8 +4,11 @@ import { Autocomplete } from '@material-ui/lab';
 import { DateTimePicker } from '@material-ui/pickers';
 import dayjs from 'dayjs';
 
+import { useStyles } from './style';
+
 
 export const WidgetContainer = ({ definition, data, updateData }) => {
+  const classes = useStyles();
   const [val, setVal] = useState(data);
 
   const onChangeHandler = (e, value) => {
@@ -24,6 +27,7 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
     case 'text':
       return (
         <TextField
+          classes={{root: classes.textFieldRoot}}
           defaultValue={val}
           onBlur={onBlurHandler}
           variant='outlined'
@@ -35,6 +39,7 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
     case 'combobox':
       return (
         <Autocomplete
+          className={definition.readonly ? classes.disabled : ''}
           value={val}
           onChange={onChangeHandler}
           renderInput={
@@ -52,6 +57,7 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
     case 'datetime':
       return (
         <DateTimePicker
+          className={definition.readonly ? classes.disabled : ''}
           value={val}
           onChange={onChangeHandler}
           format='MM/DD/YYYY HH:mm'

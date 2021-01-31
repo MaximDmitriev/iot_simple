@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Skeleton from '@material-ui/lab/Skeleton'
 import { WidgetContainer } from '../widgets';
+import { useSnackbar } from 'notistack';
+import { PopupComponent } from '../popup';
 import FetchData from '../../services/fetchData';
 
 import { useStyles } from './style';
@@ -18,6 +20,8 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
   const classes = useStyles();
   const [data, setData] = useState(null);
   const [status, setStatus] = useState('loading'); //loaded, error
+  const [popupOpen, setPopupOpen] = useState(false);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (id) {
@@ -27,18 +31,45 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
         .then(res => {
           setData(res);
           setTimeout(() => {
+            // enqueueSnackbar(`Запись id: ${id} получена`, {
+            //   variant: 'success'
+            // });
             setStatus('loaded');
           }, 500);
         })
-        .catch(err => setStatus('error'));
+        .catch(err => {
+          console.log(err);
+          setStatus('error');
+        });
     }
     return () => {
       // console.log('unmount');
     }
   }, [id]);
 
+  const addAlert = () => {
+    enqueueSnackbar('Test snackbar', {
+      variant: 'success'
+    });
+  }
+
+  const openPopup = () => {
+    setPopupOpen(true);
+  }
+
+  const confirmHandle = () => {
+    setPopupOpen(false);
+    console.log('agree');
+  }
+
+  const declineHandler = () => {
+    setPopupOpen(false);
+    console.log('cancel');
+  }
+
   return (
     <div>
+      <PopupComponent open={popupOpen} onAccept={confirmHandle} onCancel={declineHandler} />
       <Modal
         open={show}
         onClose={onClose}
@@ -56,14 +87,20 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
                   {title}:
                 </Typography>
                 <Typography className={classes.title}>
-                  {status === 'loading'
+                  {status === 'loading' || status ==='error'
                     ? <Skeleton variant='text' className={classes.titleMock}/>
                     : data[titleField]}
                 </Typography>
               </div>
               <div className={classes.btnGroup}>
-                <Button variant='contained' color='secondary'>Удалить запись</Button>
-                <Button variant='contained' className={classes.headerBtn}>Сохранить</Button>
+                <Button variant='contained' color='secondary' onClick={openPopup}>Удалить запись</Button>
+                <Button
+                  variant='contained'
+                  className={classes.headerBtn}
+                  onClick={addAlert}
+                >
+                  Сохранить
+                </Button>
               </div>
             </AppBar>
             <div className={classes.grid} style={{height: height + 'px'}}>

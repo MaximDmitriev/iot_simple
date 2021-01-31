@@ -3,9 +3,14 @@ import { DataGrid } from '@material-ui/data-grid';
 import { formatData, getColumns, getFormDefinition } from './utils';
 import { localeText } from './list-localization';
 import { ModalWrapper } from '../modal';
+import { IconButton, Tooltip } from '@material-ui/core';
+import LibraryAdd from '@material-ui/icons/LibraryAdd';
+
+import { useStyles } from './style';
 
 
 export const ListReport = ({ data, metadata }) => {
+  const classes = useStyles();
   const [show, setShow] = useState(false);
   const [id, setId] = useState(null);
 
@@ -25,7 +30,13 @@ export const ListReport = ({ data, metadata }) => {
   }
 
   return (
-    <div style={{ overflow: 'auto', height: '100%', width: '100%', background: 'rgba(255,255,255,0.95)' }}>
+    <div className={classes.wrapper}>
+      <Tooltip title="Добавить запись">
+        <IconButton color="primary" aria-label="add record" classes={{root: classes.root}}>
+          <LibraryAdd />
+        </IconButton>
+      </Tooltip>
+
       <DataGrid
         columns={columns}
         rows={rows}

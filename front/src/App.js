@@ -4,6 +4,7 @@ import { Container } from '@material-ui/core';
 import { MainPage, LoginPage, NotFoundPage } from './pages';
 import { useProvideAuth } from './services/auth';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { SnackbarProvider } from 'notistack';
 import dayjsUtils from '@date-io/dayjs';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -49,28 +50,37 @@ function App() {
   const classes = useStyles();
 
   return (
-    <MuiPickersUtilsProvider utils={dayjsUtils}>
-      <Container maxWidth="lg">
-        <Container maxWidth="lg" className={classes.root} >
-          <ProvideAuth>
-            <Switch>
-              <PrivateRoute path="/report">
-                <MainPage />
-              </PrivateRoute>
-              <PrivateRoute path="/" exact>
-                <MainPage />
-              </PrivateRoute>
-              <Route path="/login">
-                <LoginPage />
-              </Route>
-              <Route>
-                <NotFoundPage />
-              </Route>
-            </Switch>
-          </ProvideAuth>
+    <SnackbarProvider
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      maxSnack={5}
+      preventDuplicate
+    >
+      <MuiPickersUtilsProvider utils={dayjsUtils}>
+        <Container maxWidth="lg">
+          <Container maxWidth="lg" className={classes.root} >
+            <ProvideAuth>
+              <Switch>
+                <PrivateRoute path="/report">
+                  <MainPage />
+                </PrivateRoute>
+                <PrivateRoute path="/" exact>
+                  <MainPage />
+                </PrivateRoute>
+                <Route path="/login">
+                  <LoginPage />
+                </Route>
+                <Route>
+                  <NotFoundPage />
+                </Route>
+              </Switch>
+            </ProvideAuth>
+          </Container>
         </Container>
-      </Container>
-    </MuiPickersUtilsProvider>
+      </MuiPickersUtilsProvider>
+    </SnackbarProvider>
   );
 }
 
