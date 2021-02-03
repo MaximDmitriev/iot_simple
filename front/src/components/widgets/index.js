@@ -13,14 +13,16 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
 
   const onChangeHandler = (e, value) => {
     if (definition.fieldFormat === 'datetime') {
-      setVal(dayjs(e).valueOf());
+      // setVal(dayjs(e).valueOf());
+      updateData(definition.fieldName, dayjs(e).valueOf());
     } else {
-      setVal(value);
+      // setVal(value);
+      updateData(definition.fieldName, value);
     }
   }
 
   const onBlurHandler = (e) => {
-    setVal(e.target.value);
+    updateData(definition.fieldName, e.target.value);
   }
 
   switch (definition.fieldFormat) {
@@ -28,7 +30,8 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
       return (
         <TextField
           classes={{root: classes.textFieldRoot}}
-          defaultValue={val}
+          // defaultValue={val}
+          defaultValue={data}
           onBlur={onBlurHandler}
           variant='outlined'
           required={definition.required}
@@ -40,7 +43,8 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
       return (
         <Autocomplete
           className={definition.readonly ? classes.disabled : ''}
-          value={val}
+          // value={val}
+          defaultValue={data}
           onChange={onChangeHandler}
           renderInput={
             (props) => <TextField
@@ -58,7 +62,8 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
       return (
         <DateTimePicker
           className={definition.readonly ? classes.disabled : ''}
-          value={val}
+          // value={val}
+          defaultValue={data}
           onChange={onChangeHandler}
           format='MM/DD/YYYY HH:mm'
           ampm={false}

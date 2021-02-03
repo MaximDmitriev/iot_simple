@@ -9,9 +9,10 @@ import LibraryAdd from '@material-ui/icons/LibraryAdd';
 import { useStyles } from './style';
 
 
-export const ListReport = ({ data, metadata }) => {
+export const ListReport = ({ data, metadata, update }) => {
   const classes = useStyles();
-  const [show, setShow] = useState(false);
+
+  const [show, setShow] = useState({ open: false, mode: 'edit' });
   const [id, setId] = useState(null);
 
   const columns = useMemo(() => getColumns(metadata), [metadata]);
@@ -21,18 +22,23 @@ export const ListReport = ({ data, metadata }) => {
   const onClickHandler = (e) => {
     const id = e.getValue('id');
     setId(id);
-    setShow(true);
+    setShow({ open: true, mode: 'edit' });
   }
 
   const closeModal = () => {
     setId(null);
-    setShow(false);
+    setShow({ open: false, mode: 'edit' });
+    setTimeout(() => update(), 400);
+  }
+
+  const createRecord = () => {
+    setShow({open: true, mode: 'create' });
   }
 
   return (
     <div className={classes.wrapper}>
       <Tooltip title="Добавить запись">
-        <IconButton color="primary" aria-label="add record" classes={{root: classes.root}}>
+        <IconButton color="primary" aria-label="add record" classes={{root: classes.root}} onClick={createRecord}>
           <LibraryAdd />
         </IconButton>
       </Tooltip>
@@ -52,7 +58,8 @@ export const ListReport = ({ data, metadata }) => {
         onRowClick={(e) => onClickHandler(e)}
       />
       <ModalWrapper
-        show={show}
+        show={show.open}
+        act={show.mode}
         onClose={closeModal}
         tableName={metadata.tablename}
         title={metadata.singleTitle}
@@ -63,5 +70,4 @@ export const ListReport = ({ data, metadata }) => {
       />
     </div>
   )
-
 }

@@ -57,6 +57,10 @@ const columnsSchema = new Schema({
   readonly: {
     type: Boolean,
     default: false
+  },
+  onlyCreated: {
+    type: Boolean,
+    default: false
   }
 });
 

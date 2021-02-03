@@ -10,7 +10,9 @@ function convertWidth(str, totalWidth) {
 }
 
 export function getColumns({ definition }) {
-  const columns = definition.columns.reduce((acc, col) => {
+  const columns = definition.columns
+    .filter(col => col.visible)
+    .reduce((acc, col) => {
       return acc.concat([{
         field: col.systemname || col.name,
         headerName: col.name,
@@ -79,6 +81,7 @@ export function getFormDefinition({ definition: {columns}}) {
       pattern: c.pattern || null,
       readonly: c.readonly || false,
       required: c.required || false,
+      onlyCreatedMode: c.onlyCreated || null,
       width: `${colWidth * c.size[0]}%`,
       height: `${colHeight * c.size[1]}%`,
       top: c.position[1] * colHeight + '%',

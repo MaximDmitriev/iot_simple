@@ -21,10 +21,8 @@ export const ReportContainer = ({ url }) => {
     metadata: null
   });
 
-  useEffect(() => {
+  const getData = () => {
     setReport({ ...report, loaded: false });
-
-    // @TODO переделать на разные запросы по url
     fetchData.getReport(url).then(
       res => {
         if (res) {
@@ -40,7 +38,15 @@ export const ReportContainer = ({ url }) => {
         }
       }
     );
+  };
+
+  useEffect(() => {
+    getData();
   },[url]);
+
+  const updateReport = () => {
+    getData()
+  }
 
   if (!report.loaded) {
     return (
@@ -60,7 +66,7 @@ export const ReportContainer = ({ url }) => {
 
   return (
     <div className={classes.wrapper}>
-      {report.type === 'LIST' ? <ListReport data={report.data} metadata={report.metadata}/> : null}
+      {report.type === 'LIST' ? <ListReport data={report.data} metadata={report.metadata} update={updateReport}/> : null}
     </div>
   )
 }

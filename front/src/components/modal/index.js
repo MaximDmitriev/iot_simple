@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,24 +16,37 @@ import { useStyles } from './style';
 
 const fetchService = new FetchData();
 
-export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, height, definition }) => {
+export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName, id, height, definition }) => {
   const classes = useStyles();
-  const [data, setData] = useState(null);
+
+  const [data, setData] = useState({});
   const [status, setStatus] = useState('loading'); //loaded, error
   const [popupOpen, setPopupOpen] = useState(false);
+  const [mode, setMode] = useState(act);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
+  const formDefinition = useMemo(() => {
+    return mode === 'create'
+      ? definition
+      : definition.filter(c => !c.onlyCreatedMode);
+  }, [mode]);
+
+
   useEffect(() => {
-    if (id) {
+    setMode(act);
+    if (act === 'create') {
+      setStatus('loaded');
+    }
+  }, [show]);
+
+  useEffect(() => {
+      if (mode === 'edit' && id) {
       setStatus('loading');
       fetchService
         .getOneRecord(tableName, id)
         .then(res => {
           setData(res);
           setTimeout(() => {
-            // enqueueSnackbar(`Запись id: ${id} получена`, {
-            //   variant: 'success'
-            // });
             setStatus('loaded');
           }, 500);
         })
@@ -46,6 +59,12 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
       // console.log('unmount');
     }
   }, [id]);
+
+  const onCloseHandler = () => {
+    setStatus('loading');
+    setData({});
+    onClose();
+  }
 
   const addAlert = () => {
     enqueueSnackbar('Test snackbar', {
@@ -67,12 +86,36 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
     console.log('cancel');
   }
 
+  const updateWidgetData = (fieldName, val) => {
+    setData((data) => ({...data, [fieldName]: val }));
+  }
+
+  const createRecord = () => {
+    fetchService
+      .data(data)
+      .createRecord('users')
+      .then((res) => {
+        if (res.errors) {
+          enqueueSnackbar(`Не удалось создать запись. ${res.message}`, { variant: 'error', autoHideDuration: 8000 });
+        } else {
+          setData(res);
+          setMode('edit');
+          enqueueSnackbar(`Запись ${data[titleField]} создана успешно`, { variant: 'success', autoHideDuration: 5000 });
+
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        enqueueSnackbar(`Не удалось создать запись. ${err.message}`, { variant: 'error', autoHideDuration: 5000 });
+      })
+  }
+
   return (
     <div>
       <PopupComponent open={popupOpen} onAccept={confirmHandle} onCancel={declineHandler} />
       <Modal
         open={show}
-        onClose={onClose}
+        onClose={onCloseHandler}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -89,22 +132,24 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
                 <Typography className={classes.title}>
                   {status === 'loading' || status ==='error'
                     ? <Skeleton variant='text' className={classes.titleMock}/>
-                    : data[titleField]}
+                    : mode === 'edit' ? data[titleField] : ''}
                 </Typography>
               </div>
               <div className={classes.btnGroup}>
-                <Button variant='contained' color='secondary' onClick={openPopup}>Удалить запись</Button>
+                {mode === 'edit'
+                  ? <Button variant='contained' color='secondary' onClick={openPopup}>Удалить запись</Button>
+                  : null}
                 <Button
                   variant='contained'
                   className={classes.headerBtn}
-                  onClick={addAlert}
+                  onClick={mode === 'edit' ? addAlert: createRecord}
                 >
-                  Сохранить
+                  {mode === 'edit' ? 'Сохранить' : 'Создать'}
                 </Button>
               </div>
             </AppBar>
             <div className={classes.grid} style={{height: height + 'px'}}>
-              {definition.map((cell, idx) => {
+              {formDefinition.map((cell, idx) => {
                 return (
                   <div
                     key={idx}
@@ -119,7 +164,7 @@ export const ModalWrapper = ({ show, onClose, title, titleField, tableName, id, 
                     <Typography className={classes.label}>{cell.label}</Typography>
                     {status === 'loading'
                       ? <Skeleton variant="rect" width='100%' height='40px'/>
-                      : <WidgetContainer definition={cell} data={data[cell.fieldName]}/>}
+                      : <WidgetContainer definition={cell} data={data[cell.fieldName] || null} updateData={updateWidgetData}/>}
                   </div>
                 )
               })}
