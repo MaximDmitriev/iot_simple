@@ -16,7 +16,7 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
       // setVal(dayjs(e).valueOf());
       updateData(definition.fieldName, dayjs(e).valueOf());
     } else {
-      // setVal(value);
+      setVal(value);
       updateData(definition.fieldName, value);
     }
   }
@@ -43,8 +43,8 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
       return (
         <Autocomplete
           className={definition.readonly ? classes.disabled : ''}
-          // value={val}
-          defaultValue={data}
+          value={val}
+          // defaultValue={data}
           onChange={onChangeHandler}
           renderInput={
             (props) => <TextField

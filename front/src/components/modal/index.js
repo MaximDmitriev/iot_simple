@@ -14,7 +14,7 @@ import FetchData from '../../services/fetchData';
 import { useStyles } from './style';
 
 
-const fetchService = new FetchData();
+const fetchService = new FetchData('users');
 
 export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName, id, height, definition }) => {
   const classes = useStyles();
@@ -43,7 +43,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
       if (mode === 'edit' && id) {
       setStatus('loading');
       fetchService
-        .getOneRecord(tableName, id)
+        .getOneRecord(id)
         .then(res => {
           setData(res);
           setTimeout(() => {
@@ -66,10 +66,21 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
     onClose();
   }
 
-  const addAlert = () => {
-    enqueueSnackbar('Test snackbar', {
-      variant: 'success'
-    });
+  const updateRecord = () => {
+    fetchService
+      .data({id: data.id, fields: data})
+      .updateRecord()
+      .then(res => {
+        if (res.errors) {
+          enqueueSnackbar(`Не удалось сохранить запись. ${res.message}`, { variant: 'error', autoHideDuration: 8000 });
+        } else {
+          enqueueSnackbar(`Запись ${data[titleField]} успешно сохранена`, { variant: 'success', autoHideDuration: 5000 });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        enqueueSnackbar(`Не удалось сохранить запись. ${err.message}`, { variant: 'error', autoHideDuration: 5000 });
+      })
   }
 
   const openPopup = () => {
@@ -77,13 +88,27 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   }
 
   const confirmHandle = () => {
+    fetchService
+      .data({id: data.id})
+      .deleteRecord()
+      .then(res => {
+        if (res.errors) {
+          enqueueSnackbar(`Не удалось удалить запись. ${res.message}`, { variant: 'error', autoHideDuration: 8000 });
+        } else {
+          enqueueSnackbar(`Запись ${data[titleField]} успешно удалена`, { variant: 'success', autoHideDuration: 5000 });
+          onClose();
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        enqueueSnackbar(`Не удалось удалить запись. ${err.message}`, { variant: 'error', autoHideDuration: 5000 });
+      })
     setPopupOpen(false);
-    console.log('agree');
+
   }
 
   const declineHandler = () => {
     setPopupOpen(false);
-    console.log('cancel');
   }
 
   const updateWidgetData = (fieldName, val) => {
@@ -93,7 +118,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   const createRecord = () => {
     fetchService
       .data(data)
-      .createRecord('users')
+      .createRecord()
       .then((res) => {
         if (res.errors) {
           enqueueSnackbar(`Не удалось создать запись. ${res.message}`, { variant: 'error', autoHideDuration: 8000 });
@@ -142,7 +167,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
                 <Button
                   variant='contained'
                   className={classes.headerBtn}
-                  onClick={mode === 'edit' ? addAlert: createRecord}
+                  onClick={mode === 'edit' ? updateRecord : createRecord}
                 >
                   {mode === 'edit' ? 'Сохранить' : 'Создать'}
                 </Button>

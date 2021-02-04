@@ -51,5 +51,23 @@ router.get('/:id', (req, res) => {
     .catch(err => console.log(err));
 })
 
+router.delete('/delete', (req, res) => {
+  User.findByIdAndDelete(req.body.id)
+    .then(data => {
+      configResponse(res);
+      res.json(data);
+    })
+    .catch(err => console.log(err));
+})
+
+router.put('/update', (req, res) => {
+  User.findByIdAndUpdate(req.body.id, req.body.fields)
+    .then(data => {
+      configResponse(res);
+      res.json(data);
+    })
+    .catch(err => console.log(err));
+})
+
 
 module.exports = router;

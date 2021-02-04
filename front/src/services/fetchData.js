@@ -1,4 +1,8 @@
 export default class FetchData {
+  constructor(tableName) {
+    this.tableName = tableName;
+  }
+
   #baseurl = 'http://127.0.0.1:3001/json/';
   #url = '';
   #body = {};
@@ -34,14 +38,27 @@ export default class FetchData {
     return this.#_send();
   }
 
-  getOneRecord(tableName, id) {
-    this.#url = this.#baseurl + tableName + '/' + id;
+  getOneRecord(id) {
+    this.#method = 'GET';
+    this.#url = this.#baseurl + this.tableName + '/' + id;
     return this.#_send();
   }
 
-  createRecord(name) {
+  createRecord() {
     this.#method = 'POST';
-    this.#url = this.#baseurl + name + '/create';
+    this.#url = this.#baseurl + this.tableName + '/create';
+    return this.#_send();
+  }
+
+  deleteRecord() {
+    this.#method = 'DELETE';
+    this.#url = this.#baseurl + this.tableName + '/delete';
+    return this.#_send();
+  }
+
+  updateRecord() {
+    this.#method = 'PUT';
+    this.#url = this.#baseurl + this.tableName + '/update';
     return this.#_send();
   }
 }
