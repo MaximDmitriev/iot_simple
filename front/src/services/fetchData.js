@@ -1,8 +1,4 @@
-export default class FetchData {
-  constructor(tableName) {
-    this.tableName = tableName;
-  }
-
+class FetchData {
   #baseurl = 'http://127.0.0.1:3001/json/';
   #url = '';
   #body = {};
@@ -33,32 +29,35 @@ export default class FetchData {
       .catch(err => console.log(err));
   }
 
-  getReport(name) {
-    this.#url = this.#baseurl + name;
-    return this.#_send();
-  }
-
-  getOneRecord(id) {
+  getReport(tableName) {
     this.#method = 'GET';
-    this.#url = this.#baseurl + this.tableName + '/' + id;
+    this.#url = this.#baseurl + tableName;
     return this.#_send();
   }
 
-  createRecord() {
+  getOneRecord(tableName, id) {
+    this.#method = 'GET';
+    this.#url = this.#baseurl + tableName + '/' + id;
+    return this.#_send();
+  }
+
+  createRecord(tableName) {
     this.#method = 'POST';
-    this.#url = this.#baseurl + this.tableName + '/create';
+    this.#url = this.#baseurl + tableName + '/create';
     return this.#_send();
   }
 
-  deleteRecord() {
+  deleteRecord(tableName) {
     this.#method = 'DELETE';
-    this.#url = this.#baseurl + this.tableName + '/delete';
+    this.#url = this.#baseurl + tableName + '/delete';
     return this.#_send();
   }
 
-  updateRecord() {
+  updateRecord(tableName) {
     this.#method = 'PUT';
-    this.#url = this.#baseurl + this.tableName + '/update';
+    this.#url = this.#baseurl + tableName + '/update';
     return this.#_send();
   }
 }
+
+export const fetchService = new FetchData();

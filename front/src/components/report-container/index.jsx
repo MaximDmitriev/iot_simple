@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { LinearProgress } from '@material-ui/core';
+import { ListReport } from '../list-report';
+import { ErrorComponent } from '../error';
+import { fetchService } from '../../services/fetchData';
 
 import { useStyles } from './style';
-import { LinearProgress } from '@material-ui/core';
 
-import FetchData from '../../services/fetchData';
-import { ErrorComponent } from '../error';
-import { ListReport } from '../list-report';
 
 const REPORT_NOT_IMPLEMENTED_MSG = 'Отчет не готов к использованию, выберите другой отчет';
-
-
-const fetchData = new FetchData();
 
 export const ReportContainer = ({ url }) => {
   const classes = useStyles();
@@ -24,7 +21,7 @@ export const ReportContainer = ({ url }) => {
 
   const getData = () => {
     setReport({ ...report, loaded: false });
-    fetchData.getReport(url).then(
+    fetchService.getReport(url).then(
       res => {
         if (res) {
           setReport({

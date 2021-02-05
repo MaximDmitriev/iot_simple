@@ -10,12 +10,10 @@ import { WidgetContainer } from '../widgets';
 import { useSnackbar } from 'notistack';
 import { PopupComponent } from '../popup';
 import dayjs from 'dayjs';
-import FetchData from '../../services/fetchData';
+import { fetchService } from '../../services/fetchData';
 
 import { useStyles } from './style';
 
-
-const fetchService = new FetchData('users');
 
 export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName, id, height, definition }) => {
   const classes = useStyles();
@@ -44,7 +42,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
       if (mode === 'edit' && id) {
       setStatus('loading');
       fetchService
-        .getOneRecord(id)
+        .getOneRecord(tableName, id)
         .then(res => {
           setData(res);
           setTimeout(() => {
@@ -70,7 +68,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   const updateRecord = () => {
     fetchService
       .data({id: data.id, fields: data})
-      .updateRecord()
+      .updateRecord(tableName)
       .then(res => {
         if (res.errors) {
           enqueueSnackbar(`Не удалось сохранить запись. ${res.message}`, { variant: 'error', autoHideDuration: 8000 });
@@ -91,7 +89,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   const confirmHandle = () => {
     fetchService
       .data({id: data.id})
-      .deleteRecord()
+      .deleteRecord(tableName)
       .then(res => {
         if (res.errors) {
           enqueueSnackbar(`Не удалось удалить запись. ${res.message}`, { variant: 'error', autoHideDuration: 8000 });
@@ -128,7 +126,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   const createRecord = () => {
     fetchService
       .data(data)
-      .createRecord()
+      .createRecord(tableName)
       .then((res) => {
         if (res.errors) {
           enqueueSnackbar(`Не удалось создать запись. ${res.message}`, { variant: 'error', autoHideDuration: 8000 });

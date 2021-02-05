@@ -59,7 +59,7 @@ export const Navbar = ({ title, showBtn, userName, reports, onSelectItem}) => {
           {title}
         </Typography>
         {showBtn
-          ? <Button color="inherit"  aria-controls="login-menu" aria-haspopup="true" onClick={handleClick('login')}>
+          ? <Button color="inherit" aria-controls="login-menu" aria-haspopup="true" onClick={handleClick('login')}>
               {userName}
             </Button>
           : null}
