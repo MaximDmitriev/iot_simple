@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 import { MainPage, LoginPage, NotFoundPage } from './pages';
