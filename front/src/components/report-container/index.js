@@ -10,8 +10,9 @@ import { ListReport } from '../list-report';
 const REPORT_NOT_IMPLEMENTED_MSG = 'Отчет не готов к использованию, выберите другой отчет';
 
 
+const fetchData = new FetchData();
+
 export const ReportContainer = ({ url }) => {
-  const fetchData = new FetchData();
   const classes = useStyles();
 
   const [report, setReport] = useState({

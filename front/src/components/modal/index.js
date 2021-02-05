@@ -9,6 +9,7 @@ import Skeleton from '@material-ui/lab/Skeleton'
 import { WidgetContainer } from '../widgets';
 import { useSnackbar } from 'notistack';
 import { PopupComponent } from '../popup';
+import dayjs from 'dayjs';
 import FetchData from '../../services/fetchData';
 
 import { useStyles } from './style';
@@ -111,8 +112,17 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
     setPopupOpen(false);
   }
 
-  const updateWidgetData = (fieldName, val) => {
-    setData((data) => ({...data, [fieldName]: val }));
+  const updateWidgetData = (e, val, fieldName, fieldFormat) => {
+    switch (fieldFormat) {
+      case 'text':
+        setData((data) => ({...data, [fieldName]: val }));
+        break;
+      case 'datetime':
+        setData((data) => ({...data, [fieldName]: dayjs(e).valueOf() }));
+        break;
+      default:
+        setData((data) => ({...data, [fieldName]: val }));
+    }
   }
 
   const createRecord = () => {

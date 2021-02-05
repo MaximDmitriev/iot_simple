@@ -1,38 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { DateTimePicker } from '@material-ui/pickers';
-import dayjs from 'dayjs';
 
 import { useStyles } from './style';
 
 
 export const WidgetContainer = ({ definition, data, updateData }) => {
   const classes = useStyles();
-  const [val, setVal] = useState(data);
-
-  const onChangeHandler = (e, value) => {
-    if (definition.fieldFormat === 'datetime') {
-      // setVal(dayjs(e).valueOf());
-      updateData(definition.fieldName, dayjs(e).valueOf());
-    } else {
-      setVal(value);
-      updateData(definition.fieldName, value);
-    }
-  }
-
-  const onBlurHandler = (e) => {
-    updateData(definition.fieldName, e.target.value);
-  }
 
   switch (definition.fieldFormat) {
     case 'text':
       return (
         <TextField
           classes={{root: classes.textFieldRoot}}
-          // defaultValue={val}
           defaultValue={data}
-          onBlur={onBlurHandler}
+          onBlur={(e) => updateData(e, e.target.value, definition.fieldName, definition.fieldFormat)}
           variant='outlined'
           required={definition.required}
           disabled={definition.readonly}
@@ -43,9 +26,8 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
       return (
         <Autocomplete
           className={definition.readonly ? classes.disabled : ''}
-          value={val}
-          // defaultValue={data}
-          onChange={onChangeHandler}
+          value={data}
+          onChange={(e, value) => updateData(e, value, definition.fieldName, definition.fieldFormat)}
           renderInput={
             (props) => <TextField
               {...props}
@@ -62,9 +44,8 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
       return (
         <DateTimePicker
           className={definition.readonly ? classes.disabled : ''}
-          // value={val}
-          defaultValue={data}
-          onChange={onChangeHandler}
+          value={data}
+          onChange={(e, value) => updateData(e, value, definition.fieldName, definition.fieldFormat)}
           format='MM/DD/YYYY HH:mm'
           ampm={false}
           inputVariant='outlined'
@@ -75,7 +56,7 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
       )
     default:
       return (
-        <div>{definition.fieldFormat}: {val}</div>
+        <div>{definition.fieldFormat}: {data}</div>
       )
   }
 }
