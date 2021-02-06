@@ -19,7 +19,7 @@ export const ReportContainer = ({ url }) => {
     metadata: null
   });
 
-  const getData = () => {
+  const getData = () => { //@TODO вынести в хук
     setReport({ ...report, loaded: false });
     fetchService.getReport(url).then(
       res => {
@@ -40,18 +40,10 @@ export const ReportContainer = ({ url }) => {
 
   useEffect(() => {
     getData();
-  },[url]);
+  },[]);
 
   const updateReport = () => {
     getData()
-  }
-
-  if (!report.loaded) {
-    return (
-      <div className={classes.progressContainer}>
-        <LinearProgress className={classes.progress} />
-      </div>
-    )
   }
 
   if (report.loaded === 'withError') {
@@ -63,8 +55,18 @@ export const ReportContainer = ({ url }) => {
   }
 
   return (
-    <div className={classes.wrapper}>
-      {report.type === 'LIST' ? <ListReport data={report.data} metadata={report.metadata} update={updateReport}/> : null}
-    </div>
+    <>
+      {report.data
+        ? (<div className={classes.wrapper}>
+          {report.type === 'LIST' ? <ListReport data={report.data} metadata={report.metadata} update={updateReport}/> : null}
+        </div>)
+        : null
+      }
+      {!report.loaded
+        ? (<div className={classes.progressContainer}>
+            <LinearProgress className={classes.progress} />
+          </div>)
+        : null}
+    </>
   )
 }

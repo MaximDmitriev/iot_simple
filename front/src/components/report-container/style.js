@@ -2,12 +2,15 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles((theme) => ({
   progressContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
     width: '100%',
-    height: 'calc(100% - 64px)',
+    height: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0, 0.1)'
+    backgroundColor: 'rgba(0,0,0, 0.1)',
   },
   progress: {
     marginTop: '15px',

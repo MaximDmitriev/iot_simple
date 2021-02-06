@@ -11,6 +11,7 @@ import { useSnackbar } from 'notistack';
 import { PopupComponent } from '../popup';
 import dayjs from 'dayjs';
 import { fetchService } from '../../services/fetchData';
+import { getSuccessMessage, getErrorMessage } from './utils';
 
 import { useStyles } from './style';
 
@@ -71,14 +72,14 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
       .updateRecord(tableName)
       .then(res => {
         if (res.errors) {
-          enqueueSnackbar(`Не удалось сохранить запись. ${res.message}`, { variant: 'error', autoHideDuration: 8000 });
+          getErrorMessage(enqueueSnackbar,'update', res.message);
         } else {
-          enqueueSnackbar(`Запись ${data[titleField]} успешно сохранена`, { variant: 'success', autoHideDuration: 5000 });
+          getSuccessMessage(enqueueSnackbar,'update', data[titleField]);
         }
       })
       .catch(err => {
         console.log(err);
-        enqueueSnackbar(`Не удалось сохранить запись. ${err.message}`, { variant: 'error', autoHideDuration: 5000 });
+        getErrorMessage(enqueueSnackbar,'update', err.message);
       })
   }
 
@@ -92,18 +93,17 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
       .deleteRecord(tableName)
       .then(res => {
         if (res.errors) {
-          enqueueSnackbar(`Не удалось удалить запись. ${res.message}`, { variant: 'error', autoHideDuration: 8000 });
+          getErrorMessage(enqueueSnackbar,'delete', res.message);
         } else {
-          enqueueSnackbar(`Запись ${data[titleField]} успешно удалена`, { variant: 'success', autoHideDuration: 5000 });
+          getSuccessMessage(enqueueSnackbar,'delete', data[titleField]);
           onClose();
         }
       })
       .catch(err => {
         console.log(err);
-        enqueueSnackbar(`Не удалось удалить запись. ${err.message}`, { variant: 'error', autoHideDuration: 5000 });
+        getErrorMessage(enqueueSnackbar,'delete', err.message);
       })
     setPopupOpen(false);
-
   }
 
   const declineHandler = () => {
@@ -129,17 +129,17 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
       .createRecord(tableName)
       .then((res) => {
         if (res.errors) {
-          enqueueSnackbar(`Не удалось создать запись. ${res.message}`, { variant: 'error', autoHideDuration: 8000 });
+          getErrorMessage(enqueueSnackbar,'create', res.message);
         } else {
           setData(res);
           setMode('edit');
-          enqueueSnackbar(`Запись ${data[titleField]} создана успешно`, { variant: 'success', autoHideDuration: 5000 });
+          getSuccessMessage(enqueueSnackbar,'create', data[titleField]);
 
         }
       })
       .catch(err => {
         console.log(err);
-        enqueueSnackbar(`Не удалось создать запись. ${err.message}`, { variant: 'error', autoHideDuration: 5000 });
+        getErrorMessage(enqueueSnackbar,'create', err.message);
       })
   }
 
