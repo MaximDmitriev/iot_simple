@@ -18,7 +18,7 @@ app.set('port', config.get('port'));
 app.use(cors());
 
 // app.use(favicon());
-// app.use(morgan('combined'));
+app.use(morgan('combined'));
 // app.use(bodyParser.text({ type: 'text/html' }));
 // app.use(cookieParser());
 app.use(bodyParser.json({ type: 'application/json' }));

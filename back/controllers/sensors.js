@@ -9,5 +9,10 @@ router.get('/', (req, res) => {
   res.send('sensors');
 });
 
+router.get('/esp', (req, res) => {
+  console.log('esp', req.query);
+  res.send('ESP');
+})
+
 
 module.exports = router;
