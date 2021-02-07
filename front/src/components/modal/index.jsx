@@ -46,7 +46,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
         .getOneRecord(tableName, id)
         .then(res => {
           setData(res);
-          setTimeout(() => {
+          setTimeout(() => { // setTimeout для лоадера
             setStatus('loaded');
           }, 500);
         })

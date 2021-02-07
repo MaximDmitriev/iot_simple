@@ -12,27 +12,24 @@ import { useStyles } from './style';
 export const ListReport = ({ data, metadata, update }) => {
   const classes = useStyles();
 
-  const [show, setShow] = useState({ open: false, mode: 'edit' });
-  const [id, setId] = useState(null);
-
   const columns = useMemo(() => getColumns(metadata), [metadata]);
   const rows = useMemo(() => formatData(data, columns), [data, columns]);
   const { definition, totalHeight } = useMemo(() => getFormDefinition(metadata), [metadata]);
 
+  const [modalParams, setModalParams] = useState({ open: false, mode: 'edit', id: null });
+
   const onClickHandler = (e) => {
     const id = e.getValue('id');
-    setId(id);
-    setShow({ open: true, mode: 'edit' });
+    setModalParams({ open: true, mode: 'edit', id });
   }
 
   const closeModal = () => {
-    setId(null);
-    setShow({ open: false, mode: 'edit' });
-    setTimeout(() => update(), 400);
+    setModalParams({ open: false, mode: 'edit', id: null });
+    update();
   }
 
   const createRecord = () => {
-    setShow({open: true, mode: 'create' });
+    setModalParams({ open: true, mode: 'create', id: null });
   }
 
   return (
@@ -58,13 +55,13 @@ export const ListReport = ({ data, metadata, update }) => {
         onRowClick={(e) => onClickHandler(e)}
       />
       <ModalWrapper
-        show={show.open}
-        act={show.mode}
+        show={modalParams.open}
+        act={modalParams.mode}
         onClose={closeModal}
         tableName={metadata.tablename}
         title={metadata.singleTitle}
         titleField={metadata.singleTitleField}
-        id={id}
+        id={modalParams.id}
         definition={definition}
         height={totalHeight}
       />

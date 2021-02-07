@@ -1,52 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { LinearProgress } from '@material-ui/core';
 import { ListReport } from '../list-report';
 import { ErrorComponent } from '../error';
 import { fetchService } from '../../services/fetchData';
+import { reportReducer } from '../../reducers';
 
 import { useStyles } from './style';
 
 
 const REPORT_NOT_IMPLEMENTED_MSG = 'Отчет не готов к использованию, выберите другой отчет';
+const initState = {
+  loaded: false,
+  type: null,
+  data: null,
+  metadata: null,
+  error: null
+};
 
 export const ReportContainer = ({ url }) => {
   const classes = useStyles();
+  const [state, dispatch] = useReducer(reportReducer, initState);
 
-  const [report, setReport] = useState({
-    loaded: false,
-    type: null,
-    data: null,
-    metadata: null
-  });
-
-  const getData = () => { //@TODO вынести в хук
-    setReport({ ...report, loaded: false });
-    fetchService.getReport(url).then(
-      res => {
-        if (res) {
-          setReport({
-            loaded: true,
-            type: res.metadata.type,
-            data: res.data,
-            metadata: res.metadata
-          });
-        } else {
-          console.log('error');
-          setReport({ ...report, loaded: 'withError' });
+  const getData = () => {
+    dispatch({ type: 'fetchRequest' });
+    fetchService
+      .getReport(url)
+      .then(
+        res => {
+          if (res) {
+            dispatch({ type: 'fetchSuccess', payload: res });
+          } else {
+            console.log('error', res);
+            dispatch({ type: 'fetchFailure', payload: { error: 'error' } });
+          }
         }
-      }
-    );
+      )
+      .catch(err => {
+        console.log(err);
+        dispatch({ type: 'fetchFailure', payload: { error: err } });
+      });
   };
 
   useEffect(() => {
     getData();
-  },[]);
+  },[url]);
 
   const updateReport = () => {
     getData()
   }
 
-  if (report.loaded === 'withError') {
+  if (state.loaded && state.error) {
     return (
       <div className={classes.wrapper}>
         <ErrorComponent message={REPORT_NOT_IMPLEMENTED_MSG}/>
@@ -56,13 +59,13 @@ export const ReportContainer = ({ url }) => {
 
   return (
     <>
-      {report.data
+      {state.data
         ? (<div className={classes.wrapper}>
-          {report.type === 'LIST' ? <ListReport data={report.data} metadata={report.metadata} update={updateReport}/> : null}
+          {state.type === 'LIST' ? <ListReport data={state.data} metadata={state.metadata} update={updateReport}/> : null}
         </div>)
         : null
       }
-      {!report.loaded
+      {!state.loaded
         ? (<div className={classes.progressContainer}>
             <LinearProgress className={classes.progress} />
           </div>)
