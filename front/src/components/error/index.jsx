@@ -11,5 +11,5 @@ export const ErrorComponent = ({ message }) => {
         {message}
       </Typography>
     </Paper>
-  )
-}
+  );
+};

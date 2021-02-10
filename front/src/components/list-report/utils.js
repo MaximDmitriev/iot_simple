@@ -19,7 +19,7 @@ export function getColumns({ definition }) {
         width: convertWidth(col.width),
         hidden: !col.visible,
         order: col.order,
-        style: col.style || null
+        style: col.style || null,
       }]);
     }, [])
     .sort((a, b) => {
@@ -35,8 +35,7 @@ function formatCell(row, stylesMap) {
   Object.keys(row).map(name => {
     if (stylesMap[name]) {
       if (stylesMap[name] === 'datetime') {
-        const val = dayjs(row[name]).format('DD/MM/YYYY HH:mm');
-        row[name] = val;
+        row[name] = dayjs(row[name]).format('DD/MM/YYYY HH:mm');
       }
     }
   });
@@ -54,7 +53,7 @@ export function formatData(data, columns) {
   });
 }
 
-export function getFormDefinition({ definition: {columns}}) {
+export function getFormDefinition({ definition: { columns } }) {
   const rowPositions = columns.reduce((obj, widget) => {
     if (!obj[widget.position[1]] || obj[widget.position[1]] < widget.size[1]) {
       obj[widget.position[1]] = widget.size[1];
@@ -63,12 +62,12 @@ export function getFormDefinition({ definition: {columns}}) {
   }, {});
   const maxRowNumber = Math.max(...Object.keys(rowPositions).map(k => parseInt(k)));
 
-  //общая высота сетки
+  // общая высота сетки
   const totalHeight = rowPositions[maxRowNumber] > 1
     ? (maxRowNumber + rowPositions[maxRowNumber]) * ROW_HEIGHT
     : (maxRowNumber + 1) * ROW_HEIGHT;
 
-  //параметры одной ячейки в процентах
+  // параметры одной ячейки в процентах
   const colHeight = (100 * ROW_HEIGHT)/totalHeight;
   const colWidth = 100/NUMBER_COLUMNS;
 
@@ -85,10 +84,10 @@ export function getFormDefinition({ definition: {columns}}) {
       width: `${colWidth * c.size[0]}%`,
       height: `${colHeight * c.size[1]}%`,
       top: c.position[1] * colHeight + '%',
-      left: c.position[0] * colWidth + '%'
+      left: c.position[0] * colWidth + '%',
     }));
   return {
     totalHeight,
-    definition
-  }
+    definition,
+  };
 }

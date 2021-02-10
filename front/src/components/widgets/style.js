@@ -1,11 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles(theme => ({
   textFieldRoot: {
     '& .Mui-disabled': {
       background: '#eaeaea',
       cursor: 'not-allowed',
-    }
+    },
   },
   disabled: {
     background: '#eaeaea',
@@ -25,10 +25,10 @@ export const useStyles = makeStyles((theme) => ({
       cursor: 'not-allowed',
       '&:hover': {
         border: '1px solid #858585 !important',
-      }
+      },
     },
     '& div': {
       color: 'rgba(0, 0, 0, 0.4)',
-    }
-  }
+    },
+  },
 }));

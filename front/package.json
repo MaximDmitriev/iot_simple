@@ -20,7 +20,8 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.8",
     "@testing-library/react": "^11.2.2",
-    "@testing-library/user-event": "^12.6.0"
+    "@testing-library/user-event": "^12.6.0",
+    "eslint-config-google": "^0.14.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -31,8 +32,21 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "react-app/jest",
+      "google"
+    ],
+    "rules": {
+      "object-curly-spacing": ["error", "always"],
+      "linebreak-style": "off",
+      "operator-linebreak": "off",
+      "require-jsdoc": "warn",
+      "indent": ["error", 2],
+      "arrow-parens": ["warn", "as-needed"],
+      "quote-props": ["warn", "consistent-as-needed"],
+      "max-len": ["error", 120],
+      "no-invalid-this": "off",
+      "no-unused-vars": "warn"
+    }
   },
   "browserslist": {
     "production": [

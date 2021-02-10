@@ -18,24 +18,24 @@ export const ListReport = ({ data, metadata, update }) => {
 
   const [modalParams, setModalParams] = useState({ open: false, mode: 'edit', id: null });
 
-  const onClickHandler = (e) => {
+  const onClickHandler = e => {
     const id = e.getValue('id');
     setModalParams({ open: true, mode: 'edit', id });
-  }
+  };
 
   const closeModal = () => {
     setModalParams({ open: false, mode: 'edit', id: null });
     update();
-  }
+  };
 
   const createRecord = () => {
     setModalParams({ open: true, mode: 'create', id: null });
-  }
+  };
 
   return (
     <div className={classes.wrapper}>
       <Tooltip title="Добавить запись">
-        <IconButton color="primary" aria-label="add record" classes={{root: classes.root}} onClick={createRecord}>
+        <IconButton color="primary" aria-label="add record" classes={{ root: classes.root }} onClick={createRecord}>
           <LibraryAdd />
         </IconButton>
       </Tooltip>
@@ -52,7 +52,7 @@ export const ListReport = ({ data, metadata, update }) => {
         autoHeight
         disableSelectionOnClick
         localeText={localeText}
-        onRowClick={(e) => onClickHandler(e)}
+        onRowClick={e => onClickHandler(e)}
       />
       <ModalWrapper
         show={modalParams.open}
@@ -66,5 +66,5 @@ export const ListReport = ({ data, metadata, update }) => {
         height={totalHeight}
       />
     </div>
-  )
-}
+  );
+};

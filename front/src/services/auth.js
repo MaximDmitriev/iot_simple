@@ -9,7 +9,7 @@ const fakeAuth = {
   signout(cb) {
     fakeAuth.isAuthenticated = false;
     setTimeout(cb, 100);
-  }
+  },
 };
 
 export function useProvideAuth() {
@@ -17,7 +17,7 @@ export function useProvideAuth() {
 
   const signin = cb => {
     return fakeAuth.signin(() => {
-      setUser("user");
+      setUser('user');
       cb();
     });
   };
@@ -32,6 +32,6 @@ export function useProvideAuth() {
   return {
     user,
     signin,
-    signout
+    signout,
   };
 }

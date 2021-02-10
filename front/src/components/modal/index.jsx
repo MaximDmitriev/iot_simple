@@ -5,7 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Skeleton from '@material-ui/lab/Skeleton'
+import Skeleton from '@material-ui/lab/Skeleton';
 import { WidgetContainer } from '../widgets';
 import { useSnackbar } from 'notistack';
 import { PopupComponent } from '../popup';
@@ -20,10 +20,10 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   const classes = useStyles();
 
   const [data, setData] = useState({});
-  const [status, setStatus] = useState('loading'); //loaded, error
+  const [status, setStatus] = useState('loading'); // loaded, error
   const [popupOpen, setPopupOpen] = useState(false);
   const [mode, setMode] = useState(act);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const formDefinition = useMemo(() => {
     return mode === 'create'
@@ -40,7 +40,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   }, [show]);
 
   useEffect(() => {
-      if (mode === 'edit' && id) {
+    if (mode === 'edit' && id) {
       setStatus('loading');
       fetchService
         .getOneRecord(tableName, id)
@@ -57,91 +57,90 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
     }
     return () => {
       // console.log('unmount');
-    }
+    };
   }, [id]);
 
   const onCloseHandler = () => {
     setStatus('loading');
     setData({});
     onClose();
-  }
+  };
 
   const updateRecord = () => {
     fetchService
-      .data({id: data.id, fields: data})
+      .data({ id: data.id, fields: data })
       .updateRecord(tableName)
       .then(res => {
         if (res.errors) {
-          getErrorMessage(enqueueSnackbar,'update', res.message);
+          getErrorMessage(enqueueSnackbar, 'update', res.message);
         } else {
-          getSuccessMessage(enqueueSnackbar,'update', data[titleField]);
+          getSuccessMessage(enqueueSnackbar, 'update', data[titleField]);
         }
       })
       .catch(err => {
         console.log(err);
-        getErrorMessage(enqueueSnackbar,'update', err.message);
-      })
-  }
+        getErrorMessage(enqueueSnackbar, 'update', err.message);
+      });
+  };
 
   const openPopup = () => {
     setPopupOpen(true);
-  }
+  };
 
   const confirmHandle = () => {
     fetchService
-      .data({id: data.id})
+      .data({ id: data.id })
       .deleteRecord(tableName)
       .then(res => {
         if (res.errors) {
-          getErrorMessage(enqueueSnackbar,'delete', res.message);
+          getErrorMessage(enqueueSnackbar, 'delete', res.message);
         } else {
-          getSuccessMessage(enqueueSnackbar,'delete', data[titleField]);
+          getSuccessMessage(enqueueSnackbar, 'delete', data[titleField]);
           onClose();
         }
       })
       .catch(err => {
         console.log(err);
-        getErrorMessage(enqueueSnackbar,'delete', err.message);
-      })
+        getErrorMessage(enqueueSnackbar, 'delete', err.message);
+      });
     setPopupOpen(false);
-  }
+  };
 
   const declineHandler = () => {
     setPopupOpen(false);
-  }
+  };
 
   const updateWidgetData = (e, val, fieldName, fieldFormat) => {
     switch (fieldFormat) {
-      case 'text':
-        setData((data) => ({...data, [fieldName]: val }));
-        break;
-      case 'datetime':
-        setData((data) => ({...data, [fieldName]: dayjs(e).valueOf() }));
-        break;
-      default:
-        setData((data) => ({...data, [fieldName]: val }));
+    case 'text':
+      setData(data => ({ ...data, [fieldName]: val }));
+      break;
+    case 'datetime':
+      setData(data => ({ ...data, [fieldName]: dayjs(e).valueOf() }));
+      break;
+    default:
+      setData(data => ({ ...data, [fieldName]: val }));
     }
-  }
+  };
 
   const createRecord = () => {
     fetchService
       .data(data)
       .createRecord(tableName)
-      .then((res) => {
+      .then(res => {
         if (res.errors) {
-          getErrorMessage(enqueueSnackbar,'create', res.message);
+          getErrorMessage(enqueueSnackbar, 'create', res.message);
         } else {
           setData(res);
           setMode('edit');
-          getSuccessMessage(enqueueSnackbar,'create', data[titleField]);
-
+          getSuccessMessage(enqueueSnackbar, 'create', data[titleField]);
         }
       })
       .catch(err => {
         console.log(err);
-        getErrorMessage(enqueueSnackbar,'create', err.message);
-      })
-  }
+        getErrorMessage(enqueueSnackbar, 'create', err.message);
+      });
+  };
 
   return (
     <div>
@@ -181,7 +180,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
                 </Button>
               </div>
             </AppBar>
-            <div className={classes.grid} style={{height: height + 'px'}}>
+            <div className={classes.grid} style={{ height: height + 'px' }}>
               {formDefinition.map((cell, idx) => {
                 return (
                   <div
@@ -191,20 +190,24 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
                       height: cell.height,
                       width: cell.width,
                       top: cell.top,
-                      left: cell.left
+                      left: cell.left,
                     }}
                   >
                     <Typography className={classes.label}>{cell.label}</Typography>
                     {status === 'loading'
                       ? <Skeleton variant="rect" width='100%' height='40px'/>
-                      : <WidgetContainer definition={cell} data={data[cell.fieldName] || null} updateData={updateWidgetData}/>}
+                      : <WidgetContainer
+                        definition={cell}
+                        data={data[cell.fieldName] || null}
+                        updateData={updateWidgetData}
+                      />}
                   </div>
-                )
+                );
               })}
             </div>
           </div>
         </Slide>
       </Modal>
     </div>
-  )
-}
+  );
+};

@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { LinearProgress } from '@material-ui/core';
 import { ListReport } from '../list-report';
 import { ErrorComponent } from '../error';
@@ -14,7 +14,7 @@ const initState = {
   type: null,
   data: null,
   metadata: null,
-  error: null
+  error: null,
 };
 
 export const ReportContainer = ({ url }) => {
@@ -33,7 +33,7 @@ export const ReportContainer = ({ url }) => {
             console.log('error', res);
             dispatch({ type: 'fetchFailure', payload: { error: 'error' } });
           }
-        }
+        },
       )
       .catch(err => {
         console.log(err);
@@ -43,33 +43,37 @@ export const ReportContainer = ({ url }) => {
 
   useEffect(() => {
     getData();
-  },[url]);
+  }, [url]);
 
   const updateReport = () => {
-    getData()
-  }
+    getData();
+  };
 
   if (state.loaded && state.error) {
     return (
       <div className={classes.wrapper}>
         <ErrorComponent message={REPORT_NOT_IMPLEMENTED_MSG}/>
       </div>
-    )
+    );
   }
 
   return (
     <>
       {state.data
-        ? (<div className={classes.wrapper}>
-          {state.type === 'LIST' ? <ListReport data={state.data} metadata={state.metadata} update={updateReport}/> : null}
-        </div>)
+        ? (
+          <div className={classes.wrapper}>
+            {state.type === 'LIST'
+              ? <ListReport data={state.data} metadata={state.metadata} update={updateReport}/>
+              : null}
+          </div>)
         : null
       }
       {!state.loaded
-        ? (<div className={classes.progressContainer}>
+        ? (
+          <div className={classes.progressContainer}>
             <LinearProgress className={classes.progress} />
           </div>)
         : null}
     </>
-  )
-}
+  );
+};

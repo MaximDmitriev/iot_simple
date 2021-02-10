@@ -14,44 +14,50 @@ const reportsList = [
 ];
 
 
-
 export const MainPage = () => {
   const classes = useStyles();
   const location = useLocation();
 
   const [report, setReport] = useState({
     type: 'start',
-    name: 'Основная панель'
+    name: 'Основная панель',
   });
 
-  const chooseReport = (item) => {
+  const chooseReport = item => {
     const currentReport = reportsList.find(r => r.url === item);
     if (currentReport) {
       setReport({ type: currentReport.url, name: currentReport.name });
     }
-  }
+  };
   useEffect(() => {
-    let restUrl = location.pathname.split('/');
+    const restUrl = location.pathname.split('/');
     if (restUrl[1] === 'report' && restUrl[2]) {
       chooseReport(restUrl[2]);
     }
   }, []);
 
-  const onSelectItem = (item) => {
+  const onSelectItem = item => {
     chooseReport(item);
   };
 
 
   return (
     <>
-      <Navbar title={report.name} showBtn userName="Максим Дмитриев" reports={reportsList} onSelectItem={(item) => onSelectItem(item)}/>
+      <Navbar
+        title={report.name}
+        showBtn
+        userName="Максим Дмитриев"
+        reports={reportsList}
+        onSelectItem={item => onSelectItem(item)}
+      />
       {report.type === 'start'
-        ? (<Paper elevation={5} className={classes.paper}>
+        ? (
+          <Paper elevation={5} className={classes.paper}>
             <Typography variant={'body1'} align={'center'}>
               Выберите в меню нужный отчет
             </Typography>
           </Paper>)
         : <ReportContainer url={report.type}/>}
     </>
-  )
-}
+  );
+};

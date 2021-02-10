@@ -11,32 +11,32 @@ export const PopupComponent = ({ open, onAccept, onCancel }) => {
   const classes = useStyles();
 
   return (
-   <Dialog
-    open={open}
-    classes={{
-      root: classes.root,
-      scrollPaper: classes.scrollPaper
-     }}
-    TransitionComponent={Transition}
-    disableBackdropClick
-    keepMounted
-    aria-labelledby="alert-dialog-slide-title"
-    aria-describedby="alert-dialog-slide-description"
-  >
-    <DialogTitle id="alert-dialog-slide-title">Удалить запись?</DialogTitle>
-    <DialogContent>
-      <DialogContentText id="alert-dialog-slide-description">
-        Данная запись будет удалена из базы данных без возможности восстановления
-      </DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={onCancel} color='primary' variant='outlined'>
-        Отмена
-      </Button>
-      <Button onClick={onAccept} color='secondary' variant='outlined'>
-        Удалить
-      </Button>
-    </DialogActions>
-  </Dialog>
-  )
-}
+    <Dialog
+      open={open}
+      classes={{
+        root: classes.root,
+        scrollPaper: classes.scrollPaper,
+      }}
+      TransitionComponent={Transition}
+      disableBackdropClick
+      keepMounted
+      aria-labelledby="alert-dialog-slide-title"
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogTitle id="alert-dialog-slide-title">Удалить запись?</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-slide-description">
+          Данная запись будет удалена из базы данных без возможности восстановления
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onCancel} color='primary' variant='outlined'>
+          Отмена
+        </Button>
+        <Button onClick={onAccept} color='secondary' variant='outlined'>
+          Удалить
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};

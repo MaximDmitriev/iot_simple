@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles(theme => ({
   wrapper: {
     overflow: 'auto',
     height: '100%',
@@ -9,14 +9,14 @@ export const useStyles = makeStyles((theme) => ({
     position: 'relative',
     '& .MuiDataGrid-withBorder': {
       '&:last-child': {
-        borderRight: 'none'
-      }
-    }
+        borderRight: 'none',
+      },
+    },
   },
   root: {
     position: 'absolute',
     top: '5px',
     right: '5px',
-    zIndex: 100
-  }
+    zIndex: 100,
+  },
 }));

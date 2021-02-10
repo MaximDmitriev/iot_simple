@@ -18,7 +18,7 @@ export const localeText = {
   toolbarFiltersLabel: 'Показать фильтры',
   toolbarFiltersTooltipHide: 'Спрятать фильтры',
   toolbarFiltersTooltipShow: 'Показать фильтры',
-  toolbarFiltersTooltipActive: (count) => `${count} активных фильтров`,
+  toolbarFiltersTooltipActive: count => `${count} активных фильтров`,
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Найти колонку',
@@ -45,12 +45,12 @@ export const localeText = {
   columnMenuSortDesc: 'Сорт. по убывающей',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) => `${count} активных фильтров`,
+  columnHeaderFiltersTooltipActive: count => `${count} активных фильтров`,
   columnHeaderFiltersLabel: 'Показать фильтры',
   columnHeaderSortIconLabel: 'Сортировать',
 
   // Rows selected footer text
-  footerRowSelected: (count) =>
+  footerRowSelected: count =>
     count !== 1
       ? `${count.toLocaleString()} выделенных строк`
       : `${count.toLocaleString()} выделенная строка`,

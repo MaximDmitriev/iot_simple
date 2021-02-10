@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
     width: '90%',
@@ -10,8 +10,8 @@ export const useStyles = makeStyles((theme) => ({
     backgroundColor: '#fff',
     paddingBottom: '10px',
     '&:focus': {
-      outline: 'none'
-    }
+      outline: 'none',
+    },
   },
   appbar: {
     display: 'flex',
@@ -21,16 +21,16 @@ export const useStyles = makeStyles((theme) => ({
     minHeight: '60px',
     padding: '10px 20px',
     marginBottom: '10px',
-    backgroundColor: '#1976d2'
+    backgroundColor: '#1976d2',
   },
   btnGroup: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100%'
+    height: '100%',
   },
   headerBtn: {
-    marginLeft: '10px'
+    marginLeft: '10px',
   },
   title: {
     fontSize: '20px',
@@ -43,17 +43,17 @@ export const useStyles = makeStyles((theme) => ({
   displayName: {
     display: 'flex',
     height: '100%',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   titleMock: {
-    minWidth: '100px'
+    minWidth: '100px',
   },
   cell: {
     position: 'absolute',
     borderRadius: '3px',
-    padding: '5px 10px'
+    padding: '5px 10px',
   },
   label: {
-    fontSize: '14px'
-  }
+    fontSize: '14px',
+  },
 }));

@@ -23,5 +23,5 @@ export const NotFoundPage = () => {
         </Link>
       </Paper>
     </>
-  )
-}
+  );
+};

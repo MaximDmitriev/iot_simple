@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles(theme => ({
   paper: {
     height: '450px',
     width: '30%',
@@ -8,13 +8,13 @@ export const useStyles = makeStyles((theme) => ({
     marginLeft: 'auto',
     marginRight: '100px',
     transform: 'translateY(100px)',
-    padding: '30px 0'
+    padding: '30px 0',
   },
   inputWrapper: {
     display: 'flex',
     width: '85%',
     margin: 'auto',
-    marginTop: '20px'
+    marginTop: '20px',
   },
   button: {
     display: 'block',
@@ -24,6 +24,6 @@ export const useStyles = makeStyles((theme) => ({
   },
   btnWrapper: {
     width: '100%',
-    marginTop: '130px'
-  }
+    marginTop: '130px',
+  },
 }));

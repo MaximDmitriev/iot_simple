@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundImage: 'url(/img/iot4.png)',
     backgroundRepeat: 'no-repeat',
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     width: '100%',
     margin: 0,
-    padding: 0
+    padding: 0,
   },
 }));
 
@@ -31,7 +31,7 @@ export function useAuth() {
 function ProvideAuth({ children }) {
   const auth = useProvideAuth();
 
-  return <authContext.Provider value={auth}>{children}</authContext.Provider>
+  return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }
 
 function PrivateRoute({ children, ...rest }) {
@@ -41,7 +41,7 @@ function PrivateRoute({ children, ...rest }) {
       {...rest}
       render={({ location }) => auth.user
         ? children
-        : <Redirect to={{ pathname: "/login", state: { from: location } }} />}
+        : <Redirect to={{ pathname: '/login', state: { from: location } }} />}
     />
   );
 }

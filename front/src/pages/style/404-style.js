@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles(theme => ({
   paper: {
     display: 'flex',
     flexDirection: 'column',
@@ -10,12 +10,12 @@ export const useStyles = makeStyles((theme) => ({
     height: '200px',
     margin: 'auto',
     marginTop: '100px',
-    padding: '30px'
+    padding: '30px',
   },
   button: {
-    width: '200px'
+    width: '200px',
   },
   text: {
-    margin: '10px 0'
-  }
+    margin: '10px 0',
+  },
 }));

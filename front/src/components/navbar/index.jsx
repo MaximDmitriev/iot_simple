@@ -6,26 +6,26 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { useStyles } from './style';
 
 
-export const Navbar = ({ title, showBtn, userName, reports, onSelectItem}) => {
+export const Navbar = ({ title, showBtn, userName, reports, onSelectItem }) => {
   const classes = useStyles();
 
   const [anchorEls, setAnchorEls] = useState({
     login: null,
-    reports: null
+    reports: null,
   });
 
-  const handleClick = (name) => (event) => {
+  const handleClick = name => event => {
     setAnchorEls({ ...anchorEls, [name]: event.currentTarget });
   };
 
-  const handleClose = (name) => () => {
+  const handleClose = name => () => {
     setAnchorEls({ ...anchorEls, [name]: null });
   };
 
   const handleItem = (event, name) => {
     onSelectItem(event.target.dataset.type);
     handleClose(name)();
-  }
+  };
 
   return (
     <AppBar position="static" className={classes.root}>
@@ -36,7 +36,9 @@ export const Navbar = ({ title, showBtn, userName, reports, onSelectItem}) => {
           color="inherit"
           aria-label="menu"
         >
-          {showBtn ? <MenuIcon aria-controls="reports-menu" aria-haspopup="true" onClick={handleClick('reports')}/> : null}
+          {showBtn
+            ? <MenuIcon aria-controls="reports-menu" aria-haspopup="true" onClick={handleClick('reports')}/>
+            : null}
           <Menu
             id="reports-menu"
             anchorEl={anchorEls.reports}
@@ -48,9 +50,9 @@ export const Navbar = ({ title, showBtn, userName, reports, onSelectItem}) => {
             {reports && reports.map(item => {
               return (
                 <Link to={`/report/${item.url}`} key={item.url}>
-                  <MenuItem data-type={item.url} onClick={(e) => handleItem(e,'reports')}>{item.name}</MenuItem>
+                  <MenuItem data-type={item.url} onClick={e => handleItem(e, 'reports')}>{item.name}</MenuItem>
                 </Link>
-              )
+              );
             })}
 
           </Menu>
@@ -59,9 +61,10 @@ export const Navbar = ({ title, showBtn, userName, reports, onSelectItem}) => {
           {title}
         </Typography>
         {showBtn
-          ? <Button color="inherit" aria-controls="login-menu" aria-haspopup="true" onClick={handleClick('login')}>
+          ? (
+            <Button color="inherit" aria-controls="login-menu" aria-haspopup="true" onClick={handleClick('login')}>
               {userName}
-            </Button>
+            </Button>)
           : null}
         <Menu
           id="login-menu"
@@ -71,8 +74,8 @@ export const Navbar = ({ title, showBtn, userName, reports, onSelectItem}) => {
           onClose={handleClose('login')}
           TransitionComponent={Fade}
         >
-          <MenuItem data-type="account" onClick={(e) => handleItem(e,'login')}>Аккаунт</MenuItem>
-          <MenuItem data-type="logout" onClick={(e) => handleItem(e,'login')}>
+          <MenuItem data-type="account" onClick={e => handleItem(e, 'login')}>Аккаунт</MenuItem>
+          <MenuItem data-type="logout" onClick={e => handleItem(e, 'login')}>
             <Link to="/login">
               Выйти
             </Link>
@@ -80,5 +83,5 @@ export const Navbar = ({ title, showBtn, userName, reports, onSelectItem}) => {
         </Menu>
       </Toolbar>
     </AppBar>
-  )
-}
+  );
+};

@@ -8,7 +8,7 @@ import {
   InputAdornment,
   Paper,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { AccountCircle, Lock, Visibility, VisibilityOff } from '@material-ui/icons';
 import { Navbar } from '../components/navbar';
@@ -33,26 +33,25 @@ export const LoginPage = () => {
     login: false,
     password: false,
     loginText: '',
-    passwordText: ''
+    passwordText: '',
   });
 
   const [type, setType] = useState({
-    newUser: false
+    newUser: false,
   });
 
   const changeFormType = () => {
     setType({ newUser: !type.newUser });
-  }
+  };
 
   const login = () => {
-    const { from } = location.state || { from: { pathname: "/report" } };
+    const { from } = location.state || { from: { pathname: '/report' } };
     auth.signin(() => {
       history.replace(from);
     });
+  };
 
-  }
-
-  const handleChange = (prop) => (event) => {
+  const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
   };
 
@@ -60,7 +59,7 @@ export const LoginPage = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
 
-  const handleMouseDownPassword = (event) => {
+  const handleMouseDownPassword = event => {
     event.preventDefault();
   };
 
@@ -84,7 +83,7 @@ export const LoginPage = () => {
                 <InputAdornment position="start">
                   <AccountCircle />
                 </InputAdornment>
-              )
+              ),
             }}
           />
         </FormControl>
@@ -103,16 +102,16 @@ export const LoginPage = () => {
                 </InputAdornment>
               ),
               endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-              )
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
             }}
           />
         </FormControl>
@@ -126,5 +125,5 @@ export const LoginPage = () => {
         </Box>
       </Paper>
     </>
-  )
-}
+  );
+};
