@@ -16,15 +16,15 @@ export const ListReport = ({ data, metadata, update }) => {
   const rows = useMemo(() => formatData(data, columns), [data, columns]);
   const { definition, totalHeight } = useMemo(() => getFormDefinition(metadata), [metadata]);
 
-  const [modalParams, setModalParams] = useState({ open: false, mode: 'edit', id: null });
+  const [modalParams, setModalParams] = useState({ open: false, mode: 'update', id: null });
 
   const onClickHandler = e => {
     const id = e.getValue('id');
-    setModalParams({ open: true, mode: 'edit', id });
+    setModalParams({ open: true, mode: 'update', id });
   };
 
   const closeModal = () => {
-    setModalParams({ open: false, mode: 'edit', id: null });
+    setModalParams({ open: false, mode: 'update', id: null });
     update();
   };
 

@@ -40,7 +40,7 @@
       "linebreak-style": "off",
       "operator-linebreak": "off",
       "require-jsdoc": "warn",
-      "indent": ["error", 2],
+      "indent": ["error", 2, { "SwitchCase": 1 }],
       "arrow-parens": ["warn", "as-needed"],
       "quote-props": ["warn", "consistent-as-needed"],
       "max-len": ["error", 120],

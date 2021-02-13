@@ -11,7 +11,7 @@ import { useSnackbar } from 'notistack';
 import { PopupComponent } from '../popup';
 import dayjs from 'dayjs';
 import { fetchService } from '../../services/fetchData';
-import { getSuccessMessage, getErrorMessage } from './utils';
+import { getSuccessMessage, getErrorMessage, createBody, defineMethod } from './utils';
 
 import { useStyles } from './style';
 
@@ -31,6 +31,32 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
       : definition.filter(c => !c.onlyCreatedMode);
   }, [mode]);
 
+  const openPopup = () => {
+    setPopupOpen(true);
+  };
+
+  const onCloseHandler = () => {
+    setStatus('loading');
+    setData({});
+    onClose();
+  };
+
+  const declineHandler = () => {
+    setPopupOpen(false);
+  };
+
+  const updateWidgetData = (e, val, fieldName, fieldFormat) => {
+    switch (fieldFormat) {
+      case 'text':
+        setData(data => ({ ...data, [fieldName]: val }));
+        break;
+      case 'datetime':
+        setData(data => ({ ...data, [fieldName]: dayjs(e).valueOf() }));
+        break;
+      default:
+        setData(data => ({ ...data, [fieldName]: val }));
+    }
+  };
 
   useEffect(() => {
     setMode(act);
@@ -40,111 +66,62 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   }, [show]);
 
   useEffect(() => {
-    if (mode === 'edit' && id) {
+    if (mode === 'update' && id) {
       setStatus('loading');
-      fetchService
-        .getOneRecord(tableName, id)
-        .then(res => {
-          setData(res);
-          setTimeout(() => { // setTimeout для лоадера
-            setStatus('loaded');
-          }, 500);
-        })
-        .catch(err => {
-          console.log(err);
-          setStatus('error');
-        });
+      readRecord();
     }
     return () => {
       // console.log('unmount');
     };
   }, [id]);
 
-  const onCloseHandler = () => {
-    setStatus('loading');
-    setData({});
-    onClose();
+  const readRecord = () => {
+    fetchService
+      .getOneRecord(tableName, id)
+      .then(res => {
+        setData(res);
+        setTimeout(() => { // setTimeout для лоадера
+          setStatus('loaded');
+        }, 500);
+      })
+      .catch(err => {
+        console.log(err);
+        setStatus('error');
+      });
   };
 
-  const updateRecord = () => {
-    fetchService
-      .data({ id: data.id, fields: data })
-      .updateRecord(tableName)
+  const changeRecord = type => {
+    const body = createBody(type, data);
+    const method = defineMethod(type);
+
+    fetchService.data(body);
+    method.call(fetchService, tableName)
       .then(res => {
         if (res.errors) {
-          getErrorMessage(enqueueSnackbar, 'update', res.message);
+          getErrorMessage(enqueueSnackbar, type, res.message);
         } else {
-          getSuccessMessage(enqueueSnackbar, 'update', data[titleField]);
+          if (type === 'create') {
+            setData(res);
+            setMode('update');
+          } else if (type === 'delete') {
+            setStatus('loading');
+            setData({});
+            onClose();
+          }
+          getSuccessMessage(enqueueSnackbar, type, data[titleField]);
         }
       })
       .catch(err => {
         console.log(err);
-        getErrorMessage(enqueueSnackbar, 'update', err.message);
+        getErrorMessage(enqueueSnackbar, type, err.message);
       });
+    if (type === 'delete') setPopupOpen(false);
   };
 
-  const openPopup = () => {
-    setPopupOpen(true);
-  };
-
-  const confirmHandle = () => {
-    fetchService
-      .data({ id: data.id })
-      .deleteRecord(tableName)
-      .then(res => {
-        if (res.errors) {
-          getErrorMessage(enqueueSnackbar, 'delete', res.message);
-        } else {
-          getSuccessMessage(enqueueSnackbar, 'delete', data[titleField]);
-          onClose();
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        getErrorMessage(enqueueSnackbar, 'delete', err.message);
-      });
-    setPopupOpen(false);
-  };
-
-  const declineHandler = () => {
-    setPopupOpen(false);
-  };
-
-  const updateWidgetData = (e, val, fieldName, fieldFormat) => {
-    switch (fieldFormat) {
-    case 'text':
-      setData(data => ({ ...data, [fieldName]: val }));
-      break;
-    case 'datetime':
-      setData(data => ({ ...data, [fieldName]: dayjs(e).valueOf() }));
-      break;
-    default:
-      setData(data => ({ ...data, [fieldName]: val }));
-    }
-  };
-
-  const createRecord = () => {
-    fetchService
-      .data(data)
-      .createRecord(tableName)
-      .then(res => {
-        if (res.errors) {
-          getErrorMessage(enqueueSnackbar, 'create', res.message);
-        } else {
-          setData(res);
-          setMode('edit');
-          getSuccessMessage(enqueueSnackbar, 'create', data[titleField]);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        getErrorMessage(enqueueSnackbar, 'create', err.message);
-      });
-  };
 
   return (
     <div>
-      <PopupComponent open={popupOpen} onAccept={confirmHandle} onCancel={declineHandler} />
+      <PopupComponent open={popupOpen} onAccept={() => changeRecord('delete')} onCancel={declineHandler} />
       <Modal
         open={show}
         onClose={onCloseHandler}
@@ -164,19 +141,19 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
                 <Typography className={classes.title}>
                   {status === 'loading' || status ==='error'
                     ? <Skeleton variant='text' className={classes.titleMock}/>
-                    : mode === 'edit' ? data[titleField] : ''}
+                    : mode === 'update' ? data[titleField] : ''}
                 </Typography>
               </div>
               <div className={classes.btnGroup}>
-                {mode === 'edit'
+                {mode === 'update'
                   ? <Button variant='contained' color='secondary' onClick={openPopup}>Удалить запись</Button>
                   : null}
                 <Button
                   variant='contained'
                   className={classes.headerBtn}
-                  onClick={mode === 'edit' ? updateRecord : createRecord}
+                  onClick={() => changeRecord(mode)}
                 >
-                  {mode === 'edit' ? 'Сохранить' : 'Создать'}
+                  {mode === 'update' ? 'Сохранить' : 'Создать'}
                 </Button>
               </div>
             </AppBar>
