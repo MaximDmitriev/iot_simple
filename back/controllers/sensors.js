@@ -12,7 +12,12 @@ router.get('/', (req, res) => {
 router.get('/esp', (req, res) => {
   console.log('esp', req.query);
   res.send('ESP');
-})
+});
+
+router.post('/esp', (req, res) => {
+  console.log(req.body);
+  res.end();
+});
 
 
 module.exports = router;

@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const favicon = require('serve-favicon');
 const config = require('./config');
 const cors = require('cors');
+require('./mqtt/index');
 
 const users = require('./controllers/users');
 const sensors = require('./controllers/sensors');
