@@ -5,7 +5,7 @@ const client = mqtt.connect('mqtt://127.0.0.1', {
 });
 
 
-client.on('message', function (topic, message) {
+client.on('message', function(topic, message) {
   console.log(topic);
   const val = message.toString();
   const [name, value] = val.split(':');
@@ -15,12 +15,12 @@ client.on('message', function (topic, message) {
 
 client.on('connect', () => {
   console.log('connect');
-  client.subscribe('#', (err) => {
+  client.subscribe('#', err => {
     if (err) console.log(err);
   });
 });
 
-client.on('error', (error) => {
+client.on('error', error => {
   console.log('error', error);
 });
 

@@ -1,28 +1,27 @@
 const express = require('express');
 
-const { Definition } = require('../models/definitions');
 const { User } = require('../models/user');
 const { Table } = require('../models/tables');
 
 
 const router = express.Router();
 
-const configResponse = (response) => {
+const configResponse = response => {
   response.set('Access-Control-Allow-Origin', '*');
   response.set('Access-Control-Allow-Methods', '*');
-  response.set('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept, Authortization');
+  response.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authortization');
   response.type('application/json');
-}
+};
 
 function getAllUsers(req, res) {
-  const metadata = Table.findOne({tablename: 'users'}).populate('definition');
+  const metadata = Table.findOne({ tablename: 'users' }).populate('definition');
   const data = User.find({});
 
   Promise.all([metadata, data])
     .then(response => {
       const [metadata, data] = response;
       configResponse(res);
-      res.json({metadata, data});
+      res.json({ metadata, data });
     })
     .catch(err => console.log(err));
 }
@@ -40,16 +39,16 @@ router.post('/create', (req, res) => {
       res.status(400);
       res.json(err);
     });
-})
+});
 
 router.get('/:id', (req, res) => {
-  User.findOne({_id: req.params.id})
+  User.findOne({ _id: req.params.id })
     .then(data => {
       configResponse(res);
       res.json(data);
     })
     .catch(err => console.log(err));
-})
+});
 
 router.delete('/delete', (req, res) => {
   User.findByIdAndDelete(req.body.id)
@@ -58,7 +57,7 @@ router.delete('/delete', (req, res) => {
       res.json(data);
     })
     .catch(err => console.log(err));
-})
+});
 
 router.put('/update', (req, res) => {
   User.findByIdAndUpdate(req.body.id, req.body.fields)
@@ -67,7 +66,7 @@ router.put('/update', (req, res) => {
       res.json(data);
     })
     .catch(err => console.log(err));
-})
+});
 
 
 module.exports = router;

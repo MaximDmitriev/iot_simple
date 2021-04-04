@@ -19,5 +19,47 @@
     "mqtt": "^4.2.6",
     "nconf": "^0.11.0",
     "serve-favicon": "^2.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.23.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-node": "^11.1.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:node/recommended",
+      "google"
+    ],
+    "rules": {
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
+      "linebreak-style": "off",
+      "operator-linebreak": "off",
+      "require-jsdoc": "warn",
+      "indent": [
+        "error",
+        2,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "arrow-parens": [
+        "warn",
+        "as-needed"
+      ],
+      "quote-props": [
+        "warn",
+        "consistent-as-needed"
+      ],
+      "max-len": [
+        "error",
+        120
+      ],
+      "no-invalid-this": "off",
+      "no-unused-vars": "warn",
+      "new-cap": ["error", { "capIsNewExceptions": ["Router"] }]
+    }
   }
 }

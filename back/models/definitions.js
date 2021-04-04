@@ -7,61 +7,61 @@ const transformId = () => {
     ret.id = ret._id;
     delete ret._id;
     return ret;
-  }
-}
+  };
+};
 
 const columnsSchema = new Schema({
   order: {
     type: Number,
     required: true,
-    unique: true
+    unique: true,
   },
   systemname: {
     type: String,
-    required: true
+    required: true,
   },
   name: {
-    type: String
+    type: String,
   },
   width: {
     type: String,
-    default: '80px'
+    default: '80px',
   },
   visible: {
     type: Boolean,
-    default: true
+    default: true,
   },
   show_in_form: {
     type: Boolean,
-    default: true
+    default: true,
   },
   pattern: {
-    type: Array
+    type: Array,
   },
   position: {
     type: [Number, Number],
-    required: true
+    required: true,
   },
   size: {
     type: [Number, Number],
-    required: true
+    required: true,
   },
   style: {
     type: String,
-    default: 'text'
+    default: 'text',
   },
   required: {
     type: Boolean,
-    default: false
+    default: false,
   },
   readonly: {
     type: Boolean,
-    default: false
+    default: false,
   },
   onlyCreated: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const schema = new Schema(
@@ -69,9 +69,9 @@ const schema = new Schema(
     tablename: {
       type: String,
       unique: true,
-      required: true
+      required: true,
     },
-    columns: [columnsSchema]
+    columns: [columnsSchema],
   },
   {
     toJSON: {
@@ -89,7 +89,7 @@ const schema = new Schema(
         return ret;
       },
       versionKey: false,
-    }
+    },
   });
 
 exports.Deifnition = mongoose.model('Definition', schema);

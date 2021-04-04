@@ -6,40 +6,39 @@ const schema = new Schema({
   tablename: {
     type: String,
     unique: true,
-    required: true
+    required: true,
   },
   type: {
     type: String,
-    required: true
+    required: true,
   },
   title: {
     type: String,
-    default: ''
+    default: '',
   },
   definition: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Definition',
     required: true,
-  }
+  },
 },
-  {
-    toJSON: {
-      transform: function(doc, ret, options) {
-        ret.id = ret._id;
-        delete ret._id;
-        return ret;
-      },
-      versionKey: false,
+{
+  toJSON: {
+    transform: function(doc, ret, options) {
+      ret.id = ret._id;
+      delete ret._id;
+      return ret;
     },
-    toObject: {
-      transform: function(doc, ret, options) {
-        ret.id = ret._id;
-        delete ret._id;
-        return ret;
-      },
-      versionKey: false,
-    }
-  }
-  );
+    versionKey: false,
+  },
+  toObject: {
+    transform: function(doc, ret, options) {
+      ret.id = ret._id;
+      delete ret._id;
+      return ret;
+    },
+    versionKey: false,
+  },
+});
 
 exports.Table = mongoose.model('Table', schema);

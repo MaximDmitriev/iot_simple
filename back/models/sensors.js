@@ -10,7 +10,7 @@ const dataSchema = new Schema({
   value: {
     type: String,
     required: true,
-  }
+  },
 });
 
 const schema = new Schema({

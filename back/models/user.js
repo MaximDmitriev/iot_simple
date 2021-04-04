@@ -3,55 +3,52 @@ const mongoose = require('../lib/mongoose');
 
 const Schema = mongoose.Schema;
 
-
-
 const schema = new Schema({
   username: {
     type: String,
     unique: true,
-    required: true
+    required: true,
   },
   role: {
     type: String,
-    default: 'user'
+    default: 'user',
   },
   login: {
     type: String,
     unique: true,
-    required: true
+    required: true,
   },
   hashedPassword: {
     type: String,
-    required: true
+    required: true,
   },
   salt: {
     type: String,
-    required: true
+    required: true,
   },
   created: {
     type: Number,
-    default: new Date().getTime()
+    default: new Date().getTime(),
   },
 },
-  {
-    toJSON: {
-      transform: function(doc, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-        return ret;
-      },
-      versionKey: false,
+{
+  toJSON: {
+    transform: function(doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      return ret;
     },
-    toObject: {
-      transform: function(doc, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-        return ret;
-      },
-      versionKey: false,
-    }
-  }
-  );
+    versionKey: false,
+  },
+  toObject: {
+    transform: function(doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      return ret;
+    },
+    versionKey: false,
+  },
+});
 
 schema.methods.encryptPassword = function(password) {
   return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
