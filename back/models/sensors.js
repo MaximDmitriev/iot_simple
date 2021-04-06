@@ -14,10 +14,14 @@ const dataSchema = new Schema({
 });
 
 const schema = new Schema({
-  name: {
+  sensorname: {
     type: String,
     required: true,
     unique: true,
+  },
+  sensorId: {
+    type: String,
+    required: true,
   },
   clusterId: {
     type: String,
@@ -39,6 +43,24 @@ const schema = new Schema({
     type: String,
   },
   data: [dataSchema],
+},
+{
+  toJSON: {
+    transform: function(doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      return ret;
+    },
+    versionKey: false,
+  },
+  toObject: {
+    transform: function(doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      return ret;
+    },
+    versionKey: false,
+  },
 });
 
 exports.Sensors = mongoose.model('Sensors', schema);

@@ -1,32 +1,13 @@
 const express = require('express');
 
+const { Definition } = require('../models/definitions');
 const { User } = require('../models/user');
-const { Table } = require('../models/tables');
+const { getAllRecords, configResponse } = require('./utils');
 
 
 const router = express.Router();
 
-const configResponse = response => {
-  response.set('Access-Control-Allow-Origin', '*');
-  response.set('Access-Control-Allow-Methods', '*');
-  response.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authortization');
-  response.type('application/json');
-};
-
-function getAllUsers(req, res) {
-  const metadata = Table.findOne({ tablename: 'users' }).populate('definition');
-  const data = User.find({});
-
-  Promise.all([metadata, data])
-    .then(response => {
-      const [metadata, data] = response;
-      configResponse(res);
-      res.json({ metadata, data });
-    })
-    .catch(err => console.log(err));
-}
-
-router.get('/', getAllUsers);
+router.get('/', getAllRecords);
 
 router.post('/create', (req, res) => {
   configResponse(res);

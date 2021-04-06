@@ -2,6 +2,7 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { DateTimePicker } from '@material-ui/pickers';
+import { ImagePicker } from './image-picker/index';
 
 import { useStyles } from './style';
 
@@ -53,6 +54,18 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
           readOnly={definition.readonly}
           fullWidth
         />
+      );
+    case 'textarea':
+      return (
+        <textarea
+          className={classes.textArea}
+          defaultValue={data}
+          onBlur={e => updateData(e, e.target.value, definition.fieldName, definition.fieldFormat)}
+        />
+      );
+    case 'image':
+      return (
+        <ImagePicker />
       );
     default:
       return (

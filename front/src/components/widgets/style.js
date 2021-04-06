@@ -31,4 +31,16 @@ export const useStyles = makeStyles(theme => ({
       color: 'rgba(0, 0, 0, 0.4)',
     },
   },
+  textArea: {
+    width: '100%',
+    height: 'calc(100% - 22px)',
+    overflowY: 'auto',
+    padding: '10px',
+    borderColor: 'rgba(0, 0, 0, 0.2)',
+    borderRadius: '4px',
+    resize: 'none',
+    fontSize: '16px',
+    fontFamily: 'Roboto',
+    color: 'rgba(0, 0, 0, 0.87)',
+  },
 }));

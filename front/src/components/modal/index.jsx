@@ -29,7 +29,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
     return mode === 'create'
       ? definition
       : definition.filter(c => !c.onlyCreatedMode);
-  }, [mode]);
+  }, [mode, definition]);
 
   const openPopup = () => {
     setPopupOpen(true);

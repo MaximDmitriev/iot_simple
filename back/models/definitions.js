@@ -14,7 +14,6 @@ const columnsSchema = new Schema({
   order: {
     type: Number,
     required: true,
-    unique: true,
   },
   systemname: {
     type: String,
