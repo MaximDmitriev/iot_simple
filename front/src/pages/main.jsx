@@ -10,6 +10,8 @@ import { useStyles } from './style/main-style';
 const reportsList = [
   { url: 'users', name: 'Пользователи' },
   { url: 'sensors', name: 'Датчики' },
+  { url: 'relays', name: 'Исполнительные механизмы' },
+  { url: 'devices', name: 'Устройства' },
   { url: 'dashboards', name: 'Дашборды' },
 ];
 

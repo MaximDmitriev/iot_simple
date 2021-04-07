@@ -11,6 +11,8 @@ require('./mqtt/index');
 
 const users = require('./controllers/users');
 const sensors = require('./controllers/sensors');
+const relays = require('./controllers/relays');
+const devices = require('./controllers/devices');
 
 
 const app = express();
@@ -26,6 +28,8 @@ app.use(bodyParser.json({ type: 'application/json' }));
 
 app.use('/json/users', users);
 app.use('/json/sensors', sensors);
+app.use('/json/relays', relays);
+app.use('/json/devices', devices);
 
 
 app.listen(app.get('port'), () => {

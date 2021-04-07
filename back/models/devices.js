@@ -2,24 +2,13 @@ const mongoose = require('../lib/mongoose');
 
 const Schema = mongoose.Schema;
 
-const dataSchema = new Schema({
-  date: {
-    type: String,
-    required: true,
-  },
-  value: {
-    type: String,
-    required: true,
-  },
-});
-
 const schema = new Schema({
-  sensorname: {
+  devicename: {
     type: String,
     required: true,
     unique: true,
   },
-  sensorId: {
+  deviceId: {
     type: String,
     required: true,
   },
@@ -30,7 +19,7 @@ const schema = new Schema({
   location: {
     type: String,
   },
-  type: {
+  board: {
     type: String,
   },
   description: {
@@ -39,10 +28,9 @@ const schema = new Schema({
   image: {
     type: String,
   },
-  production_name: {
-    type: String,
+  content: {
+    type: Array,
   },
-  data: [dataSchema],
 },
 {
   toJSON: {
@@ -63,5 +51,4 @@ const schema = new Schema({
   },
 });
 
-exports.Sensors = mongoose.model('Sensors', schema);
-exports.Relays = mongoose.model('Relays', schema);
+exports.Devices = mongoose.model('Devices', schema);
