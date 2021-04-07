@@ -19,7 +19,7 @@ export const useStyles = makeStyles(theme => ({
     transform: 'translateX(-100%)',
   },
   list: {
-    padding: '10px',
+    padding: '10px 0',
   },
   listItem: {
     display: 'flex',
@@ -31,6 +31,11 @@ export const useStyles = makeStyles(theme => ({
     fontFamily: 'Roboto',
     cursor: 'pointer',
     textTransform: 'uppercase',
+    padding: '5px 10px',
+    transition: '0.2s',
+    '&:hover': {
+      background: '#292F33',
+    },
   },
   icon: {
     marginRight: '10px',
