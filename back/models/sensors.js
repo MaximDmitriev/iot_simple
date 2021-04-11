@@ -17,15 +17,14 @@ const schema = new Schema({
   sensorname: {
     type: String,
     required: true,
-    unique: true,
   },
   sensorId: {
     type: String,
     required: true,
+    unique: true,
   },
   clusterId: {
     type: String,
-    required: true,
   },
   location: {
     type: String,
@@ -39,7 +38,7 @@ const schema = new Schema({
   image: {
     type: String,
   },
-  production_name: {
+  prodNumber: {
     type: String,
   },
   data: [dataSchema],

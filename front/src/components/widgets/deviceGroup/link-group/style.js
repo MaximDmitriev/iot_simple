@@ -3,10 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles(theme => ({
   wrapper: {
     width: '100%',
-    height: 'calc(100% - 22px)',
+    height: '100%',
     border: '1px solid rgba(0, 0, 0, 0.2)',
     borderRadius: '4px',
     overflow: 'auto',
+    marginRight: '15px',
   },
   list: {
     width: '100%',

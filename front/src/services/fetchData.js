@@ -58,6 +58,12 @@ class FetchData {
     this.#url = this.#baseurl + tableName + '/update';
     return this.#_send();
   }
+
+  getFreeSensors() {
+    this.#method = 'GET';
+    this.#url = this.#baseurl + 'service/get_free_sensors';
+    return this.#_send();
+  }
 }
 
 export const fetchService = new FetchData();

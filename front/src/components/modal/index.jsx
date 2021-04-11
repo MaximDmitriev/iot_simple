@@ -53,6 +53,17 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
       case 'datetime':
         setData(data => ({ ...data, [fieldName]: dayjs(e).valueOf() }));
         break;
+      case 'deviceGroup':
+        if (!data[fieldName]) {
+          setData(data => ({ ...data, [fieldName]: [val] }));
+        } else if (data[fieldName].includes(val)) {
+          const idx = data[fieldName].findIndex(v => v === val);
+          const values = [...data[fieldName].slice(0, idx), ...data[fieldName].slice(idx + 1)];
+          setData(data => ({ ...data, [fieldName]: values }));
+        } else {
+          setData(data => ({ ...data, [fieldName]: data[fieldName].concat(val) }));
+        }
+        break;
       default:
         setData(data => ({ ...data, [fieldName]: val }));
     }
@@ -141,7 +152,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
                 <Typography className={classes.title}>
                   {status === 'loading' || status ==='error'
                     ? <Skeleton variant='text' className={classes.titleMock}/>
-                    : mode === 'update' ? data[titleField] : ''}
+                    : mode === 'update' ? `${data[titleField]} ${data.sensorId || data.deviceId || ''}` : ''}
                 </Typography>
               </div>
               <div className={classes.btnGroup}>

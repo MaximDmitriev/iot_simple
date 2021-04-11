@@ -3,8 +3,7 @@ import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { DateTimePicker } from '@material-ui/pickers';
 import { ImagePicker } from './image-picker/index';
-import { SelectGroup } from './select-group';
-import { LinkGroup } from './link-group';
+import { DeviceGroup } from './deviceGroup';
 
 import { useStyles } from './style';
 
@@ -69,10 +68,8 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
       return (
         <ImagePicker />
       );
-    case 'selectGroup':
-      return <SelectGroup data={data}/>;
-    case 'linkGroup':
-      return <LinkGroup data={data}/>;
+    case 'deviceGroup':
+      return <DeviceGroup data={data} updateData={updateData} definition={definition}/>;
     default:
       return (
         <div>{definition.fieldFormat}: {data}</div>

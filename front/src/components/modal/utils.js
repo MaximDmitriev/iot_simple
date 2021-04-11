@@ -41,7 +41,7 @@ export const createBody = (type, data) => {
     case 'delete':
       return { id: data.id };
     case 'create':
-      return { ...data };
+      return data;
   }
 };
 

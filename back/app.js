@@ -13,6 +13,7 @@ const users = require('./controllers/users');
 const sensors = require('./controllers/sensors');
 const relays = require('./controllers/relays');
 const devices = require('./controllers/devices');
+const service = require('./controllers/service');
 
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/json/users', users);
 app.use('/json/sensors', sensors);
 app.use('/json/relays', relays);
 app.use('/json/devices', devices);
+app.use('/json/service', service);
 
 
 app.listen(app.get('port'), () => {
