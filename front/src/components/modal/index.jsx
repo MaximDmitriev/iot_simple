@@ -11,7 +11,7 @@ import { useSnackbar } from 'notistack';
 import { PopupComponent } from '../popup';
 import dayjs from 'dayjs';
 import { fetchService } from '../../services/fetchData';
-import { getSuccessMessage, getErrorMessage, createBody, defineMethod } from './utils';
+import { getSuccessMessage, getErrorMessage, createBody, defineMethod, updateSensors } from './utils';
 
 import { useStyles } from './style';
 
@@ -104,29 +104,30 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   const changeRecord = type => {
     const body = createBody(type, data);
     const method = defineMethod(type);
-
-    fetchService.data(body);
-    method.call(fetchService, tableName)
-      .then(res => {
-        if (res.errors) {
-          getErrorMessage(enqueueSnackbar, type, res.message);
-        } else {
-          if (type === 'create') {
-            setData(res);
-            setMode('update');
-          } else if (type === 'delete') {
-            setStatus('loading');
-            setData({});
-            onClose();
+    updateSensors(enqueueSnackbar, type, tableName, data).then(() => {
+      fetchService.data(body);
+      method.call(fetchService, tableName)
+        .then(res => {
+          if (res.errors) {
+            getErrorMessage(enqueueSnackbar, type, res.message);
+          } else {
+            if (type === 'create') {
+              setData(res);
+              setMode('update');
+            } else if (type === 'delete') {
+              setStatus('loading');
+              setData({});
+              onClose();
+            }
+            getSuccessMessage(enqueueSnackbar, type, data[titleField]);
           }
-          getSuccessMessage(enqueueSnackbar, type, data[titleField]);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        getErrorMessage(enqueueSnackbar, type, err.message);
-      });
-    if (type === 'delete') setPopupOpen(false);
+        })
+        .catch(err => {
+          console.log(err);
+          getErrorMessage(enqueueSnackbar, type, err.message);
+        });
+      if (type === 'delete') setPopupOpen(false);
+    });
   };
 
 
@@ -156,8 +157,18 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
                 </Typography>
               </div>
               <div className={classes.btnGroup}>
+                {mode === 'update' && tableName === 'relays'
+                  ? <Button variant='contained' color='primary'>Включить</Button>
+                  : null}
                 {mode === 'update'
-                  ? <Button variant='contained' color='secondary' onClick={openPopup}>Удалить запись</Button>
+                  ? <Button
+                    variant='contained'
+                    color='secondary'
+                    className={classes.headerBtn}
+                    onClick={openPopup}
+                  >
+                    Удалить запись
+                  </Button>
                   : null}
                 <Button
                   variant='contained'

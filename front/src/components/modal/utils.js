@@ -1,4 +1,5 @@
 import { fetchService } from '../../services/fetchData';
+import { Constants, Names } from '../../config';
 
 export function getErrorMessage(alert, type, msg) {
   const TIME = 8000;
@@ -54,4 +55,22 @@ export const defineMethod = type => {
     case 'delete':
       return fetchService.deleteRecord;
   }
+};
+
+export const updateSensors = (enqueueSnackbar, type, tableName, data) => {
+  return new Promise(resolve => {
+    if (type !== 'delete' && tableName === Names.DevicesTableName) {
+      const ids = data[Names.SensorsFieldName].map(name => (name.split(Constants.PairSeparator)[1]));
+      fetchService
+        .data({ cluster: data[Names.ClusterFieldName], ids })
+        .setClusterSensors()
+        .then(() => resolve())
+        .catch(err => {
+          console.log(err);
+          getErrorMessage(enqueueSnackbar, type, err.message);
+        });
+    } else {
+      resolve();
+    }
+  });
 };

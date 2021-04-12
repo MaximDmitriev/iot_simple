@@ -64,6 +64,12 @@ class FetchData {
     this.#url = this.#baseurl + 'service/get_free_sensors';
     return this.#_send();
   }
+
+  setClusterSensors() {
+    this.#method = 'POST';
+    this.#url = this.#baseurl + 'service/set_cluster_sensors';
+    return this.#_send();
+  }
 }
 
 export const fetchService = new FetchData();
