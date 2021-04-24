@@ -3,32 +3,21 @@ const mongoose = require('../lib/mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-  sensorname: {
-    type: String,
-    required: true,
-  },
   sensorId: {
     type: String,
     required: true,
-    unique: true,
   },
   clusterId: {
     type: String,
+    required: true,
   },
-  location: {
-    type: String,
+  datetime: {
+    type: Number,
+    required: true,
   },
-  type: {
-    type: String,
-  },
-  description: {
-    type: String,
-  },
-  image: {
-    type: String,
-  },
-  prodNumber: {
-    type: String,
+  value: {
+    type: Number,
+    required: true,
   },
 },
 {
@@ -50,5 +39,4 @@ const schema = new Schema({
   },
 });
 
-exports.Sensors = mongoose.model('Sensors', schema);
-exports.Relays = mongoose.model('Relays', schema);
+exports.Data = mongoose.model('Data', schema);

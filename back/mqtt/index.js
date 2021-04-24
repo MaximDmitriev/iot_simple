@@ -1,16 +1,54 @@
 const mqtt = require('mqtt');
+const { Config: { separators } } = require('../config/config');
+const { updateClusterData, updateSensorData, confirmationSwitch } = require('./controllers');
+
+
 const client = mqtt.connect('mqtt://127.0.0.1', {
   username: 'server',
   password: '123',
 });
 
 
+/**
+ * Возможные сообщения и их формат:
+ *
+ * requestAllData - запрос данных со всех устройств,
+ * запрос может быть как регулярный автоматический, так и пользовательский. В ответ все устроства должны ответить
+ * сообщениями с топиком cluster$>$>$clusterId
+ *
+ * cluster$>$>$clusterId - текущие данные по всем датчикам и механизмам устройства с id == clusterId
+ * message составляется следующим образом:
+ * first_sensorId:sensor_value||second_sensorId:sensor_value||...||last_sensorId:sensor_value
+ *
+ * sensor$>$>$sensorId - текущие данны по датчику
+ * message составляется следующим образом: sensorId:sensor_value
+ *
+ * switchRelay - вкл/выкл исполнительный механизм
+ * message составляется следующим образом: relayId:state
+ * в ответ от устройства должно прийти сообщение confirmationOfSwitch
+ *
+ * confirmationOfSwitch - подтвеждение вкл/выкл механизма
+ * message составляется следующим образом: relayId:state
+ */
+
+
 client.on('message', function(topic, message) {
-  console.log(topic);
-  const val = message.toString();
-  const [name, value] = val.split(':');
-  const date = new Date();
-  console.log(name, value, date.toLocaleTimeString());
+  switch (true) {
+    case topic.indexOf('cluster') > -1:
+      updateClusterData(topic.split(separators.pair)[1], message.toString());
+      break;
+    case topic.indexOf('sensor') > -1:
+      updateSensorData(topic.split(separators.pair)[1], message.toString());
+      break;
+    case topic === 'confirmationOfSwitch':
+      const data = message.toString();
+      const [id, state] = data.split(separators.sensorData);
+      confirmationSwitch(id, state);
+      break;
+    default:
+      const date = new Date();
+      console.log(topic, message.toString(), date.toLocaleString());
+  }
 });
 
 client.on('connect', () => {
@@ -24,4 +62,20 @@ client.on('error', error => {
   console.log('error', error);
 });
 
-module.exports = client;
+// setInterval(() => {
+//   client.publish('requestAllData', 'allData');
+// }, 15000);
+
+// function requestCluster(clusterId, count = 20) {
+//   client.publish(clusterId, `${count}`);
+// }
+//
+// function requestSensor(sensorId, count = 20) {
+//   client.publish(sensorId, `${count}`);
+// }
+
+function switchRelay(relayId, state) {
+  client.publish('switchRelay', `${relayId}${separators.sensorData}${state}`);
+}
+
+module.exports = { client, switchRelay };

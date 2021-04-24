@@ -61,7 +61,8 @@
       ],
       "no-invalid-this": "off",
       "no-unused-vars": "warn",
-      "new-cap": ["error", { "capIsNewExceptions": ["Router"] }]
+      "new-cap": ["error", { "capIsNewExceptions": ["Router"] }],
+      "node/no-unsupported-features/es-syntax": "off"
     }
   }
 }
