@@ -4,6 +4,7 @@ const { Sensors } = require('../models/sensors');
 const { Relays } = require('../models/sensors');
 const { Devices } = require('../models/devices');
 const { Data } = require('../models/data');
+const { switchRelay } = require('../mqtt/index');
 
 const router = express.Router();
 
@@ -95,6 +96,17 @@ router.post('/get_sensor_data', (req, res) => {
           res.send(JSON.stringify({ message: 'Ошибка БД', error }));
         });
     });
+  }
+});
+
+router.post('/switch', (req, res) => {
+  if (req.body.id && req.body.state) {
+    switchRelay(req.body.id, req.body.state);
+    res.status(200);
+    res.send(JSON.stringify({ message: 'Устройство переключено' }));
+  } else {
+    res.status(405);
+    res.send(JSON.stringify({ message: 'Не указан id механизма или его статус' }));
   }
 });
 

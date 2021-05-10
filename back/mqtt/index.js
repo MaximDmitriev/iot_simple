@@ -1,7 +1,9 @@
 const mqtt = require('mqtt');
+const config = require('../config');
 const { Config: { separators } } = require('../config/config');
 const { updateClusterData, updateSensorData, confirmationSwitch } = require('./controllers');
 
+const timeout = config.get('timeout');
 
 const client = mqtt.connect('mqtt://127.0.0.1', {
   username: 'server',
@@ -20,11 +22,11 @@ const client = mqtt.connect('mqtt://127.0.0.1', {
  * message составляется следующим образом:
  * first_sensorId:sensor_value||second_sensorId:sensor_value||...||last_sensorId:sensor_value
  *
- * sensor$>$>$sensorId - текущие данны по датчику
+ * sensor$>$>$sensorId - текущие данные по датчику
  * message составляется следующим образом: sensorId:sensor_value
  *
- * switchRelay - вкл/выкл исполнительный механизм
- * message составляется следующим образом: relayId:state
+ * switchRelay$>$>$relayId - вкл/выкл исполнительный механизм
+ * message составляется следующим образом: 1 или 0
  * в ответ от устройства должно прийти сообщение confirmationOfSwitch
  *
  * confirmationOfSwitch - подтвеждение вкл/выкл механизма
@@ -64,7 +66,7 @@ client.on('error', error => {
 
 // setInterval(() => {
 //   client.publish('requestAllData', 'allData');
-// }, 15000);
+// }, timeout);
 
 // function requestCluster(clusterId, count = 20) {
 //   client.publish(clusterId, `${count}`);
@@ -75,7 +77,7 @@ client.on('error', error => {
 // }
 
 function switchRelay(relayId, state) {
-  client.publish('switchRelay', `${relayId}${separators.sensorData}${state}`);
+  client.publish(`switchRelay${separators.pair}${relayId}`, state.toString());
 }
 
 module.exports = { client, switchRelay };

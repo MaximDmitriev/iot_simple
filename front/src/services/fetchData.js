@@ -70,6 +70,12 @@ class FetchData {
     this.#url = this.#baseurl + 'service/set_cluster_sensors';
     return this.#_send();
   }
+
+  switchRelay() {
+    this.#method = 'POST';
+    this.#url = this.#baseurl + 'service/switch';
+    return this.#_send();
+  }
 }
 
 export const fetchService = new FetchData();

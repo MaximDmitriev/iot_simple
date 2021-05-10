@@ -130,6 +130,11 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
     });
   };
 
+  const switchRelay = () => {
+    const body = { id: data.sensorId, state: 1 };
+    fetchService.data(body).switchRelay();
+  };
+
 
   return (
     <div>
@@ -158,7 +163,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
               </div>
               <div className={classes.btnGroup}>
                 {mode === 'update' && tableName === 'relays'
-                  ? <Button variant='contained' color='primary'>Включить</Button>
+                  ? <Button variant='contained' color='primary' onClick={switchRelay}>Включить</Button>
                   : null}
                 {mode === 'update'
                   ? <Button
