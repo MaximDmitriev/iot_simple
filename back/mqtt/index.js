@@ -29,8 +29,9 @@ const client = mqtt.connect('mqtt://127.0.0.1', {
  * message составляется следующим образом: 1 или 0
  * в ответ от устройства должно прийти сообщение confirmationOfSwitch
  *
- * confirmationOfSwitch - подтвеждение вкл/выкл механизма
- * message составляется следующим образом: relayId:state
+ * confirmationOfSwitch - подтвеждение вкл/выкл механизма и передача состояния всего кластера
+ * message составляется следующим образом:
+ * first_sensorId:sensor_value||second_sensorId:sensor_value||...||last_sensorId:sensor_value
  */
 
 
@@ -43,9 +44,7 @@ client.on('message', function(topic, message) {
       updateSensorData(topic.split(separators.pair)[1], message.toString());
       break;
     case topic === 'confirmationOfSwitch':
-      const data = message.toString();
-      const [id, state] = data.split(separators.sensorData);
-      confirmationSwitch(id, state);
+      updateClusterData(topic.split(separators.pair)[1], message.toString());
       break;
     default:
       const date = new Date();

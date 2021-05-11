@@ -1,6 +1,10 @@
+const EventEmitter = require('events');
 const { Data } = require('../models/data');
 const { Config: { separators } } = require('../config/config');
 
+
+class MqttEmitter extends EventEmitter {}
+const mqttEmitter = new MqttEmitter();
 
 function updateClusterData(clusterId, body) {
   const datetime = new Date().getTime();
@@ -17,7 +21,9 @@ function updateClusterData(clusterId, body) {
 
   Promise
     .all(promises)
-    .then(res => console.log('done', res))
+    .then(res => {
+      mqttEmitter.emit('clusterUpdated', res);
+    })
     .catch(err => console.error(err));
 }
 
@@ -29,4 +35,4 @@ function confirmationSwitch(relayId, body) {
 
 }
 
-module.exports = { updateClusterData, updateSensorData, confirmationSwitch };
+module.exports = { updateClusterData, updateSensorData, confirmationSwitch, mqttEmitter };

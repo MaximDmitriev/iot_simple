@@ -43,7 +43,18 @@ export const useStyles = makeStyles(theme => ({
   displayName: {
     display: 'flex',
     height: '100%',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    flexDirection: 'column',
+  },
+  name: {
+    display: 'flex',
+  },
+  status: {
+    display: 'flex',
+  },
+  statusText: {
+    marginLeft: '7px',
   },
   titleMock: {
     minWidth: '100px',

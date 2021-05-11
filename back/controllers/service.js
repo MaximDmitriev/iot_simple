@@ -5,6 +5,7 @@ const { Relays } = require('../models/sensors');
 const { Devices } = require('../models/devices');
 const { Data } = require('../models/data');
 const { switchRelay } = require('../mqtt/index');
+const { mqttEmitter } = require('../mqtt/controllers');
 
 const router = express.Router();
 
@@ -100,10 +101,12 @@ router.post('/get_sensor_data', (req, res) => {
 });
 
 router.post('/switch', (req, res) => {
-  if (req.body.id && req.body.state) {
+  if (req.body.id && (req.body.state || req.body.state === 0)) {
     switchRelay(req.body.id, req.body.state);
-    res.status(200);
-    res.send(JSON.stringify({ message: 'Устройство переключено' }));
+    mqttEmitter.once('clusterUpdated', (data) => {
+      res.status(200);
+      res.send(JSON.stringify({ ...data, message: 'Устройство переключено' }));
+    });
   } else {
     res.status(405);
     res.send(JSON.stringify({ message: 'Не указан id механизма или его статус' }));

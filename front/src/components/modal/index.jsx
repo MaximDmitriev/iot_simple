@@ -1,14 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
-import AppBar from '@material-ui/core/AppBar';
 import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { WidgetContainer } from '../widgets';
 import { useSnackbar } from 'notistack';
 import { PopupComponent } from '../popup';
+import { ModalHeader } from './modal-header';
 import dayjs from 'dayjs';
 import { fetchService } from '../../services/fetchData';
 import { getSuccessMessage, getErrorMessage, createBody, defineMethod, updateSensors } from './utils';
@@ -130,11 +129,6 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
     });
   };
 
-  const switchRelay = () => {
-    const body = { id: data.sensorId, state: 1 };
-    fetchService.data(body).switchRelay();
-  };
-
 
   return (
     <div>
@@ -150,40 +144,16 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
       >
         <Slide direction='down' in={show} mountOnEnter unmountOnExit>
           <div className={classes.container}>
-            <AppBar position='static' className={classes.appbar}>
-              <div className={classes.displayName}>
-                <Typography className={classes.title}>
-                  {title}:
-                </Typography>
-                <Typography className={classes.title}>
-                  {status === 'loading' || status ==='error'
-                    ? <Skeleton variant='text' className={classes.titleMock}/>
-                    : mode === 'update' ? `${data[titleField]} ${data.sensorId || data.deviceId || ''}` : ''}
-                </Typography>
-              </div>
-              <div className={classes.btnGroup}>
-                {mode === 'update' && tableName === 'relays'
-                  ? <Button variant='contained' color='primary' onClick={switchRelay}>Включить</Button>
-                  : null}
-                {mode === 'update'
-                  ? <Button
-                    variant='contained'
-                    color='secondary'
-                    className={classes.headerBtn}
-                    onClick={openPopup}
-                  >
-                    Удалить запись
-                  </Button>
-                  : null}
-                <Button
-                  variant='contained'
-                  className={classes.headerBtn}
-                  onClick={() => changeRecord(mode)}
-                >
-                  {mode === 'update' ? 'Сохранить' : 'Создать'}
-                </Button>
-              </div>
-            </AppBar>
+            <ModalHeader
+              data={data}
+              status={status}
+              title={title}
+              mode={mode}
+              titleField={titleField}
+              tableName={tableName}
+              openPopup={openPopup}
+              changeRecord={changeRecord}
+            />
             <div className={classes.grid} style={{ height: height + 'px' }}>
               {formDefinition.map((cell, idx) => {
                 return (
