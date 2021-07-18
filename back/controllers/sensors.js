@@ -2,13 +2,12 @@ const express = require('express');
 const { Definition } = require('../models/definitions');
 const { Sensors } = require('../models/sensors');
 const { Data } = require('../models/data');
-const { getAllRecords, configResponse } = require('./utils');
+const { getAllRecords } = require('./utils');
 
 const router = express.Router();
 
 router.get('/', getAllRecords);
 router.post('/create', (req, res) => {
-  configResponse(res);
   Sensors.create(req.body)
     .then(user => {
       res.json(user);
@@ -22,7 +21,6 @@ router.post('/create', (req, res) => {
 router.get('/:id', (req, res) => {
   Sensors.findOne({ _id: req.params.id })
     .then(data => {
-      configResponse(res);
       Data.find({ sensorId: data.sensorId }).sort({ datetime: -1 }).limit(1)
         .then(sensor => {
           const value = sensor.length ? sensor[0].value : null;
@@ -37,7 +35,6 @@ router.get('/:id', (req, res) => {
 router.delete('/delete', (req, res) => {
   Sensors.findByIdAndDelete(req.body.id)
     .then(data => {
-      configResponse(res);
       res.json(data);
     })
     .catch(err => console.log(err));
@@ -46,7 +43,6 @@ router.delete('/delete', (req, res) => {
 router.put('/update', (req, res) => {
   Sensors.findByIdAndUpdate(req.body.id, req.body.fields)
     .then(data => {
-      configResponse(res);
       res.json(data);
     })
     .catch(err => console.log(err));

@@ -9,6 +9,7 @@ import dayjsUtils from '@date-io/dayjs';
 
 import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
+import { getCookieSecurity } from './services/common';
 
 
 const useStyles = makeStyles(theme => ({
@@ -36,10 +37,11 @@ function ProvideAuth({ children }) {
 
 function PrivateRoute({ children, ...rest }) {
   const auth = useAuth();
+  const token = auth.user?.token || getCookieSecurity();
   return (
     <Route
       {...rest}
-      render={({ location }) => auth.user
+      render={({ location }) => token
         ? children
         : <Redirect to={{ pathname: '/login', state: { from: location } }} />}
     />

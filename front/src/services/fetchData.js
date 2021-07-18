@@ -1,5 +1,7 @@
+import { getCookieSecurity } from './common';
+
 class FetchData {
-  #baseurl = 'http://127.0.0.1:3001/json/';
+  #baseurl = 'http://backend.app.localhost:3001/json/';
   #url = '';
   #body = {};
   #method = 'GET';
@@ -14,19 +16,27 @@ class FetchData {
     const request = {
       cache: 'no-cache',
       method: this.#method,
+      credentials: 'include',
+      mode: 'cors',
+    };
+    request.headers = {
+      'Content-Type': 'application/json;charset=utf-8',
+      'X-AUTH': getCookieSecurity(),
     };
     if (this.#method !== 'GET') {
-      request.headers = {
-        'Content-Type': 'application/json;charset=utf-8',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': '*',
-        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type,Accept, Authortization',
-      };
       request.body = this.#body;
     }
     return fetch(this.#url, request)
       .then(res => res.json())
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  logIn() {
+    this.#method = 'POST';
+    this.#url = this.#baseurl + 'login';
+    return this.#_send();
   }
 
   getReport(tableName) {

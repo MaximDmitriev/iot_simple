@@ -1,36 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Navbar } from '../components/navbar';
+import Navbar from '../components/navbar';
 import { Paper, Typography } from '@material-ui/core';
 import { ReportContainer } from '../components/report-container';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '../App';
+import { getCookie } from '../services/common';
+import { roots } from '../services/constants';
 
 import { useStyles } from './style/main-style';
-
-
-const reportsList = [
-  { url: 'users', name: 'Пользователи' },
-  { url: 'sensors', name: 'Датчики' },
-  { url: 'relays', name: 'Исполнительные механизмы' },
-  { url: 'devices', name: 'Устройства' },
-  { url: 'dashboards', name: 'Дашборды' },
-];
 
 
 export const MainPage = () => {
   const classes = useStyles();
   const location = useLocation();
+  const auth = useAuth();
+  const userCookie = getCookie('current_user');
+  const user = userCookie ? JSON.parse(userCookie) : auth.user;
 
   const [report, setReport] = useState({
     type: 'start',
     name: 'Основная панель',
   });
 
-  const chooseReport = item => {
-    const currentReport = reportsList.find(r => r.url === item);
-    if (currentReport) {
-      setReport({ type: currentReport.url, name: currentReport.name });
-    }
-  };
   useEffect(() => {
     const restUrl = location.pathname.split('/');
     if (restUrl[1] === 'report' && restUrl[2]) {
@@ -38,8 +29,11 @@ export const MainPage = () => {
     }
   }, []);
 
-  const onSelectItem = item => {
-    chooseReport(item);
+  const chooseReport = item => {
+    const currentReport = roots.find(r => r.url === item);
+    if (currentReport) {
+      setReport({ type: currentReport.url, name: currentReport.name });
+    }
   };
 
 
@@ -48,9 +42,8 @@ export const MainPage = () => {
       <Navbar
         title={report.name}
         showBtn
-        userName="Максим Дмитриев"
-        reports={reportsList}
-        onSelectItem={item => onSelectItem(item)}
+        onSelectItem={chooseReport}
+        name={user.name || user.username || ''}
       />
       {report.type === 'start'
         ? (

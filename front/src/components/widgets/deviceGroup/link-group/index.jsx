@@ -16,6 +16,7 @@ const LinkElement = ({ el, definition, updateData }) => {
     </div>
   );
 };
+const MemoLinkElement = React.memo(LinkElement);
 
 export const LinkGroup = ({ contents, definition, updateData }) => {
   const classes = useStyles();
@@ -26,7 +27,7 @@ export const LinkGroup = ({ contents, definition, updateData }) => {
         {contents && contents.map(el => {
           return (
             <li className={classes.listItem} key={el}>
-              <LinkElement el={el} definition={definition} updateData={updateData}/>
+              <MemoLinkElement el={el} definition={definition} updateData={updateData}/>
             </li>
           );
         })}

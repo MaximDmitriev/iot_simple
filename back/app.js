@@ -4,9 +4,10 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-const favicon = require('serve-favicon');
 const config = require('./config');
-const cors = require('cors');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const mongoose = require('./lib/mongoose');
 require('./mqtt/index');
 
 const users = require('./controllers/users');
@@ -14,19 +15,46 @@ const sensors = require('./controllers/sensors');
 const relays = require('./controllers/relays');
 const devices = require('./controllers/devices');
 const service = require('./controllers/service');
+const login = require('./controllers/login');
 
 
 const app = express();
 
 app.set('port', config.get('port'));
-app.use(cors());
 
-// app.use(favicon());
 app.use(morgan('combined'));
-// app.use(bodyParser.text({ type: 'text/html' }));
-// app.use(cookieParser());
+app.use(cookieParser());
 app.use(bodyParser.json({ type: 'application/json' }));
 
+app.use(session({
+  secret: config.get('session:secret'),
+  key: config.get('session:key'),
+  name: 'cid',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+    maxAge: 2000000,
+    domain: '.app.localhost',
+    path: '/',
+    sameSite: 'None',
+  },
+  store: MongoStore.create({
+    client: mongoose.connection.getClient(),
+    ttl: 24 * 60 * 60,
+  }),
+}));
+
+app.use((req, res, next) => {
+  res.set('Access-Control-Allow-Credentials', 'true');
+  res.set('Access-Control-Allow-Headers', config.get('headers'));
+  res.set('Access-Control-Allow-Methods', config.get('methods'));
+  res.set('Access-Control-Allow-Origin', 'http://frontend.app.localhost:3000');
+  next();
+});
+
+app.use('/json/login', login);
 app.use('/json/users', users);
 app.use('/json/sensors', sensors);
 app.use('/json/relays', relays);

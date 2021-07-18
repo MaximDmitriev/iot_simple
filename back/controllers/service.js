@@ -103,7 +103,7 @@ router.post('/get_sensor_data', (req, res) => {
 router.post('/switch', (req, res) => {
   if (req.body.id && (req.body.state || req.body.state === 0)) {
     switchRelay(req.body.id, req.body.state);
-    mqttEmitter.once('clusterUpdated', (data) => {
+    mqttEmitter.once('clusterUpdated', data => {
       res.status(200);
       res.send(JSON.stringify({ ...data, message: 'Устройство переключено' }));
     });

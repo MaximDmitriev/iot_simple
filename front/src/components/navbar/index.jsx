@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton, Typography, Button, Menu, MenuItem, Fade } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import { roots } from '../../services/constants';
+import { getCookie } from '../../services/common';
+import { useAuth } from '../../App';
 
 import { useStyles } from './style';
 
 
-export const Navbar = ({ title, showBtn, userName, reports, onSelectItem }) => {
+const Navbar = ({ title, showBtn, onSelectItem, name }) => {
   const classes = useStyles();
+  const auth = useAuth();
 
   const [anchorEls, setAnchorEls] = useState({
     login: null,
@@ -18,14 +22,16 @@ export const Navbar = ({ title, showBtn, userName, reports, onSelectItem }) => {
     setAnchorEls({ ...anchorEls, [name]: event.currentTarget });
   };
 
-  const handleClose = name => () => {
-    setAnchorEls({ ...anchorEls, [name]: null });
-  };
-
   const handleItem = (event, name) => {
     onSelectItem(event.target.dataset.type);
     handleClose(name)();
   };
+
+  const handleClose = name => () => {
+    setAnchorEls({ ...anchorEls, [name]: null });
+  };
+
+  const logOut = () => auth.signOut();
 
   return (
     <AppBar position="static" className={classes.root}>
@@ -47,7 +53,7 @@ export const Navbar = ({ title, showBtn, userName, reports, onSelectItem }) => {
             onClose={handleClose('reports')}
             TransitionComponent={Fade}
           >
-            {reports && reports.map(item => {
+            {roots.map(item => {
               return (
                 <Link to={`/report/${item.url}`} key={item.url}>
                   <MenuItem data-type={item.url} onClick={e => handleItem(e, 'reports')}>{item.name}</MenuItem>
@@ -63,7 +69,7 @@ export const Navbar = ({ title, showBtn, userName, reports, onSelectItem }) => {
         {showBtn
           ? (
             <Button color="inherit" aria-controls="login-menu" aria-haspopup="true" onClick={handleClick('login')}>
-              {userName}
+              {name}
             </Button>)
           : null}
         <Menu
@@ -75,13 +81,12 @@ export const Navbar = ({ title, showBtn, userName, reports, onSelectItem }) => {
           TransitionComponent={Fade}
         >
           <MenuItem data-type="account" onClick={e => handleItem(e, 'login')}>Аккаунт</MenuItem>
-          <MenuItem data-type="logout" onClick={e => handleItem(e, 'login')}>
-            <Link to="/login">
-              Выйти
-            </Link>
-          </MenuItem>
+          <MenuItem data-type="logout" onClick={logOut}>Выйти</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
   );
 };
+
+export default React.memo(Navbar);
+// export default Navbar;

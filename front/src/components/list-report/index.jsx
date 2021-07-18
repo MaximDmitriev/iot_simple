@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { formatData, getColumns, getFormDefinition } from './utils';
 import { localeText } from './list-localization';
@@ -8,7 +8,11 @@ import LibraryAdd from '@material-ui/icons/LibraryAdd';
 
 import { useStyles } from './style';
 
-
+/**
+ * - создание компонента
+ * - null вместо update
+ */
+// создать контейнер для логики
 export const ListReport = ({ data, metadata, update }) => {
   const classes = useStyles();
 
@@ -18,15 +22,15 @@ export const ListReport = ({ data, metadata, update }) => {
 
   const [modalParams, setModalParams] = useState({ open: false, mode: 'update', id: null });
 
-  const onClickHandler = e => {
+  const onClickHandler = useCallback(e => {
     const id = e.getValue('id');
     setModalParams({ open: true, mode: 'update', id });
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setModalParams({ open: false, mode: 'update', id: null });
     update();
-  };
+  }, []);
 
   const createRecord = () => {
     setModalParams({ open: true, mode: 'create', id: null });
@@ -52,7 +56,7 @@ export const ListReport = ({ data, metadata, update }) => {
         autoHeight
         disableSelectionOnClick
         localeText={localeText}
-        onRowClick={e => onClickHandler(e)}
+        onRowClick={onClickHandler}
       />
       <ModalWrapper
         show={modalParams.open}

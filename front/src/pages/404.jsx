@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Paper, Typography } from '@material-ui/core';
-import { Navbar } from '../components/navbar';
+import Navbar from '../components/navbar';
 import { useStyles } from './style/404-style';
 
 
