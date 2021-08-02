@@ -16,32 +16,31 @@ export function getCookieSecurity() {
 
 // options.expires время жизни Cookie в миллисекундах
 export function setCookie(name, value, options) {
-  // options = options || {};
-  //
-  // let expires = options.expires || dayjs(new Date()).add(7, 'day').unix();
-  // if (typeof expires == 'number' && expires) {
-  //   const d = new Date();
-  //   d.setTime(d.getTime() + expires);
-  //   expires = options.expires = d;
-  // }
-  // if (expires && expires.toUTCString) {
-  //   options.expires = expires.toUTCString();
-  // }
-  //
-  // value = encodeURIComponent(value);
-  //
-  // let updatedCookie = name + (document.location.port ? '_' : '') + document.location.port + '=' + value;
-  //
-  // // eslint-disable-next-line guard-for-in
-  // for (const propName in options) {
-  //   updatedCookie += '; ' + propName;
-  //   const propValue = options[propName];
-  //   if (propValue !== true) {
-  //     updatedCookie += '=' + propValue;
-  //   }
-  // }
-  // // console.log(updatedCookie);
-  // document.cookie = updatedCookie;
+  options = options || {};
+
+  let expires = options.expires || dayjs(new Date()).add(7, 'day').unix();
+  if (typeof expires == 'number' && expires) {
+    const d = new Date();
+    d.setTime(d.getTime() + expires);
+    expires = options.expires = d;
+  }
+  if (expires && expires.toUTCString) {
+    options.expires = expires.toUTCString();
+  }
+
+  value = encodeURIComponent(value);
+
+  let updatedCookie = name + (document.location.port ? '_' : '') + document.location.port + '=' + value;
+
+  // eslint-disable-next-line guard-for-in
+  for (const propName in options) {
+    updatedCookie += '; ' + propName;
+    const propValue = options[propName];
+    if (propValue !== true) {
+      updatedCookie += '=' + propValue;
+    }
+  }
+  document.cookie = updatedCookie;
 }
 
 export function deleteCookie(name) {

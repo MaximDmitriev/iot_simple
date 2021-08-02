@@ -8,6 +8,7 @@ const config = require('./config');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const mongoose = require('./lib/mongoose');
+const { authCache } = require('./services/cache');
 require('./mqtt/index');
 
 const users = require('./controllers/users');
@@ -50,8 +51,20 @@ app.use((req, res, next) => {
   res.set('Access-Control-Allow-Credentials', 'true');
   res.set('Access-Control-Allow-Headers', config.get('headers'));
   res.set('Access-Control-Allow-Methods', config.get('methods'));
-  res.set('Access-Control-Allow-Origin', 'http://frontend.app.localhost:3000');
+  res.set('Access-Control-Allow-Origin', config.get('frontend'));
   next();
+});
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS' || req.path.includes('login')) {
+    next();
+  } else {
+    if (authCache.isSessionExisted(req.headers['x-auth'])) {
+      next();
+    } else {
+      res.status(401);
+      res.json(JSON.stringify({ message: 'Требуется авторизация' }));
+    }
+  }
 });
 
 app.use('/json/login', login);

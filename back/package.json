@@ -41,7 +41,7 @@
       ],
       "linebreak-style": "off",
       "operator-linebreak": "off",
-      "require-jsdoc": "warn",
+      "require-jsdoc": "off",
       "indent": [
         "error",
         2,

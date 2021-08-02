@@ -54,9 +54,9 @@ export const LoginPage = () => {
       ({ message, token, username, login, role }) => {
         if (!token && message) enqueueSnackbar(message, { variant: 'error', autoHideDuration: 8000 });
         if (token) {
-          history.replace(from);
           setCookie('security_token', token);
           setCookie('current_user', JSON.stringify({ username, login, role }));
+          history.replace(from);
         }
       });
   };

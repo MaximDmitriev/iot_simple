@@ -1,7 +1,8 @@
 import { getCookieSecurity } from './common';
 
 class FetchData {
-  #baseurl = 'http://backend.app.localhost:3001/json/';
+  // #baseurl = 'http://backend.app.localhost:3001/json/';
+  #baseurl = window.settings.host;
   #url = '';
   #body = {};
   #method = 'GET';
@@ -27,7 +28,9 @@ class FetchData {
       request.body = this.#body;
     }
     return fetch(this.#url, request)
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok && res.status === 200) return res.json();
+      })
       .catch(err => {
         console.log(err);
       });
@@ -36,6 +39,12 @@ class FetchData {
   logIn() {
     this.#method = 'POST';
     this.#url = this.#baseurl + 'login';
+    return this.#_send();
+  }
+
+  logOut() {
+    this.#method = 'POST';
+    this.#url = this.#baseurl + 'login/out';
     return this.#_send();
   }
 

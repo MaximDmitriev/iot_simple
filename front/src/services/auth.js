@@ -16,6 +16,10 @@ const auth = {
   },
   signOut(cb) {
     cb();
+    fetchService
+      .data({})
+      .logOut()
+      .catch(err => console.error(err));
   },
 };
 
@@ -39,7 +43,6 @@ export function useProvideAuth() {
 
   const signOut = () => {
     return auth.signOut(() => {
-      console.log('logout');
       setUser({});
       deleteCookieSecurity();
       deleteCookie('current_user');

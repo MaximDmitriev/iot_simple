@@ -31,8 +31,6 @@ const Navbar = ({ title, showBtn, onSelectItem, name }) => {
     setAnchorEls({ ...anchorEls, [name]: null });
   };
 
-  const logOut = () => auth.signOut();
-
   return (
     <AppBar position="static" className={classes.root}>
       <Toolbar>
@@ -81,7 +79,7 @@ const Navbar = ({ title, showBtn, onSelectItem, name }) => {
           TransitionComponent={Fade}
         >
           <MenuItem data-type="account" onClick={e => handleItem(e, 'login')}>Аккаунт</MenuItem>
-          <MenuItem data-type="logout" onClick={logOut}>Выйти</MenuItem>
+          <MenuItem data-type="logout" onClick={auth.signOut}>Выйти</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
