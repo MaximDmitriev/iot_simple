@@ -76,44 +76,7 @@ router.post('/', (req, res) => {
   })();
 });
 
-
 function generateAccessToken(username) {
   return jwt.sign({ name: username }, ACCESS_TOKEN_SECRET, { expiresIn: 60 * 60 * 2 });
   // return jwt.sign({ name: username }, ACCESS_TOKEN_SECRET);
 }
-
-
-// router.post('/', (req, res) => {
-//   User
-//     .findOne({ login: req.body.login })
-//     .then(user => {
-//       console.log(user)
-//       if (user.checkPassword(req.body.password)) {
-//         req.session.user = user.id;
-//         const userData = {
-//           username: user.username,
-//           login: user.login,
-//           role: user.role,
-//         };
-//         authCache.createUser({ user: userData, token: req.session.id });
-//         res.send({
-//           ...userData,
-//           token: req.session.id,
-//         });
-//       } else {
-//         res.status(403);
-//         res.json(JSON.stringify({ message: errorMessage }));
-//       }
-//     })
-//     .catch(err => {
-//       res.status(403);
-//       res.json(JSON.stringify({ message: errorMessage, err }));
-//     });
-// });
-
-// router.post('/out', (req, res) => {
-//   authCache.deleteUser();
-//   res.status(200);
-//   res.json({});
-// });
-

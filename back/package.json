@@ -32,6 +32,7 @@
     "eslint": "^7.23.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-node": "^11.1.0",
+    "prettier": "file:prettier",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },

@@ -75,7 +75,7 @@ const schema = new Schema(
   },
   {
     toJSON: {
-      transform: function(doc, ret, options) {
+      transform: function (doc, ret, options) {
         ret.id = ret._id;
         delete ret._id;
         return ret;
@@ -83,13 +83,14 @@ const schema = new Schema(
       versionKey: false,
     },
     toObject: {
-      transform: function(doc, ret, options) {
+      transform: function (doc, ret, options) {
         ret.id = ret._id;
         delete ret._id;
         return ret;
       },
       versionKey: false,
     },
-  });
+  }
+);
 
 export const Definition = mongoose.model('Definition', schema);

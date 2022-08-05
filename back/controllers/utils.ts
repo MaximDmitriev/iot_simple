@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { Devices, Definition, Relays, Sensors, Table, User } from '../models';
 
-
 export function getAllRecords(req, res) {
   const name = req.baseUrl.split('/')[2];
   const metadata = Table.findOne({ tablename: name }).populate('definition');

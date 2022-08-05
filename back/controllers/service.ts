@@ -6,7 +6,6 @@ import { switchRelay } from '../mqtt';
 import { mqttEmitter } from '../mqtt/controllers';
 
 export const router = express.Router();
-
 const { separators } = Config;
 
 /** возвращает датчики и исполнительные механизмы, непривязанные к устройствам */
@@ -15,7 +14,7 @@ router.get('/get_free_sensors', (req, res) => {
   const relays = Relays.find({ clusterId: { $in: [undefined, ''] } });
   Promise.all([sensors, relays])
     .then(doc => {
-      const data = [...doc[0], ...doc[1]].map(s => (`${s.sensorname} (${s.sensorId})${separators.pair}${s.sensorId}`));
+      const data = [...doc[0], ...doc[1]].map(s => `${s.sensorname} (${s.sensorId})${separators.pair}${s.sensorId}`);
       res.send(JSON.stringify(data));
     })
     .catch(err => console.log(err));
@@ -27,26 +26,25 @@ router.get('/get_free_sensors', (req, res) => {
  */
 router.post('/set_cluster_sensors', (req, res) => {
   // @TODO оптимизировать апдейты, возможно через pre() post()
-  Devices.findOne({ clusterId: req.body.cluster })
-    .then(doc => {
-      const ids = doc.content ? doc.content.map(id => id.split(separators.pair)[1]) : [];
-      const index2delete = ids.filter(id => !req.body.ids.includes(id));
-      if (index2delete.length) {
-        Sensors.updateMany({ sensorId: { $in: index2delete } }, { clusterId: undefined }, (err, result) => {
-          console.log(result);
-        });
-        Relays.updateMany({ sensorId: { $in: index2delete } }, { clusterId: undefined }, (err, result) => {
-          console.log(result);
-        });
-      }
-      Sensors.updateMany({ sensorId: { $in: req.body.ids } }, { clusterId: req.body.cluster }, (err, result) => {
+  Devices.findOne({ clusterId: req.body.cluster }).then(doc => {
+    const ids = doc.content ? doc.content.map(id => id.split(separators.pair)[1]) : [];
+    const index2delete = ids.filter(id => !req.body.ids.includes(id));
+    if (index2delete.length) {
+      Sensors.updateMany({ sensorId: { $in: index2delete } }, { clusterId: undefined }, (err, result) => {
         console.log(result);
       });
-      Relays.updateMany({ sensorId: { $in: req.body.ids } }, { clusterId: req.body.cluster }, (err, result) => {
+      Relays.updateMany({ sensorId: { $in: index2delete } }, { clusterId: undefined }, (err, result) => {
         console.log(result);
       });
-      res.send(JSON.stringify(index2delete));
+    }
+    Sensors.updateMany({ sensorId: { $in: req.body.ids } }, { clusterId: req.body.cluster }, (err, result) => {
+      console.log(result);
     });
+    Relays.updateMany({ sensorId: { $in: req.body.ids } }, { clusterId: req.body.cluster }, (err, result) => {
+      console.log(result);
+    });
+    res.send(JSON.stringify(index2delete));
+  });
 });
 
 /**
@@ -71,8 +69,7 @@ router.post('/get_sensor_data', (req, res) => {
     res.send({ message: 'Некорректный запрос данных' });
   }
   if (req.body.type === 'sensor') {
-    Data
-      .find({ sensorId: req.body.id })
+    Data.find({ sensorId: req.body.id })
       .sort({ datetime: -1 })
       .limit(1)
       .then(data => res.send(JSON.stringify(data)))
@@ -87,8 +84,7 @@ router.post('/get_sensor_data', (req, res) => {
         res.status(500);
         res.send(JSON.stringify({ message: 'Ошибка БД', error }));
       }
-      Data
-        .find({ clusterId: req.body.id })
+      Data.find({ clusterId: req.body.id })
         .sort({ datetime: -1 })
         .limit(device.content.length)
         .then(data => res.send(JSON.stringify(data)))

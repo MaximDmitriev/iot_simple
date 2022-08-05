@@ -1,4 +1,5 @@
-const ONE_DAY = 1000*60*60*24;
+// @ts-nocheck
+const ONE_DAY = 1000 * 60 * 60 * 24;
 
 class AuthCache {
   constructor() {
@@ -31,4 +32,3 @@ class AuthCache {
 }
 
 export const authCache = new AuthCache();
-

@@ -3,7 +3,6 @@ import { Definition, User } from '../models';
 
 import { getAllRecords } from './utils';
 
-
 export const router = express.Router();
 
 router.get('/', getAllRecords);
@@ -43,4 +42,3 @@ router.put('/update', (req, res) => {
     })
     .catch(err => console.log(err));
 });
-

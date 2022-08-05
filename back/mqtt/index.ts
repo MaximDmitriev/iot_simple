@@ -10,7 +10,6 @@ export const client = mqtt.connect('mqtt://127.0.0.1', {
   password: '123',
 });
 
-
 /**
  * Возможные сообщения и их формат:
  *
@@ -34,8 +33,7 @@ export const client = mqtt.connect('mqtt://127.0.0.1', {
  * first_sensorId:sensor_value||second_sensorId:sensor_value||...||last_sensorId:sensor_value
  */
 
-
-client.on('message', function(topic, message) {
+client.on('message', function (topic, message) {
   switch (true) {
     case topic.indexOf('cluster') > -1:
       updateClusterData(topic.split(separators.pair)[1], message.toString());

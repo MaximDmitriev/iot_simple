@@ -1,6 +1,6 @@
 import express from 'express';
-import { Definition, Devices } from '../models';
 import { getAllRecords } from './utils';
+import { Definition, Devices } from '../models';
 
 export const router = express.Router();
 
@@ -38,4 +38,3 @@ router.put('/update', (req, res) => {
     })
     .catch(err => console.log(err));
 });
-

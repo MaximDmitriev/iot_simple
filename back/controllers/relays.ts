@@ -20,7 +20,9 @@ router.post('/create', (req, res) => {
 router.get('/:id', (req, res) => {
   Relays.findOne({ _id: req.params.id })
     .then(data => {
-      Data.find({ sensorId: data.sensorId }).sort({ datetime: -1 }).limit(1)
+      Data.find({ sensorId: data.sensorId })
+        .sort({ datetime: -1 })
+        .limit(1)
         .then(sensor => {
           const value = sensor.length ? sensor[0].value : null;
           // @TODO из-за методов toJson/ toObject модели не получается нормальным образом добавить поле state в объект
