@@ -1,0 +1,7 @@
+/front/.idea
+/front/node_modules
+
+/back/.idea
+/back/node_modules
+/back/createUser.js
+/back/settings.js
