@@ -1,6 +1,7 @@
+// @ts-nocheck
 import mqtt from 'mqtt';
-import { Config } from '../config/config.js';
-import { updateSensorData, updateClusterData } from './controllers.js';
+import { Config } from '../config/config.ts';
+import { updateSensorData, updateClusterData } from './controllers';
 
 const { separators } = Config;
 

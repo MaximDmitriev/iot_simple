@@ -1,6 +1,7 @@
+// @ts-nocheck
 import express from 'express';
 import { Data, Relays, Sensors, Devices } from '../models';
-import { Config } from '../config/config';
+import { Config } from '../config/config.ts';
 import { switchRelay } from '../mqtt';
 import { mqttEmitter } from '../mqtt/controllers';
 

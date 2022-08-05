@@ -1,4 +1,6 @@
 createUser.js
 /node_modules
 settings.js
+settings.ts
 .idea
+/build

@@ -1,8 +1,9 @@
+// @ts-nocheck
 import express from 'express';
 import { User } from '../models';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../settings.js';
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../settings';
 
 export const router = express.Router();
 const errorMessage = 'Неверное имя или пароль';

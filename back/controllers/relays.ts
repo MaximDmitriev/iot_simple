@@ -1,12 +1,13 @@
+// @ts-nocheck
 import express from 'express';
-import { Definition, Data, Sensors } from '../models';
+import { Definition, Data, Relays } from '../models';
 import { getAllRecords } from './utils';
 
 export const router = express.Router();
 
 router.get('/', getAllRecords);
 router.post('/create', (req, res) => {
-  Sensors.create(req.body)
+  Relays.create(req.body)
     .then(user => {
       res.json(user);
     })
@@ -17,7 +18,7 @@ router.post('/create', (req, res) => {
     });
 });
 router.get('/:id', (req, res) => {
-  Sensors.findOne({ _id: req.params.id })
+  Relays.findOne({ _id: req.params.id })
     .then(data => {
       Data.find({ sensorId: data.sensorId }).sort({ datetime: -1 }).limit(1)
         .then(sensor => {
@@ -31,7 +32,7 @@ router.get('/:id', (req, res) => {
     .catch(err => console.log(err));
 });
 router.delete('/delete', (req, res) => {
-  Sensors.findByIdAndDelete(req.body.id)
+  Relays.findByIdAndDelete(req.body.id)
     .then(data => {
       res.json(data);
     })
@@ -39,10 +40,9 @@ router.delete('/delete', (req, res) => {
 });
 
 router.put('/update', (req, res) => {
-  Sensors.findByIdAndUpdate(req.body.id, req.body.fields)
+  Relays.findByIdAndUpdate(req.body.id, req.body.fields)
     .then(data => {
       res.json(data);
     })
     .catch(err => console.log(err));
 });
-

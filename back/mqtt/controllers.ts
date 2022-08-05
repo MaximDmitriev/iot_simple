@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { EventEmitter } from 'events';
 import { Data } from '../models';
-import { Config } from '../config/config';
+import { Config } from '../config/config.ts';
 
 
 class MqttEmitter extends EventEmitter {}

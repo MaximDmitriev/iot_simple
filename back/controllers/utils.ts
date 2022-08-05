@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Devices, Definition, Relays, Sensors, Table, User } from '../models';
 
 
