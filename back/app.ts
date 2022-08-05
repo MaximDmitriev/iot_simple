@@ -1,10 +1,9 @@
-// @ts-nocheck
-import express from 'express';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
 import cors from 'cors';
+import express from 'express';
 import jwt from 'jsonwebtoken';
-import * as mqtt from './mqtt';
+import mongoose from 'mongoose';
+// import * as mqtt from './mqtt';
 
 import { users, login, devices, loginedUsers, sensors, relays, services } from './controllers';
 
@@ -12,15 +11,18 @@ function checkAuthToken(token) {
   // accepted refresh unauthorized
   if (token && !Array.isArray(token) && token !== 'undefined') {
     const res = jwt.decode(token, { json: true });
+
     if (res && res.name) {
       // const user = loginedUsers[res.name] || await User.findOne({ name: res.name });
       console.log(loginedUsers[res.name]);
     }
+
     return 'accepted';
-  } else {
-    return 'unauthorized';
   }
+
+  return 'unauthorized';
 }
+
 const app = express();
 
 app.set('port', 3001);
@@ -44,10 +46,11 @@ app.use(allowCrossDomain);
 app.use(bodyParser.json({ type: 'application/json' }));
 
 app.use((req, res, next) => {
-  if (req.url.indexOf('login') !== -1) {
+  if (req.url.includes('login')) {
     next();
   } else {
     const status = checkAuthToken(req.headers['x-auth']);
+
     if (status === 'accepted') {
       next();
     } else if ('refresh') {

@@ -1,8 +1,8 @@
-// @ts-nocheck
 import express from 'express';
-import { Definition, Data, Sensors } from '../models';
+import { Data, Sensors } from '../models';
 import { getAllRecords } from './utils';
 
+// eslint-disable-next-line new-cap
 export const router = express.Router();
 
 router.get('/', getAllRecords);
@@ -24,9 +24,10 @@ router.get('/:id', (req, res) => {
         .sort({ datetime: -1 })
         .limit(1)
         .then(sensor => {
-          const value = sensor.length ? sensor[0].value : null;
+          const value = sensor.length > 0 ? sensor[0].value : null;
           // @TODO из-за методов toJson/ toObject модели не получается нормальным образом добавить поле state в объект
           let body = JSON.stringify(data).slice(0, -1);
+
           body = body + `,"state":${value}}`;
           res.send(body);
         });

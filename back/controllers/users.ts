@@ -1,5 +1,5 @@
 import express from 'express';
-import { Definition, User } from '../models';
+import { User } from '../models';
 
 import { getAllRecords } from './utils';
 

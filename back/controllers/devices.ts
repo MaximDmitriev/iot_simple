@@ -1,7 +1,8 @@
 import express from 'express';
+import { Devices } from '../models';
 import { getAllRecords } from './utils';
-import { Definition, Devices } from '../models';
 
+// eslint-disable-next-line new-cap
 export const router = express.Router();
 
 router.get('/', getAllRecords);

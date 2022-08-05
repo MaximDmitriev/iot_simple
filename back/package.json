@@ -20,7 +20,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.1.2",
     "mongoose": "^6.5.1",
-    "mqtt": "^4.2.6"
+    "mqtt": "^4.2.6",
+    "eslint-plugin-unicorn": "29.0.0",
+    "eslint-plugin-jsdoc": "32.3.0",
+    "eslint-plugin-sonarjs": "0.6.0",
+    "eslint-plugin-prettier": "^4.2.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -31,58 +35,16 @@
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.23.0",
     "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-compat": "^4.0.2",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
-    "prettier": "file:prettier",
+    "prettier": "2.7.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
   "parserOptions": {
     "project": "tsconfig.json",
     "tsconfigRootDir": "."
-  },
-  "eslintConfig": {
-    "extends": [
-      "plugin:node/recommended",
-      "google"
-    ],
-    "rules": {
-      "object-curly-spacing": [
-        "error",
-        "always"
-      ],
-      "linebreak-style": "off",
-      "operator-linebreak": "off",
-      "require-jsdoc": "off",
-      "indent": [
-        "error",
-        2,
-        {
-          "SwitchCase": 1
-        }
-      ],
-      "arrow-parens": [
-        "warn",
-        "as-needed"
-      ],
-      "quote-props": [
-        "warn",
-        "consistent-as-needed"
-      ],
-      "max-len": [
-        "error",
-        120
-      ],
-      "no-invalid-this": "off",
-      "no-unused-vars": "warn",
-      "new-cap": [
-        "error",
-        {
-          "capIsNewExceptions": [
-            "Router"
-          ]
-        }
-      ],
-      "node/no-unsupported-features/es-syntax": "off"
-    }
   }
 }

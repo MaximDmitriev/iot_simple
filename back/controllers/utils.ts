@@ -1,10 +1,10 @@
-// @ts-nocheck
-import { Devices, Definition, Relays, Sensors, Table, User } from '../models';
+import { Devices, Relays, Sensors, Table, User } from '../models';
 
 export function getAllRecords(req, res) {
   const name = req.baseUrl.split('/')[2];
   const metadata = Table.findOne({ tablename: name }).populate('definition');
   let data;
+
   switch (name) {
     case 'devices':
       data = Devices.find({});
@@ -18,11 +18,14 @@ export function getAllRecords(req, res) {
     case 'users':
       data = User.find({});
       break;
+    default:
+      data = null;
   }
 
   Promise.all([metadata, data])
     .then(response => {
       const [metadata, data] = response;
+
       res.json({ metadata, data });
     })
     .catch(err => console.log(err));

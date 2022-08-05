@@ -1,14 +1,12 @@
-// @ts-nocheck
 import mongoose from 'mongoose';
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
-const transformId = () => {
-  return (doc, ret, options) => {
-    ret.id = ret._id;
-    delete ret._id;
-    return ret;
-  };
+const transformId = () => (doc, ret, options) => {
+  ret.id = ret._id;
+  delete ret._id;
+
+  return ret;
 };
 
 const columnsSchema = new Schema({
@@ -75,17 +73,19 @@ const schema = new Schema(
   },
   {
     toJSON: {
-      transform: function (doc, ret, options) {
+      transform(doc, ret, options) {
         ret.id = ret._id;
         delete ret._id;
+
         return ret;
       },
       versionKey: false,
     },
     toObject: {
-      transform: function (doc, ret, options) {
+      transform(doc, ret, options) {
         ret.id = ret._id;
         delete ret._id;
+
         return ret;
       },
       versionKey: false,

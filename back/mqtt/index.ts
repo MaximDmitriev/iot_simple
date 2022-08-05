@@ -1,4 +1,3 @@
-// @ts-nocheck
 import mqtt from 'mqtt';
 import { Config } from '../config/config.ts';
 import { updateSensorData, updateClusterData } from './controllers';
@@ -15,30 +14,30 @@ export const client = mqtt.connect('mqtt://127.0.0.1', {
  *
  * requestAllData - запрос данных со всех устройств,
  * запрос может быть как регулярный автоматический, так и пользовательский. В ответ все устроства должны ответить
- * сообщениями с топиком cluster$>$>$clusterId
+ * сообщениями с топиком cluster$>$>$clusterId.
  *
- * cluster$>$>$clusterId - текущие данные по всем датчикам и механизмам устройства с id == clusterId
+ * Cluster$>$>$clusterId - текущие данные по всем датчикам и механизмам устройства с id == clusterId
  * message составляется следующим образом:
- * first_sensorId:sensor_value||second_sensorId:sensor_value||...||last_sensorId:sensor_value
+ * first_sensorId:sensor_value||second_sensorId:sensor_value||...||last_sensorId:sensor_value.
  *
- * sensor$>$>$sensorId - текущие данные по датчику
- * message составляется следующим образом: sensorId:sensor_value
+ * Sensor$>$>$sensorId - текущие данные по датчику
+ * message составляется следующим образом: sensorId:sensor_value.
  *
- * switchRelay$>$>$relayId - вкл/выкл исполнительный механизм
+ * SwitchRelay$>$>$relayId - вкл/выкл исполнительный механизм
  * message составляется следующим образом: 1 или 0
- * в ответ от устройства должно прийти сообщение confirmationOfSwitch
+ * в ответ от устройства должно прийти сообщение confirmationOfSwitch.
  *
- * confirmationOfSwitch - подтвеждение вкл/выкл механизма и передача состояния всего кластера
+ * ConfirmationOfSwitch - подтвеждение вкл/выкл механизма и передача состояния всего кластера
  * message составляется следующим образом:
- * first_sensorId:sensor_value||second_sensorId:sensor_value||...||last_sensorId:sensor_value
+ * first_sensorId:sensor_value||second_sensorId:sensor_value||...||last_sensorId:sensor_value.
  */
 
-client.on('message', function (topic, message) {
+client.on('message', (topic, message) => {
   switch (true) {
-    case topic.indexOf('cluster') > -1:
+    case topic.includes('cluster'):
       updateClusterData(topic.split(separators.pair)[1], message.toString());
       break;
-    case topic.indexOf('sensor') > -1:
+    case topic.includes('sensor'):
       updateSensorData(topic.split(separators.pair)[1], message.toString());
       break;
     case topic === 'confirmationOfSwitch':
@@ -46,6 +45,7 @@ client.on('message', function (topic, message) {
       break;
     default:
       const date = new Date();
+
       console.log(topic, message.toString(), date.toLocaleString());
   }
 });

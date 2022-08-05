@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const schema = new Schema(
   {
@@ -35,17 +35,19 @@ const schema = new Schema(
   },
   {
     toJSON: {
-      transform: function (doc, ret) {
+      transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
+
         return ret;
       },
       versionKey: false,
     },
     toObject: {
-      transform: function (doc, ret) {
+      transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
+
         return ret;
       },
       versionKey: false,

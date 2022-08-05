@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { EventEmitter } from 'events';
-import { Data } from '../models';
 import { Config } from '../config/config.ts';
+import { Data } from '../models';
 
 class MqttEmitter extends EventEmitter {}
 export const mqttEmitter = new MqttEmitter();
@@ -9,15 +8,14 @@ export const mqttEmitter = new MqttEmitter();
 const { separators } = Config;
 
 export function updateClusterData(clusterId, body) {
-  const datetime = new Date().getTime();
+  const datetime = Date.now();
   const data = body.split(separators.item).reduce((acc, item) => {
     const [name, value] = item.split(separators.sensorData);
+
     return { ...acc, [name]: value };
   }, {});
 
-  const promises = Object.entries(data).map(([sensorId, value]) => {
-    return Data.create({ datetime, sensorId, value, clusterId });
-  });
+  const promises = Object.entries(data).map(([sensorId, value]) => Data.create({ datetime, sensorId, value, clusterId }));
 
   Promise.all(promises)
     .then(res => {
