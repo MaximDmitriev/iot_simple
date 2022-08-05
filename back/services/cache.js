@@ -30,6 +30,5 @@ class AuthCache {
   }
 }
 
-const authCache = new AuthCache();
+export const authCache = new AuthCache();
 
-module.exports = { authCache };

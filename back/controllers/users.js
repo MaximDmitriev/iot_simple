@@ -1,11 +1,10 @@
-const express = require('express');
+import express from 'express';
+import { Definition, User } from '../models';
 
-const { Definition } = require('../models/definitions');
-const { User } = require('../models/user');
-const { getAllRecords } = require('./utils');
+import { getAllRecords } from './utils';
 
 
-const router = express.Router();
+export const router = express.Router();
 
 router.get('/', getAllRecords);
 
@@ -45,5 +44,3 @@ router.put('/update', (req, res) => {
     .catch(err => console.log(err));
 });
 
-
-module.exports = router;

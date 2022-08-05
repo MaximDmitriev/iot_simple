@@ -1,4 +1,4 @@
-exports.Config = {
+export const Config = {
   separators: {
     pair: '$>$>$',
     item: '||',

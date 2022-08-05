@@ -1,9 +1,8 @@
-const express = require('express');
-const { Definition } = require('../models/definitions');
-const { Devices } = require('../models/devices');
-const { getAllRecords } = require('./utils');
+import express from 'express';
+import { Definition, Devices } from '../models';
+import { getAllRecords } from './utils';
 
-const router = express.Router();
+export const router = express.Router();
 
 router.get('/', getAllRecords);
 router.post('/create', (req, res) => {
@@ -40,4 +39,3 @@ router.put('/update', (req, res) => {
     .catch(err => console.log(err));
 });
 
-module.exports = router;

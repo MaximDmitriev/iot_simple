@@ -1,80 +1,71 @@
-const express = require('express');
-const http = require('http');
-const path = require('path');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
-const config = require('./config');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const mongoose = require('./lib/mongoose');
-const { authCache } = require('./services/cache');
-require('./mqtt/index');
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import * as mqtt from './mqtt';
 
-const users = require('./controllers/users');
-const sensors = require('./controllers/sensors');
-const relays = require('./controllers/relays');
-const devices = require('./controllers/devices');
-const service = require('./controllers/service');
-const login = require('./controllers/login');
+import { users, login, devices, loginedUsers, sensors, relays, services } from './controllers';
 
 
+function checkAuthToken(token) { // accepted refresh unauthorized
+  if (token && !Array.isArray(token) && token !== 'undefined') {
+    const res = jwt.decode(token, { json: true });
+    if (res && res.name) {
+      // const user = loginedUsers[res.name] || await User.findOne({ name: res.name });
+      console.log(loginedUsers[res.name]);
+    }
+    return 'accepted';
+  } else {
+    return 'unauthorized';
+  }
+}
 const app = express();
 
-app.set('port', config.get('port'));
+app.set('port', 3001);
 
-app.use(morgan('combined'));
-app.use(cookieParser());
+mongoose.connect('mongodb://localhost:27017/iot_db', { dbName: 'iot_db' })
+  .then(() => console.log('mongo connected'))
+  .catch(err => console.error(err));
+
+app.use(cors());
+
+
+const allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  // res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+};
+
+app.use(allowCrossDomain);
+
 app.use(bodyParser.json({ type: 'application/json' }));
 
-app.use(session({
-  secret: config.get('session:secret'),
-  key: config.get('session:key'),
-  name: 'cid',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: false,
-    maxAge: 2000000,
-    domain: '.app.localhost',
-    path: '/',
-    sameSite: 'None',
-  },
-  store: MongoStore.create({
-    client: mongoose.connection.getClient(),
-    ttl: 24 * 60 * 60,
-  }),
-}));
 
-app.use((req, res, next) => {
-  res.set('Access-Control-Allow-Credentials', 'true');
-  res.set('Access-Control-Allow-Headers', config.get('headers'));
-  res.set('Access-Control-Allow-Methods', config.get('methods'));
-  res.set('Access-Control-Allow-Origin', config.get('frontend'));
-  next();
-});
-app.use((req, res, next) => {
-  if (req.method === 'OPTIONS' || req.path.includes('login')) {
+app.use(((req, res, next) => {
+  if (req.url.indexOf('login') !== -1) {
     next();
   } else {
-    if (authCache.isSessionExisted(req.headers['x-auth'])) {
+    const status = checkAuthToken(req.headers['x-auth']);
+    if (status === 'accepted') {
       next();
+    } else if ('refresh') {
+      res.status(406).send();
     } else {
-      res.status(401);
-      res.json(JSON.stringify({ message: 'Требуется авторизация' }));
+      res.status(401).json(JSON.stringify({ message: 'Требуется авторизация' }));
     }
   }
-});
+}));
 
 app.use('/json/login', login);
 app.use('/json/users', users);
 app.use('/json/sensors', sensors);
 app.use('/json/relays', relays);
 app.use('/json/devices', devices);
-app.use('/json/service', service);
+app.use('/json/service', services);
 
 
-app.listen(app.get('port'), () => {
+app.listen(3001, () => {
   console.log('server started');
 });

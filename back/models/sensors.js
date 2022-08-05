@@ -1,4 +1,4 @@
-const mongoose = require('../lib/mongoose');
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -50,5 +50,5 @@ const schema = new Schema({
   },
 });
 
-exports.Sensors = mongoose.model('Sensors', schema);
-exports.Relays = mongoose.model('Relays', schema);
+export const Sensors = mongoose.model('Sensors', schema);
+export const Relays = mongoose.model('Relays', schema);

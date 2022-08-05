@@ -1,4 +1,4 @@
-const mongoose = require('../lib/mongoose');
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -91,4 +91,4 @@ const schema = new Schema(
     },
   });
 
-exports.Deifnition = mongoose.model('Definition', schema);
+export const Definition = mongoose.model('Definition', schema);

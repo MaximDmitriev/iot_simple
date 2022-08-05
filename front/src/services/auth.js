@@ -9,8 +9,14 @@ const auth = {
       .data({ login, password })
       .logIn()
       .then(res => {
+        console.log(res);
         const response = typeof res === 'string' ? JSON.parse(res) : res;
-        cb(response);
+        cb({
+          token: response.auth.accessToken,
+          name: 'demo',
+          login: 'demo',
+          role: 'admin',
+        });
       })
       .catch(err => console.error(err));
   },

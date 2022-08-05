@@ -1,11 +1,10 @@
-const mqtt = require('mqtt');
-const config = require('../config');
-const { Config: { separators } } = require('../config/config');
-const { updateClusterData, updateSensorData, confirmationSwitch } = require('./controllers');
+import mqtt from 'mqtt';
+import { Config } from '../config/config.js';
+import { updateSensorData, updateClusterData } from './controllers.js';
 
-const timeout = config.get('timeout');
+const { separators } = Config;
 
-const client = mqtt.connect('mqtt://127.0.0.1', {
+export const client = mqtt.connect('mqtt://127.0.0.1', {
   username: 'server',
   password: '123',
 });
@@ -75,8 +74,6 @@ client.on('error', error => {
 //   client.publish(sensorId, `${count}`);
 // }
 
-function switchRelay(relayId, state) {
+export function switchRelay(relayId, state) {
   client.publish(`switchRelay${separators.pair}${relayId}`, state.toString());
 }
-
-module.exports = { client, switchRelay };

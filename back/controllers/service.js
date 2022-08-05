@@ -1,13 +1,12 @@
-const express = require('express');
-const { Config: { separators } } = require('../config/config');
-const { Sensors } = require('../models/sensors');
-const { Relays } = require('../models/sensors');
-const { Devices } = require('../models/devices');
-const { Data } = require('../models/data');
-const { switchRelay } = require('../mqtt/index');
-const { mqttEmitter } = require('../mqtt/controllers');
+import express from 'express';
+import { Data, Relays, Sensors, Devices } from '../models';
+import { Config } from '../config/config';
+import { switchRelay } from '../mqtt';
+import { mqttEmitter } from '../mqtt/controllers';
 
-const router = express.Router();
+export const router = express.Router();
+
+const { separators } = Config;
 
 /** возвращает датчики и исполнительные механизмы, непривязанные к устройствам */
 router.get('/get_free_sensors', (req, res) => {
@@ -112,5 +111,3 @@ router.post('/switch', (req, res) => {
     res.send(JSON.stringify({ message: 'Не указан id механизма или его статус' }));
   }
 });
-
-module.exports = router;

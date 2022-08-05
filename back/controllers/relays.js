@@ -1,10 +1,8 @@
-const express = require('express');
-const { Definition } = require('../models/definitions');
-const { Relays } = require('../models/sensors');
-const { Data } = require('../models/data');
-const { getAllRecords } = require('./utils');
+import express from 'express';
+import { Definition, Data, Relays } from '../models';
+import { getAllRecords } from './utils';
 
-const router = express.Router();
+export const router = express.Router();
 
 router.get('/', getAllRecords);
 router.post('/create', (req, res) => {
@@ -47,5 +45,3 @@ router.put('/update', (req, res) => {
     })
     .catch(err => console.log(err));
 });
-
-module.exports = router;

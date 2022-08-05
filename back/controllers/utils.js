@@ -1,12 +1,7 @@
-const { Definition } = require('../models/definitions');
-const { Devices } = require('../models/devices');
-const { Relays } = require('../models/sensors');
-const { Sensors } = require('../models/sensors');
-const { Table } = require('../models/tables');
-const { User } = require('../models/user');
+import { Devices, Definition, Relays, Sensors, Table, User } from '../models';
 
 
-function getAllRecords(req, res) {
+export function getAllRecords(req, res) {
   const name = req.baseUrl.split('/')[2];
   const metadata = Table.findOne({ tablename: name }).populate('definition');
   let data;
@@ -32,5 +27,3 @@ function getAllRecords(req, res) {
     })
     .catch(err => console.log(err));
 }
-
-module.exports = { getAllRecords };

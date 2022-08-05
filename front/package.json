@@ -36,14 +36,32 @@
       "google"
     ],
     "rules": {
-      "object-curly-spacing": ["error", "always"],
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
       "linebreak-style": "off",
       "operator-linebreak": "off",
       "require-jsdoc": "off",
-      "indent": ["error", 2, { "SwitchCase": 1 }],
-      "arrow-parens": ["warn", "as-needed"],
-      "quote-props": ["warn", "consistent-as-needed"],
-      "max-len": ["error", 120],
+      "indent": [
+        "error",
+        2,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "arrow-parens": [
+        "warn",
+        "as-needed"
+      ],
+      "quote-props": [
+        "warn",
+        "consistent-as-needed"
+      ],
+      "max-len": [
+        "error",
+        120
+      ],
       "no-invalid-this": "off",
       "no-unused-vars": "warn"
     }

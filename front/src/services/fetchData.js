@@ -2,7 +2,8 @@ import { getCookieSecurity } from './common';
 
 class FetchData {
   // #baseurl = 'http://backend.app.localhost:3001/json/';
-  #baseurl = window.settings.host;
+  #baseurl = 'http://localhost:3001/json/';
+  // #baseurl = window.settings.host;
   #url = '';
   #body = {};
   #method = 'GET';
@@ -17,13 +18,17 @@ class FetchData {
     const request = {
       cache: 'no-cache',
       method: this.#method,
-      credentials: 'include',
-      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        ['X-AUTH']: getCookieSecurity(),
+        ['Access-Control-Allow-Origin']: '*',
+        ['Access-Control-Allow-Methods']: '*',
+        ['Access-Control-Allow-Headers']: '*',
+        ['Accept']: 'application/json',
+        ['Content-Length']: '30',
+      },
     };
-    request.headers = {
-      'Content-Type': 'application/json;charset=utf-8',
-      'X-AUTH': getCookieSecurity(),
-    };
+
     if (this.#method !== 'GET') {
       request.body = this.#body;
     }

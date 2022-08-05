@@ -1,4 +1,4 @@
-const mongoose = require('../lib/mongoose');
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -39,4 +39,4 @@ const schema = new Schema({
   },
 });
 
-exports.Data = mongoose.model('Data', schema);
+export const Data = mongoose.model('Data', schema);

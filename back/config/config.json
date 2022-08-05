@@ -1,0 +1,14 @@
+{
+  "port": 3001,
+  "mongoose": {
+    "uri": "mongodb://localhost:27017/iot_db"
+  },
+  "timeout": 120000,
+  "session":  {
+    "secret": "IoTServiceApp",
+    "key": "cid"
+  },
+  "headers": "access-control-allow-credentials, x-auth, content-type, access-control-allow-origin, access-control-allow-headers, set-cookie",
+  "methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "frontend": "http://frontend.app.localhost"
+}

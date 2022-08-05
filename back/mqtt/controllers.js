@@ -1,12 +1,14 @@
-const EventEmitter = require('events');
-const { Data } = require('../models/data');
-const { Config: { separators } } = require('../config/config');
+import { EventEmitter } from 'events';
+import { Data } from '../models';
+import { Config } from '../config/config';
 
 
 class MqttEmitter extends EventEmitter {}
-const mqttEmitter = new MqttEmitter();
+export const mqttEmitter = new MqttEmitter();
 
-function updateClusterData(clusterId, body) {
+const { separators } = Config;
+
+export function updateClusterData(clusterId, body) {
   const datetime = new Date().getTime();
   const data = body
     .split(separators.item)
@@ -27,12 +29,10 @@ function updateClusterData(clusterId, body) {
     .catch(err => console.error(err));
 }
 
-function updateSensorData(sensorId, body) {
+export function updateSensorData(sensorId, body) {
   console.log(sensorId, body);
 }
 
-function confirmationSwitch(relayId, body) {
+export function confirmationSwitch(relayId, body) {
 
 }
-
-module.exports = { updateClusterData, updateSensorData, confirmationSwitch, mqttEmitter };
