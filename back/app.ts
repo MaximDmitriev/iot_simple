@@ -1,18 +1,20 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 // import * as mqtt from './mqtt';
 
-import { users, login, devices, loginedUsers, sensors, relays, services } from './controllers';
+import { users, login, boards, loginedUsers, sensors, relays, services } from './controllers';
 
-function checkAuthToken(token) {
+/** Проверка токена. */
+const checkAuthToken = (token?: string[] | string): string => {
   // accepted refresh unauthorized
   if (token && !Array.isArray(token) && token !== 'undefined') {
     const res = jwt.decode(token, { json: true });
 
-    if (res && res.name) {
+    if (res?.name) {
       // const user = loginedUsers[res.name] || await User.findOne({ name: res.name });
       console.log(loginedUsers[res.name]);
     }
@@ -21,7 +23,7 @@ function checkAuthToken(token) {
   }
 
   return 'unauthorized';
-}
+};
 
 const app = express();
 
@@ -34,7 +36,7 @@ mongoose
 
 app.use(cors());
 
-const allowCrossDomain = function (req, res, next) {
+const allowCrossDomain = (_, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Origin', '*');
   // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   // res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -45,7 +47,7 @@ app.use(allowCrossDomain);
 
 app.use(bodyParser.json({ type: 'application/json' }));
 
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   if (req.url.includes('login')) {
     next();
   } else {
@@ -53,7 +55,7 @@ app.use((req, res, next) => {
 
     if (status === 'accepted') {
       next();
-    } else if ('refresh') {
+    } else if (status === 'refresh') {
       res.status(406).send();
     } else {
       res.status(401).json(JSON.stringify({ message: 'Требуется авторизация' }));
@@ -65,7 +67,7 @@ app.use('/json/login', login);
 app.use('/json/users', users);
 app.use('/json/sensors', sensors);
 app.use('/json/relays', relays);
-app.use('/json/devices', devices);
+app.use('/json/devices', boards);
 app.use('/json/service', services);
 
 app.listen(3001, () => {

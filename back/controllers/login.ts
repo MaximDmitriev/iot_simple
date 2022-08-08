@@ -10,20 +10,20 @@ export const router = express.Router();
 const errorMessage = 'Неверное имя или пароль';
 
 const currentUser = {
-  #name: '',
+  username: '',
   set name(val) {
-    this.#name = val;
+    this.username = val;
   },
   get name() {
-    return this.#name;
+    return this.username;
   },
 };
 
 export const loginedUsers = {};
-function generateAccessToken(username) {
-  return jwt.sign({ name: username }, ACCESS_TOKEN_SECRET, { expiresIn: 60 * 60 * 2 });
-  // return jwt.sign({ name: username }, ACCESS_TOKEN_SECRET);
-}
+
+/** Создание токена. */
+const generateAccessToken = (username: string) => jwt.sign({ name: username }, ACCESS_TOKEN_SECRET, { expiresIn: 60 * 60 * 2 });
+// return jwt.sign({ name: username }, ACCESS_TOKEN_SECRET);
 
 router.post('/', (req, res) => {
   void (async () => {
@@ -41,15 +41,12 @@ router.post('/', (req, res) => {
     }
 
     const user = await User.findOne({ name: req.body.login });
-    const count = await User.countDocuments();
-
-    console.log(user, count);
 
     if (!user) {
       return res.status(401).json({
         messages: [
           {
-            msg: 'Неверный логин или пароль',
+            msg: errorMessage,
             type: 'error',
           },
         ],

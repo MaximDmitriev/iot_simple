@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
+// @TODO добавить ролевую модель
+/** Схема пользовалелей. */
 const schema = new Schema({
   name: {
     type: String,

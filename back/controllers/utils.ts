@@ -1,6 +1,7 @@
+import type { Request, Response } from 'express';
 import { Devices, Relays, Sensors, Table, User } from '../models';
 
-export function getAllRecords(req, res) {
+export const getAllRecords = (req: Request, res: Response) => {
   const name = req.baseUrl.split('/')[2];
   const metadata = Table.findOne({ tablename: name }).populate('definition');
   let data;
@@ -24,9 +25,9 @@ export function getAllRecords(req, res) {
 
   Promise.all([metadata, data])
     .then(response => {
-      const [metadata, data] = response;
+      const [metadataResponse, dataResponse] = response;
 
-      res.json({ metadata, data });
+      res.json({ metadataResponse, dataResponse });
     })
     .catch(err => console.log(err));
-}
+};

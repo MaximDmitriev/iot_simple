@@ -1,11 +1,12 @@
 import express from 'express';
-import { Data, Sensors } from '../models';
+import { SensorData, Sensors } from '../models';
 import { getAllRecords } from './utils';
 
 // eslint-disable-next-line new-cap
 export const router = express.Router();
 
 router.get('/', getAllRecords);
+
 router.post('/create', (req, res) => {
   Sensors.create(req.body)
     .then(user => {
@@ -20,11 +21,11 @@ router.post('/create', (req, res) => {
 router.get('/:id', (req, res) => {
   Sensors.findOne({ _id: req.params.id })
     .then(data => {
-      Data.find({ sensorId: data.sensorId })
+      void SensorData.find({ sensorId: data!.sensorId })
         .sort({ datetime: -1 })
         .limit(1)
         .then(sensor => {
-          const value = sensor.length > 0 ? sensor[0].value : null;
+          const value = sensor.length > 0 ? sensor[0].value : '';
           // @TODO из-за методов toJson/ toObject модели не получается нормальным образом добавить поле state в объект
           let body = JSON.stringify(data).slice(0, -1);
 
@@ -34,6 +35,7 @@ router.get('/:id', (req, res) => {
     })
     .catch(err => console.log(err));
 });
+
 router.delete('/delete', (req, res) => {
   Sensors.findByIdAndDelete(req.body.id)
     .then(data => {

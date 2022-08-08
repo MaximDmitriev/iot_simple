@@ -1,14 +1,9 @@
 import mongoose from 'mongoose';
+import { renameStorageId } from './utils';
 
 const { Schema } = mongoose;
 
-const transformId = () => (doc, ret, options) => {
-  ret.id = ret._id;
-  delete ret._id;
-
-  return ret;
-};
-
+/** Схема описания отчета (список или форма). */
 const columnsSchema = new Schema({
   order: {
     type: Number,
@@ -73,21 +68,11 @@ const schema = new Schema(
   },
   {
     toJSON: {
-      transform(doc, ret, options) {
-        ret.id = ret._id;
-        delete ret._id;
-
-        return ret;
-      },
+      transform: renameStorageId,
       versionKey: false,
     },
     toObject: {
-      transform(doc, ret, options) {
-        ret.id = ret._id;
-        delete ret._id;
-
-        return ret;
-      },
+      transform: renameStorageId,
       versionKey: false,
     },
   }

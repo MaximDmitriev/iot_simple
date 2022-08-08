@@ -1,10 +1,10 @@
-import mqtt from 'mqtt';
-import { Config } from '../config/config.ts';
+import * as mqtt from 'mqtt';
+import { Config } from '../config/config';
 import { updateSensorData, updateClusterData } from './controllers';
 
 const { separators } = Config;
 
-export const client = mqtt.connect('mqtt://127.0.0.1', {
+export const client: mqtt.MqttClient = mqtt.connect('mqtt://127.0.0.1', {
   username: 'server',
   password: '123',
 });
@@ -44,9 +44,7 @@ client.on('message', (topic, message) => {
       updateClusterData(topic.split(separators.pair)[1], message.toString());
       break;
     default:
-      const date = new Date();
-
-      console.log(topic, message.toString(), date.toLocaleString());
+      console.log(topic, message.toString(), new Date().toLocaleString());
   }
 });
 
@@ -73,6 +71,6 @@ client.on('error', error => {
 //   client.publish(sensorId, `${count}`);
 // }
 
-export function switchRelay(relayId, state) {
+export const switchRelay = (relayId, state: boolean) => {
   client.publish(`switchRelay${separators.pair}${relayId}`, state.toString());
-}
+};

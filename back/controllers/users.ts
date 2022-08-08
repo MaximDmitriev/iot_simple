@@ -3,6 +3,7 @@ import { User } from '../models';
 
 import { getAllRecords } from './utils';
 
+// eslint-disable-next-line new-cap
 export const router = express.Router();
 
 router.get('/', getAllRecords);

@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
+import { renameStorageId } from './utils';
 
 const { Schema } = mongoose;
 
+/** Схема таблиц. */
 const schema = new Schema(
   {
     tablename: {
@@ -18,28 +20,18 @@ const schema = new Schema(
       default: '',
     },
     definition: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Definition',
       required: true,
     },
   },
   {
     toJSON: {
-      transform(doc, ret, options) {
-        ret.id = ret._id;
-        delete ret._id;
-
-        return ret;
-      },
+      transform: renameStorageId,
       versionKey: false,
     },
     toObject: {
-      transform(doc, ret, options) {
-        ret.id = ret._id;
-        delete ret._id;
-
-        return ret;
-      },
+      transform: renameStorageId,
       versionKey: false,
     },
   }

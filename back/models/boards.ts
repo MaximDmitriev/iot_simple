@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
+import { renameStorageId } from './utils';
 
 const { Schema } = mongoose;
 
+/** Схема одноплатника. */
 const schema = new Schema(
   {
     devicename: {
@@ -35,24 +37,14 @@ const schema = new Schema(
   },
   {
     toJSON: {
-      transform(doc, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-
-        return ret;
-      },
+      transform: renameStorageId,
       versionKey: false,
     },
     toObject: {
-      transform(doc, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-
-        return ret;
-      },
+      transform: renameStorageId,
       versionKey: false,
     },
   }
 );
 
-export const Devices = mongoose.model('Devices', schema);
+export const Boards = mongoose.model('Boards', schema);

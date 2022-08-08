@@ -1,14 +1,17 @@
 import mongoose from 'mongoose';
+import type { DeviceDto } from '../interfaces';
+import { renameStorageId } from './utils';
 
 const { Schema } = mongoose;
 
-const schema = new Schema(
+/** Схема устройств/датчиков. */
+const schema = new Schema<DeviceDto>(
   {
-    sensorname: {
+    name: {
       type: String,
       required: true,
     },
-    sensorId: {
+    id: {
       type: String,
       required: true,
       unique: true,
@@ -34,21 +37,11 @@ const schema = new Schema(
   },
   {
     toJSON: {
-      transform(doc, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-
-        return ret;
-      },
+      transform: renameStorageId,
       versionKey: false,
     },
     toObject: {
-      transform(doc, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-
-        return ret;
-      },
+      transform: renameStorageId,
       versionKey: false,
     },
   }
