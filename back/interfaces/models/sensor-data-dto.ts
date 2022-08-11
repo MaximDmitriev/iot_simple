@@ -1,9 +1,9 @@
 /** Данные датчика. */
 export interface SensorDataDto {
   /** Идентификатор датчика. */
-  sensorId: string;
+  sensorId: number;
   /** Идентификатор кластера. */
-  clusterId: string;
+  clusterId: number;
   /** Время замера (мс). */
   datetime: number;
   /** Значение датчика. */

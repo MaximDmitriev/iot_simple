@@ -11,9 +11,9 @@ export interface DeviceDto {
   /** Наименование. */
   name: string;
   /** Идентификатор. */
-  id: string;
+  id: number;
   /** Идентификатор кластера. */
-  clusterId: string;
+  clusterId: number;
   /** Местонахождение. */
   location: string;
   /** Тип. */

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { Devices, Relays, Sensors, Table, User } from '../models';
+import { Boards, Relays, Sensors, Table, User } from '../models';
 
 export const getAllRecords = (req: Request, res: Response) => {
   const name = req.baseUrl.split('/')[2];
@@ -8,7 +8,7 @@ export const getAllRecords = (req: Request, res: Response) => {
 
   switch (name) {
     case 'devices':
-      data = Devices.find({});
+      data = Boards.find({});
       break;
     case 'relays':
       data = Relays.find({});

@@ -12,12 +12,12 @@ const schema = new Schema<DeviceDto>(
       required: true,
     },
     id: {
-      type: String,
+      type: Number,
       required: true,
       unique: true,
     },
     clusterId: {
-      type: String,
+      type: Number,
     },
     location: {
       type: String,

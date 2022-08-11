@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import type { UserDto } from '../interfaces';
 
 const { Schema } = mongoose;
 
-// @TODO добавить ролевую модель
+// @TODO добавить ролевую модель + id
 /** Схема пользовалелей. */
-const schema = new Schema({
+const schema = new Schema<UserDto>({
   name: {
     type: String,
     required: true,

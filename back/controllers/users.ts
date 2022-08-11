@@ -1,14 +1,17 @@
+import type { Request } from 'express';
 import express from 'express';
+import type { UserDto } from '../interfaces';
 import { User } from '../models';
-
 import { getAllRecords } from './utils';
 
 // eslint-disable-next-line new-cap
 export const router = express.Router();
 
+/** Получение всех пользователей. */
 router.get('/', getAllRecords);
 
-router.post('/create', (req, res) => {
+/** Создание пользователя. */
+router.post('/create', (req: Request<never, UserDto, UserDto>, res) => {
   User.create(req.body)
     .then(user => {
       res.json(user);
@@ -20,7 +23,8 @@ router.post('/create', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+/** Получение пользователя по id. */
+router.get('/:id', (req: Request<{ id: Pick<UserDto, 'id'> }, UserDto | null>, res) => {
   User.findOne({ _id: req.params.id })
     .then(data => {
       res.json(data);
@@ -28,16 +32,23 @@ router.get('/:id', (req, res) => {
     .catch(err => console.log(err));
 });
 
-router.delete('/delete', (req, res) => {
-  User.findByIdAndDelete(req.body.id)
+/** Удаление пользователя. */
+router.delete('/delete/:id', (req: Request<{ id: Pick<UserDto, 'id'> }, UserDto | null>, res) => {
+  User.findByIdAndDelete(req.params.id)
     .then(data => {
       res.json(data);
     })
     .catch(err => console.log(err));
 });
 
-router.put('/update', (req, res) => {
-  User.findByIdAndUpdate(req.body.id, req.body.fields)
+/** Обновление пользователя. */
+router.put('/update', (req: Request<never, UserDto | null, UserDto>, res) => {
+  const { id } = req.body;
+  const fields: Partial<UserDto> = { ...req.body };
+
+  delete fields.id;
+
+  User.findByIdAndUpdate(id, fields)
     .then(data => {
       res.json(data);
     })

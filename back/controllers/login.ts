@@ -27,8 +27,6 @@ const generateAccessToken = (username: string) => jwt.sign({ name: username }, A
 
 router.post('/', (req, res) => {
   void (async () => {
-    console.log(req.method, req.body);
-
     if (!req.body.login || !req.body.password) {
       return res.status(405).json({
         messages: [

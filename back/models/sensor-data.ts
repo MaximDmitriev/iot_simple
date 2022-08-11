@@ -4,15 +4,15 @@ import { renameStorageId } from './utils';
 
 const { Schema } = mongoose;
 
-/** Схема данныхс устройств. */
+/** Схема данных с устройств. */
 const schema = new Schema<SensorDataDto>(
   {
     sensorId: {
-      type: String,
+      type: Number,
       required: true,
     },
     clusterId: {
-      type: String,
+      type: Number,
       required: true,
     },
     datetime: {

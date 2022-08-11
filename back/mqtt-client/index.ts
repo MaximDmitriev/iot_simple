@@ -71,6 +71,6 @@ client.on('error', error => {
 //   client.publish(sensorId, `${count}`);
 // }
 
-export const switchRelay = (relayId, state: boolean) => {
+export const switchRelay = (relayId, state: 0 | 1) => {
   client.publish(`switchRelay${separators.pair}${relayId}`, state.toString());
 };

@@ -1,16 +1,20 @@
+import type { Request } from 'express';
 import express from 'express';
+import type { DeviceDto } from '../interfaces';
 import { SensorData, Sensors } from '../models';
 import { getAllRecords } from './utils';
 
 // eslint-disable-next-line new-cap
 export const router = express.Router();
 
+/** Получение всех датчиков. */
 router.get('/', getAllRecords);
 
-router.post('/create', (req, res) => {
+/** Создание датчика. */
+router.post('/create', (req: Request<never, DeviceDto, DeviceDto>, res) => {
   Sensors.create(req.body)
-    .then(user => {
-      res.json(user);
+    .then(sensor => {
+      res.json(sensor);
     })
     .catch(err => {
       console.log(err);
@@ -18,16 +22,18 @@ router.post('/create', (req, res) => {
       res.json(err);
     });
 });
-router.get('/:id', (req, res) => {
+
+/** Получение датчика по id. */
+router.get('/:id', (req: Request<Pick<DeviceDto, 'id'>, string>, res) => {
   Sensors.findOne({ _id: req.params.id })
-    .then(data => {
-      void SensorData.find({ sensorId: data!.sensorId })
+    .then(sensor => {
+      void SensorData.find({ sensorId: sensor!.id })
         .sort({ datetime: -1 })
         .limit(1)
-        .then(sensor => {
-          const value = sensor.length > 0 ? sensor[0].value : '';
+        .then(sensorData => {
+          const value = sensorData.length > 0 ? sensorData[0].value : '';
           // @TODO из-за методов toJson/ toObject модели не получается нормальным образом добавить поле state в объект
-          let body = JSON.stringify(data).slice(0, -1);
+          let body = JSON.stringify(sensor).slice(0, -1);
 
           body = body + `,"state":${value}}`;
           res.send(body);
@@ -36,16 +42,23 @@ router.get('/:id', (req, res) => {
     .catch(err => console.log(err));
 });
 
-router.delete('/delete', (req, res) => {
-  Sensors.findByIdAndDelete(req.body.id)
+/** Удаление записи о датчике. */
+router.delete('/delete/:id', (req: Request<Pick<DeviceDto, 'id'>, DeviceDto | null>, res) => {
+  Sensors.findByIdAndDelete(req.params.id)
     .then(data => {
       res.json(data);
     })
     .catch(err => console.log(err));
 });
 
-router.put('/update', (req, res) => {
-  Sensors.findByIdAndUpdate(req.body.id, req.body.fields)
+/** Обновление данных о датчике. */
+router.put('/update', (req: Request<never, DeviceDto | null, DeviceDto>, res) => {
+  const { id } = req.body;
+  const fields: Partial<DeviceDto> = { ...req.body };
+
+  delete fields.id;
+
+  Sensors.findByIdAndUpdate(id, fields)
     .then(data => {
       res.json(data);
     })

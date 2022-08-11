@@ -1,16 +1,20 @@
+import type { Request } from 'express';
 import express from 'express';
+import type { BoardDto } from '../interfaces';
 import { Boards } from '../models';
 import { getAllRecords } from './utils';
 
 // eslint-disable-next-line new-cap
 export const router = express.Router();
 
+/** Получение всех плат. */
 router.get('/', getAllRecords);
 
-router.post('/create', (req, res) => {
+/** Создание платы. */
+router.post('/create', (req: Request<never, BoardDto, BoardDto>, res) => {
   Boards.create(req.body)
-    .then(user => {
-      res.json(user);
+    .then(board => {
+      res.json(board);
     })
     .catch(err => {
       console.log(err);
@@ -19,26 +23,33 @@ router.post('/create', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+/** Получение устройства по id. */
+router.get('/:id', (req: Request<Pick<BoardDto, 'id'>, BoardDto | null>, res) => {
   Boards.findOne({ _id: req.params.id })
-    .then(data => {
-      res.json(data);
+    .then(board => {
+      res.json(board);
     })
     .catch(err => console.log(err));
 });
 
-router.delete('/delete', (req, res) => {
-  Boards.findByIdAndDelete(req.body.id)
-    .then(data => {
-      res.json(data);
+/** Удаление устройства по id. */
+router.delete('/delete/:id', (req: Request<Pick<BoardDto, 'id'>, BoardDto | null>, res) => {
+  Boards.findByIdAndDelete(req.params.id)
+    .then(board => {
+      res.json(board);
     })
     .catch(err => console.log(err));
 });
 
-router.put('/update', (req, res) => {
-  Boards.findByIdAndUpdate(req.body.id, req.body.fields)
-    .then(data => {
-      res.json(data);
+/** Обновление записи об устройстве. */
+router.put('/update', (req: Request<never, BoardDto | null, BoardDto>, res) => {
+  const { id } = req.body;
+  const fields: Partial<BoardDto> = { ...req.body };
+
+  delete fields.id;
+  Boards.findByIdAndUpdate(id, fields)
+    .then(board => {
+      res.json(board);
     })
     .catch(err => console.log(err));
 });

@@ -4,7 +4,6 @@ import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
-// import * as mqtt from './mqtt';
 
 import { users, login, boards, loginedUsers, sensors, relays, services } from './controllers';
 
@@ -67,7 +66,7 @@ app.use('/json/login', login);
 app.use('/json/users', users);
 app.use('/json/sensors', sensors);
 app.use('/json/relays', relays);
-app.use('/json/devices', boards);
+app.use('/json/boards', boards);
 app.use('/json/service', services);
 
 app.listen(3001, () => {

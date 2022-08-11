@@ -1,25 +1,23 @@
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import express from 'express';
-import { Config } from '../config/config';
-import { SensorData, Relays, Sensors, Devices } from '../models';
+import type { DeviceDto, SensorDataDto } from '../interfaces';
+import { SensorData, Relays, Sensors, Boards } from '../models';
 import { switchRelay } from '../mqtt-client';
 import { mqttEmitter } from '../mqtt-client/controllers';
 
 // eslint-disable-next-line new-cap
 export const router = express.Router();
 
-const { separators } = Config;
-
 /** Возвращает датчики и исполнительные механизмы, непривязанные к устройствам. */
-router.get('/get_free_sensors', (_, res) => {
+router.get('/get_free_sensors', (_, res: Response<DeviceDto[]>) => {
   const sensors = Sensors.find({ clusterId: { $in: [undefined, ''] } });
   const relays = Relays.find({ clusterId: { $in: [undefined, ''] } });
 
   Promise.all([sensors, relays])
     .then(doc => {
-      const data = [...doc[0], ...doc[1]].map(s => `${s.sensorname} (${s.sensorId})${separators.pair}${s.sensorId}`);
+      const data = [...doc[0], ...doc[1]];
 
-      res.send(JSON.stringify(data));
+      res.json(data);
     })
     .catch(err => console.log(err));
 });
@@ -28,11 +26,11 @@ router.get('/get_free_sensors', (_, res) => {
  * Переопределяет clusterId у датчиков в зависимости от того,
  * привязаны они к устройству или нет на clusterId/undefined соответственно.
  */
-router.post('/set_cluster_sensors', (req: Request<never, string, { cluster: string; ids: string[] }>, res) => {
+router.post('/set_cluster_sensors', (req: Request<never, number[], { cluster: number; ids: number[] }>, res) => {
   // @TODO оптимизировать апдейты, возможно через pre() post()
-  void Devices.findOne({ clusterId: req.body.cluster }).then(doc => {
-    const ids = doc?.content ? doc.content.map((id: string) => id.split(separators.pair)[1]) : [];
-    const index2delete = ids.filter((id: string) => !req.body.ids.includes(id));
+  void Boards.findOne({ clusterId: req.body.cluster }).then(board => {
+    const ids = board?.components ? board.components.map((id: number) => id) : [];
+    const index2delete = ids.filter((id: number) => !req.body.ids.includes(id));
 
     if (index2delete.length > 0) {
       void Sensors.updateMany({ sensorId: { $in: index2delete } }, { clusterId: undefined }, (_, result) => {
@@ -49,65 +47,72 @@ router.post('/set_cluster_sensors', (req: Request<never, string, { cluster: stri
     void Relays.updateMany({ sensorId: { $in: req.body.ids } }, { clusterId: req.body.cluster }, (_, result) => {
       console.log(result);
     });
-    res.send(JSON.stringify(index2delete));
+    res.json(index2delete);
   });
 });
 
 /**
- * Возвращает данные датчиков или группы датчиков (устройства), последнюю запись или набор записей
- * в заисимости от запроса
+ * Возвращает данные датчиков
  * body: {
  * id - sensorId/clusterId (required)
- * type - sensor/cluster (required)
  * paging: { start, count },
  * filter: { fromDate, toDate },
  * }.
  */
-router.post('/get_sensor_data', (req, res) => {
-  if (!req.body.type || !req.body.id) {
-    res.status(400);
-    res.send({ message: 'Некорректный запрос данных' });
-  }
+router.post('/get_sensor_data', (req: Request<never, SensorDataDto[], { id: number; paging: { count: number } }>, res) => {
+  const count = req.body.paging?.count ?? 1;
 
-  if (req.body.type === 'sensor') {
-    SensorData.find({ sensorId: req.body.id })
-      .sort({ datetime: -1 })
-      .limit(1)
-      .then(data => res.send(JSON.stringify(data)))
-      .catch(error => {
-        res.status(500);
-        res.send(JSON.stringify({ message: 'Ошибка БД', error }));
-      });
-  }
-
-  if (req.body.type === 'cluster') {
-    void Devices.findOne({ clusterId: req.body.id }, (error, device) => {
-      if (error) {
-        res.status(500);
-        res.send(JSON.stringify({ message: 'Ошибка БД', error }));
-      }
-
-      SensorData.find({ clusterId: req.body.id })
-        .sort({ datetime: -1 })
-        .limit(device.content.length)
-        .then(data => res.send(JSON.stringify(data)))
-        .catch(err => {
-          res.status(500);
-          res.send(JSON.stringify({ message: 'Ошибка БД', err }));
-        });
+  SensorData.find({ sensorId: req.body.id })
+    .sort({ datetime: -1 })
+    .limit(count)
+    .then(sensorData => res.json(sensorData))
+    .catch(() => {
+      res.status(500);
+      res.json([]);
     });
-  }
 });
 
-router.post('/switch', (req, res) => {
-  if (req.body.id && (req.body.state || req.body.state === 0)) {
-    switchRelay(req.body.id, req.body.state);
-    mqttEmitter.once('clusterUpdated', data => {
-      res.status(200);
-      res.send(JSON.stringify({ ...data, message: 'Устройство переключено' }));
-    });
-  } else {
+/**
+ * Возвращает данные датчиков одного кластера
+ * body: {
+ * id - sensorId/clusterId (required)
+ * paging: { start, count },
+ * filter: { fromDate, toDate },
+ * }.
+ */
+router.post('/get_sensor_cluster_data', (req: Request<never, SensorDataDto[], { id: number; paging: { count: number } }>, res) => {
+  const count = req.body.paging?.count ?? 1;
+
+  void Boards.findOne({ clusterId: req.body.id }, (error, device) => {
+    if (error) {
+      res.status(500);
+      res.json([]);
+    }
+
+    SensorData.find({ clusterId: req.body.id })
+      .sort({ datetime: -1 })
+      .limit(device.content.length * count)
+      .then(sensorData => res.json(sensorData))
+      .catch(() => {
+        res.status(500);
+        res.json([]);
+      });
+  });
+});
+
+/** Переключение реле в заданное состояние. */
+router.get('/switch/:id/:state', (req: Request<{ id: number; state: 0 | 1 }, string>, res) => {
+  if (!req.params.id) {
     res.status(405);
     res.send(JSON.stringify({ message: 'Не указан id механизма или его статус' }));
   }
+
+  const state = req.params.state || 0;
+
+  switchRelay(req.params.id, state);
+
+  mqttEmitter.once('clusterUpdated', data => {
+    res.status(200);
+    res.send(JSON.stringify({ ...data, message: 'Устройство переключено' }));
+  });
 });

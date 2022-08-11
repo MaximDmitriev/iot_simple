@@ -1,28 +1,29 @@
 import mongoose from 'mongoose';
+import type { BoardDto } from '../interfaces';
 import { renameStorageId } from './utils';
 
 const { Schema } = mongoose;
 
 /** Схема одноплатника. */
-const schema = new Schema(
+const schema = new Schema<BoardDto>(
   {
-    devicename: {
+    name: {
       type: String,
       required: true,
       unique: true,
     },
-    deviceId: {
-      type: String,
+    id: {
+      type: Number,
       required: true,
     },
     clusterId: {
-      type: String,
+      type: Number,
       required: true,
     },
     location: {
       type: String,
     },
-    board: {
+    boardName: {
       type: String,
     },
     description: {
@@ -31,8 +32,8 @@ const schema = new Schema(
     image: {
       type: String,
     },
-    content: {
-      type: Array,
+    components: {
+      type: [Number],
     },
   },
   {
