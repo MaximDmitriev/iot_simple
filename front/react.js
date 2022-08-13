@@ -1,0 +1,70 @@
+module.exports = {
+  extends: ['prettier', 'plugin:react-hooks/recommended'],
+  plugins: ['react', 'react-hooks'],
+  settings: {
+    react: {
+      version: 'detect', // React version. "detect" automatically picks the version you have installed.
+    },
+    linkComponents: ['Link'],
+  },
+  rules: {
+    'react/jsx-uses-react': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'error',
+    'react/no-array-index-key': 'error',
+    'react/jsx-boolean-value': ['error', 'never'],
+    'react/jsx-pascal-case': ['error', { allowAllCaps: true }],
+    'react/jsx-closing-bracket-location': 'error',
+    'react/jsx-closing-tag-location': 'error',
+    'react/no-string-refs': 'error',
+    'react/jsx-wrap-multilines': 'error',
+    'react/jsx-no-bind': [
+      'error',
+      {
+        ignoreDOMComponents: true,
+        ignoreRefs: true,
+        allowArrowFunctions: true,
+      },
+    ],
+    'react/sort-comp': 'error',
+    'react/destructuring-assignment': ['error', 'always', { ignoreClassFields: true }],
+    'react/display-name': 'error',
+    'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
+    'react/jsx-fragments': 'error',
+    'react/jsx-no-duplicate-props': 'error',
+    'react/jsx-no-script-url': 'error',
+    'react/jsx-no-useless-fragment': 'error',
+    'react/jsx-props-no-multi-spaces': 'error',
+    'react/jsx-sort-default-props': 'error',
+    'react/jsx-sort-props': ['error', { reservedFirst: true, shorthandFirst: true, callbacksLast: true }],
+    'react/jsx-no-target-blank': 'error',
+    'react/no-access-state-in-setstate': 'error',
+    'react/no-adjacent-inline-elements': 'error',
+    'react/no-children-prop': 'error',
+    'react/no-deprecated': 'warn',
+    'react/no-did-mount-set-state': 'error',
+    'react/no-did-update-set-state': 'error',
+    'react/no-direct-mutation-state': 'error',
+    'react/no-multi-comp': ['error', { ignoreStateless: true }],
+    'react/no-redundant-should-component-update': 'error',
+    'react/no-this-in-sfc': 'error',
+    'react/no-unknown-property': 'error',
+    'react/no-unused-state': 'error',
+    'react/react-in-jsx-scope': 'off',
+    'react/require-render-return': 'error',
+    'react/self-closing-comp': [
+      'error',
+      {
+        component: true,
+        html: true,
+      },
+    ],
+    'react/style-prop-object': 'error',
+    'react/jsx-key': 'error',
+    'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
+    // FIXME: Включить после выполнения задачи https://jira.gboteam.ru/browse/GBO-11872
+    'react/jsx-no-constructed-context-values': 'warn',
+    // "react/prefer-stateless-function": [<enabled>, { "ignorePureComponents": <ignorePureComponents> }]
+    // "react/jsx-handler-names": "error"
+  },
+};

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton, Typography, Button, Menu, MenuItem, Fade } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import { roots } from '../../services/constants';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../App';
-
+import { roots } from '../../services/constants';
 import { useStyles } from './style';
 
 const Navbar = ({ title, showBtn, onSelectItem, name }) => {
@@ -30,53 +29,47 @@ const Navbar = ({ title, showBtn, onSelectItem, name }) => {
   };
 
   return (
-    <AppBar position="static" className={classes.root}>
+    <AppBar className={classes.root} position="static">
       <Toolbar>
-        <IconButton className={classes.menuButton} edge="start" color="inherit" aria-label="menu">
+        <IconButton aria-label="menu" className={classes.menuButton} color="inherit" edge="start">
           {showBtn ? <MenuIcon aria-controls="reports-menu" aria-haspopup="true" onClick={handleClick('reports')} /> : null}
           <Menu
-            id="reports-menu"
-            anchorEl={anchorEls.reports}
             keepMounted
+            TransitionComponent={Fade}
+            anchorEl={anchorEls.reports}
+            id="reports-menu"
             open={Boolean(anchorEls.reports)}
             onClose={handleClose('reports')}
-            TransitionComponent={Fade}
           >
-            {roots.map(item => {
-              return (
-                <Link to={`/report/${item.url}`} key={item.url}>
-                  <MenuItem data-type={item.url} onClick={e => handleItem(e, 'reports')}>
-                    {item.name}
-                  </MenuItem>
-                </Link>
-              );
-            })}
+            {roots.map(item => (
+              <Link key={item.url} to={`/report/${item.url}`}>
+                <MenuItem data-type={item.url} onClick={e => handleItem(e, 'reports')}>
+                  {item.name}
+                </MenuItem>
+              </Link>
+            ))}
           </Menu>
         </IconButton>
-        <Typography variant="h6" className={classes.title}>
+        <Typography className={classes.title} variant="h6">
           {title}
         </Typography>
         {showBtn ? (
-          <Button color="inherit" aria-controls="login-menu" aria-haspopup="true" onClick={handleClick('login')}>
+          <Button aria-controls="login-menu" aria-haspopup="true" color="inherit" onClick={handleClick('login')}>
             {name}
           </Button>
         ) : null}
         <Menu
-          id="login-menu"
-          anchorEl={anchorEls.login}
           keepMounted
+          TransitionComponent={Fade}
+          anchorEl={anchorEls.login}
+          id="login-menu"
           open={Boolean(anchorEls.login)}
           onClose={handleClose('login')}
-          TransitionComponent={Fade}
         >
           <MenuItem data-type="account" onClick={e => handleItem(e, 'login')}>
             Аккаунт
           </MenuItem>
-          <MenuItem
-            data-type="logout"
-            // @ts-ignore
-            onClick={auth.signOut}
-          >
+          <MenuItem data-type="logout" onClick={auth.signOut}>
             Выйти
           </MenuItem>
         </Menu>
@@ -86,4 +79,3 @@ const Navbar = ({ title, showBtn, onSelectItem, name }) => {
 };
 
 export default React.memo(Navbar);
-// export default Navbar;

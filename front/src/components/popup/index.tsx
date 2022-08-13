@@ -1,30 +1,26 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Button } from '@material-ui/core';
-
 import { useStyles } from './style';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="down" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => <Slide ref={ref} direction="down" {...props} />);
 
 export const PopupComponent = ({ open, onAccept, onCancel }) => {
   const classes = useStyles();
 
   return (
     <Dialog
-      open={open}
+      disableBackdropClick
+      keepMounted
+      TransitionComponent={Transition}
+      aria-describedby="alert-dialog-slide-description"
+      aria-labelledby="alert-dialog-slide-title"
       classes={{
         // @ts-ignore
         root: classes.root,
         // @ts-ignore
         scrollPaper: classes.scrollPaper,
       }}
-      // @ts-ignore
-      TransitionComponent={Transition}
-      disableBackdropClick
-      keepMounted
-      aria-labelledby="alert-dialog-slide-title"
-      aria-describedby="alert-dialog-slide-description"
+      open={open}
     >
       <DialogTitle id="alert-dialog-slide-title">Удалить запись?</DialogTitle>
       <DialogContent>
@@ -33,10 +29,10 @@ export const PopupComponent = ({ open, onAccept, onCancel }) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} color="primary" variant="outlined">
+        <Button color="primary" variant="outlined" onClick={onCancel}>
           Отмена
         </Button>
-        <Button onClick={onAccept} color="secondary" variant="outlined">
+        <Button color="secondary" variant="outlined" onClick={onAccept}>
           Удалить
         </Button>
       </DialogActions>

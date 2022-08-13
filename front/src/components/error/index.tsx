@@ -5,8 +5,8 @@ export const ErrorComponent = ({ message }) => {
   const classes = useStyles();
 
   return (
-    <Paper elevation={5} className={classes.paper}>
-      <Typography variant={'body1'} align={'center'}>
+    <Paper className={classes.paper} elevation={5}>
+      <Typography align={'center'} variant={'body1'}>
         {message}
       </Typography>
     </Paper>

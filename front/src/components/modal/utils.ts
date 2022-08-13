@@ -1,7 +1,7 @@
-import { fetchService } from '../../services/fetchData';
 import { Constants, Names } from '../../config';
+import { fetchService } from '../../services/fetchData';
 
-export function getErrorMessage(alert, type, msg) {
+export const getErrorMessage = (alert, type, msg) => {
   const TIME = 8000;
 
   const getAction = type => {
@@ -16,9 +16,9 @@ export function getErrorMessage(alert, type, msg) {
   };
 
   alert(`Не удалось ${getAction(type)} запись. ${msg}`, { variant: 'error', autoHideDuration: TIME });
-}
+};
 
-export function getSuccessMessage(alert, type, msg) {
+export const getSuccessMessage = (alert, type, msg) => {
   const TIME = 5000;
 
   const getAction = type => {
@@ -33,7 +33,7 @@ export function getSuccessMessage(alert, type, msg) {
   };
 
   alert(`Запись ${msg} успешно ${getAction(type)}`, { variant: 'success', autoHideDuration: TIME });
-}
+};
 
 export const createBody = (type, data) => {
   switch (type) {
@@ -57,10 +57,11 @@ export const defineMethod = type => {
   }
 };
 
-export const updateSensors = (enqueueSnackbar, type, tableName, data) => {
-  return new Promise<void>(resolve => {
+export const updateSensors = (enqueueSnackbar, type, tableName, data) =>
+  new Promise<void>(resolve => {
     if (type !== 'delete' && tableName === Names.DevicesTableName && data[Names.SensorsFieldName]) {
       const ids = data[Names.SensorsFieldName].map(name => name.split(Constants.PairSeparator)[1]);
+
       fetchService
         .data({ cluster: data[Names.ClusterFieldName], ids })
         .setClusterSensors()
@@ -73,4 +74,3 @@ export const updateSensors = (enqueueSnackbar, type, tableName, data) => {
       resolve();
     }
   });
-};

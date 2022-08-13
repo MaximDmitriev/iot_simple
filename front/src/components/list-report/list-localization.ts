@@ -1,3 +1,5 @@
+const SHOW_FILTERS = 'Показать фильтры';
+
 export const localeText = {
   // Root
   rootGridLabel: 'grid',
@@ -15,9 +17,9 @@ export const localeText = {
 
   // Filters toolbar button text
   toolbarFilters: 'Фильтры',
-  toolbarFiltersLabel: 'Показать фильтры',
+  toolbarFiltersLabel: SHOW_FILTERS,
   toolbarFiltersTooltipHide: 'Спрятать фильтры',
-  toolbarFiltersTooltipShow: 'Показать фильтры',
+  toolbarFiltersTooltipShow: SHOW_FILTERS,
   toolbarFiltersTooltipActive: count => `${count} активных фильтров`,
 
   // Columns panel text
@@ -46,7 +48,7 @@ export const localeText = {
 
   // Column header text
   columnHeaderFiltersTooltipActive: count => `${count} активных фильтров`,
-  columnHeaderFiltersLabel: 'Показать фильтры',
+  columnHeaderFiltersLabel: SHOW_FILTERS,
   columnHeaderSortIconLabel: 'Сортировать',
 
   // Rows selected footer text

@@ -1,16 +1,15 @@
 import { useState, useMemo, useCallback } from 'react';
-import { DataGrid } from '@material-ui/data-grid';
-import { formatData, getColumns, getFormDefinition } from './utils';
-import { localeText } from './list-localization';
-import { ModalWrapper } from '../modal';
 import { IconButton, Tooltip } from '@material-ui/core';
+import { DataGrid } from '@material-ui/data-grid';
 import LibraryAdd from '@material-ui/icons/LibraryAdd';
-
+import { ModalWrapper } from '../modal';
+import { localeText } from './list-localization';
 import { useStyles } from './style';
+import { formatData, getColumns, getFormDefinition } from './utils';
 
 /**
- * - создание компонента
- * - null вместо update
+ * - создание компонента.
+ * - null вместо update.
  */
 // создать контейнер для логики
 export const ListReport = ({ data, metadata, update }) => {
@@ -24,13 +23,14 @@ export const ListReport = ({ data, metadata, update }) => {
 
   const onClickHandler = useCallback(e => {
     const id = e.getValue('id');
+
     setModalParams({ open: true, mode: 'update', id });
   }, []);
 
   const closeModal = useCallback(() => {
     setModalParams({ open: false, mode: 'update', id: null });
     update();
-  }, []);
+  }, [update]);
 
   const createRecord = () => {
     setModalParams({ open: true, mode: 'create', id: null });
@@ -39,36 +39,35 @@ export const ListReport = ({ data, metadata, update }) => {
   return (
     <div className={classes.wrapper}>
       <Tooltip title="Добавить запись">
-        <IconButton color="primary" aria-label="add record" classes={{ root: classes.root }} onClick={createRecord}>
+        <IconButton aria-label="add record" classes={{ root: classes.root }} color="primary" onClick={createRecord}>
           <LibraryAdd />
         </IconButton>
       </Tooltip>
 
       <DataGrid
-        columns={columns}
-        rows={rows}
-        rowHeight={40}
-        headerHeight={45}
-        showColumnRightBorder
-        showCellRightBorder
-        // @ts-ignore
-        showToolbar
-        hideFooterSelectedRowCount
         autoHeight
         disableSelectionOnClick
+        hideFooterSelectedRowCount
+        showCellRightBorder
+        showColumnRightBorder
+        showToolbar
+        columns={columns}
+        headerHeight={45}
         localeText={localeText}
+        rowHeight={40}
+        rows={rows}
         onRowClick={onClickHandler}
       />
       <ModalWrapper
-        show={modalParams.open}
         act={modalParams.mode}
-        onClose={closeModal}
+        definition={definition}
+        height={totalHeight}
+        id={modalParams.id}
+        show={modalParams.open}
         tableName={metadata.tablename}
         title={metadata.singleTitle}
         titleField={metadata.singleTitleField}
-        id={modalParams.id}
-        definition={definition}
-        height={totalHeight}
+        onClose={closeModal}
       />
     </div>
   );

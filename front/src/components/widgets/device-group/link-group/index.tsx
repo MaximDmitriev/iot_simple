@@ -1,7 +1,6 @@
 import React from 'react';
 import BackspaceIcon from '@material-ui/icons/Backspace';
 import { Constants } from '../../../../config';
-
 import { useStyles } from './style';
 
 const LinkElement = ({ el, definition, updateData }) => {
@@ -24,14 +23,11 @@ export const LinkGroup = ({ contents, definition, updateData }) => {
   return (
     <div className={classes.wrapper}>
       <ul className={classes.list}>
-        {contents &&
-          contents.map(el => {
-            return (
-              <li className={classes.listItem} key={el}>
-                <MemoLinkElement el={el} definition={definition} updateData={updateData} />
-              </li>
-            );
-          })}
+        {contents?.map(el => (
+          <li key={el} className={classes.listItem}>
+            <MemoLinkElement definition={definition} el={el} updateData={updateData} />
+          </li>
+        ))}
       </ul>
     </div>
   );

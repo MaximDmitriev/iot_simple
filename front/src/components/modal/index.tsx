@@ -1,18 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
-import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
+import Modal from '@material-ui/core/Modal';
 import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { WidgetContainer } from '../widgets';
-import { useSnackbar } from 'notistack';
-import { PopupComponent } from '../popup';
-import { ModalHeader } from './modal-header';
 import dayjs from 'dayjs';
+import { useSnackbar } from 'notistack';
 import { fetchService } from '../../services/fetchData';
-import { getSuccessMessage, getErrorMessage, createBody, defineMethod, updateSensors } from './utils';
-
+import { PopupComponent } from '../popup';
+import { WidgetContainer } from '../widgets';
+import { ModalHeader } from './modal-header';
 import { useStyles } from './style';
+import { getSuccessMessage, getErrorMessage, createBody, defineMethod, updateSensors } from './utils';
 
 export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName, id, height, definition }) => {
   const classes = useStyles();
@@ -23,9 +22,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   const [mode, setMode] = useState(act);
   const { enqueueSnackbar } = useSnackbar();
 
-  const formDefinition = useMemo(() => {
-    return mode === 'create' ? definition : definition.filter(c => !c.onlyCreatedMode);
-  }, [mode, definition]);
+  const formDefinition = useMemo(() => (mode === 'create' ? definition : definition.filter(c => !c.onlyCreatedMode)), [mode, definition]);
 
   const openPopup = () => {
     setPopupOpen(true);
@@ -53,12 +50,14 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
         if (!data[fieldName]) {
           setData(data => ({ ...data, [fieldName]: [val] }));
         } else if (data[fieldName].includes(val)) {
-          const idx = data[fieldName].findIndex(v => v === val);
+          const idx = data[fieldName].indexOf(val);
           const values = [...data[fieldName].slice(0, idx), ...data[fieldName].slice(idx + 1)];
+
           setData(data => ({ ...data, [fieldName]: values }));
         } else {
           setData(data => ({ ...data, [fieldName]: data[fieldName].concat(val) }));
         }
+
         break;
       default:
         setData(data => ({ ...data, [fieldName]: val }));
@@ -67,6 +66,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
 
   useEffect(() => {
     setMode(act);
+
     if (act === 'create') {
       setStatus('loaded');
     }
@@ -77,6 +77,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
       setStatus('loading');
       readRecord();
     }
+
     return () => {
       // console.log('unmount');
     };
@@ -101,9 +102,9 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   const changeRecord = type => {
     const body = createBody(type, data);
     const method = defineMethod(type);
+
     updateSensors(enqueueSnackbar, type, tableName, data).then(() => {
       fetchService.data(body);
-      // @ts-ignore
       method
         .call(fetchService, tableName)
         .then(res => {
@@ -118,6 +119,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
               setData({});
               onClose();
             }
+
             getSuccessMessage(enqueueSnackbar, type, data[titleField]);
           }
         })
@@ -125,6 +127,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
           console.log(err);
           getErrorMessage(enqueueSnackbar, type, err.message);
         });
+
       if (type === 'delete') setPopupOpen(false);
     });
   };
@@ -133,48 +136,46 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
     <div>
       <PopupComponent open={popupOpen} onAccept={() => changeRecord('delete')} onCancel={declineHandler} />
       <Modal
-        open={show}
-        onClose={onCloseHandler}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}
+        open={show}
+        onClose={onCloseHandler}
       >
-        <Slide direction="down" in={show} mountOnEnter unmountOnExit>
+        <Slide mountOnEnter unmountOnExit direction="down" in={show}>
           <div className={classes.container}>
             <ModalHeader
-              data={data}
-              status={status}
-              title={title}
-              mode={mode}
-              titleField={titleField}
-              tableName={tableName}
-              openPopup={openPopup}
               changeRecord={changeRecord}
+              data={data}
+              mode={mode}
+              openPopup={openPopup}
+              status={status}
+              tableName={tableName}
+              title={title}
+              titleField={titleField}
             />
             <div className={classes.grid} style={{ height: height + 'px' }}>
-              {formDefinition.map((cell, idx) => {
-                return (
-                  <div
-                    key={idx}
-                    className={classes.cell}
-                    style={{
-                      height: cell.height,
-                      width: cell.width,
-                      top: cell.top,
-                      left: cell.left,
-                    }}
-                  >
-                    <Typography className={classes.label}>{cell.label}</Typography>
-                    {status === 'loading' ? (
-                      <Skeleton variant="rect" width="100%" height="40px" />
-                    ) : (
-                      <WidgetContainer definition={cell} data={data[cell.fieldName] || null} updateData={updateWidgetData} />
-                    )}
-                  </div>
-                );
-              })}
+              {formDefinition.map((cell, idx) => (
+                <div
+                  key={idx}
+                  className={classes.cell}
+                  style={{
+                    height: cell.height,
+                    width: cell.width,
+                    top: cell.top,
+                    left: cell.left,
+                  }}
+                >
+                  <Typography className={classes.label}>{cell.label}</Typography>
+                  {status === 'loading' ? (
+                    <Skeleton height="40px" variant="rect" width="100%" />
+                  ) : (
+                    <WidgetContainer data={data[cell.fieldName] || null} definition={cell} updateData={updateWidgetData} />
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </Slide>

@@ -1,11 +1,11 @@
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CollectionsIcon from '@material-ui/icons/Collections';
-
 import { useStyles } from './style';
 
 export const ImagePicker = () => {
   const classes = useStyles();
+
   return (
     <div className={classes.wrapper}>
       <div className={classes.overlay}>

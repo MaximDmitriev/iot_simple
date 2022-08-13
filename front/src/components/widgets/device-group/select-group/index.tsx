@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
+import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Button from '@material-ui/core/Button';
-import { fetchService } from '../../../../services/fetchData';
 import { Constants } from '../../../../config';
-
+import { fetchService } from '../../../../services/fetchData';
 import { useStyles } from './style';
 
 export const SelectGroup = ({ contents, updateData, definition }) => {
@@ -15,11 +14,14 @@ export const SelectGroup = ({ contents, updateData, definition }) => {
 
   useEffect(() => {
     let active = true;
+
     if (open) {
       (async () => {
         const res = await fetchService.getFreeSensors();
+
         if (active) {
           const pickedValues = contents || [];
+
           setOptions(res.filter(o => !pickedValues.includes(o)));
         }
       })();
@@ -38,22 +40,21 @@ export const SelectGroup = ({ contents, updateData, definition }) => {
   return (
     <div className={classes.wrapper}>
       <Autocomplete
-        renderInput={params => <TextField {...params} label="Элемент" variant="outlined" />}
-        options={options}
+        blurOnSelect
+        className={classes.select}
         clearText="очистить"
         closeText="закрыть"
-        openText="открыть"
-        noOptionsText="нет доступных элементов"
-        className={classes.select}
-        blurOnSelect={true}
-        // @ts-ignore
         getOptionLabel={o => o.split(Constants.PairSeparator)[0]}
-        onOpen={() => setOpen(true)}
-        onClose={() => setOpen(false)}
+        noOptionsText="нет доступных элементов"
+        openText="открыть"
+        options={options}
+        renderInput={params => <TextField {...params} label="Элемент" variant="outlined" />}
         value={value}
         onChange={(_, v) => setValue(v)}
+        onClose={() => setOpen(false)}
+        onOpen={() => setOpen(true)}
       />
-      <Button className={classes.button} variant="contained" color="primary" onClick={onClickHandler} disabled={!value}>
+      <Button className={classes.button} color="primary" disabled={!value} variant="contained" onClick={onClickHandler}>
         Добавить
       </Button>
     </div>

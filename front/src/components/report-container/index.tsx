@@ -1,10 +1,9 @@
 import { useEffect, useReducer } from 'react';
 import { LinearProgress } from '@material-ui/core';
-import { ListReport } from '../list-report';
-import { ErrorComponent } from '../error';
-import { fetchService } from '../../services/fetchData';
 import { reportReducer } from '../../reducers';
-
+import { fetchService } from '../../services/fetchData';
+import { ErrorComponent } from '../error';
+import { ListReport } from '../list-report';
 import { useStyles } from './style';
 
 const REPORT_NOT_IMPLEMENTED_MSG = 'Отчет не готов к использованию, выберите другой отчет';
@@ -21,7 +20,6 @@ export const ReportContainer = ({ url }) => {
   const [state, dispatch] = useReducer(reportReducer, initState);
 
   const getData = () => {
-    // @ts-ignore
     dispatch({ type: 'fetchRequest' });
     fetchService
       .getReport(url)

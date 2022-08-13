@@ -1,14 +1,13 @@
 // @ts-nocheck
 import { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { Box, Button, FormControl, IconButton, InputAdornment, Paper, TextField, Typography } from '@material-ui/core';
 import { AccountCircle, Lock, Visibility, VisibilityOff } from '@material-ui/icons';
-import Navbar from '../components/navbar';
-import { useAuth } from '../App';
 import { useSnackbar } from 'notistack';
-
-import { useStyles } from './style/login-style';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useAuth } from '../App';
+import Navbar from '../components/navbar';
 import { setCookie } from '../services/common';
+import { useStyles } from './style/login-style';
 
 export const LoginPage = () => {
   const classes = useStyles();
@@ -40,9 +39,12 @@ export const LoginPage = () => {
 
   const login = e => {
     e.preventDefault();
+
     const { from } = location.state || { from: { pathname: '/report' } };
+
     auth.signIn(values.login, values.password, ({ message, token, username, login, role }) => {
       if (!token && message) enqueueSnackbar(message, { variant: 'error', autoHideDuration: 8000 });
+
       if (token) {
         setCookie('security_token', token);
         setCookie('current_user', JSON.stringify({ username, login, role }));
@@ -66,18 +68,13 @@ export const LoginPage = () => {
   return (
     <>
       <Navbar title={'Авторизация'} />
-      <Paper elevation={3} className={classes.paper}>
-        <Typography variant={'h6'} align={'center'}>
+      <Paper className={classes.paper} elevation={3}>
+        <Typography align={'center'} variant={'h6'}>
           {type.newUser ? 'Регистрация нового пользователя' : 'Вход в аккаунт'}
         </Typography>
         <form onSubmit={login}>
           <FormControl className={classes.inputWrapper}>
             <TextField
-              id="login"
-              label="Логин"
-              error={errors.login}
-              helperText={errors.loginText}
-              onChange={handleChange('login')}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -85,16 +82,15 @@ export const LoginPage = () => {
                   </InputAdornment>
                 ),
               }}
+              error={errors.login}
+              helperText={errors.loginText}
+              id="login"
+              label="Логин"
+              onChange={handleChange('login')}
             />
           </FormControl>
           <FormControl className={classes.inputWrapper}>
             <TextField
-              id="password"
-              label="Пароль"
-              type={values.showPassword ? 'text' : 'password'}
-              error={errors.password}
-              helperText={errors.passwordText}
-              onChange={handleChange('password')}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -113,10 +109,16 @@ export const LoginPage = () => {
                   </InputAdornment>
                 ),
               }}
+              error={errors.password}
+              helperText={errors.passwordText}
+              id="password"
+              label="Пароль"
+              type={values.showPassword ? 'text' : 'password'}
+              onChange={handleChange('password')}
             />
           </FormControl>
           <Box className={classes.btnWrapper}>
-            <Button className={classes.button} color="primary" variant="contained" type="submit">
+            <Button className={classes.button} color="primary" type="submit" variant="contained">
               {type.newUser ? 'Зарегистрироваться' : 'Войти'}
             </Button>
             <Button className={classes.button} variant="contained" onClick={changeFormType}>

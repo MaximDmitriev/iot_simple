@@ -54,4 +54,3 @@ export const useStyles = makeStyles(() => ({
     transform: 'translateX(40px)',
   },
 }));
-

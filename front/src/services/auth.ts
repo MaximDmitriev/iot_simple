@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { fetchService } from './fetchData';
 import { deleteCookie, deleteCookieSecurity } from './common';
+import { fetchService } from './fetchData';
 
 const auth = {
   isLogin: false,
@@ -10,7 +10,9 @@ const auth = {
       .logIn()
       .then(res => {
         console.log(res);
+
         const response = typeof res === 'string' ? JSON.parse(res) : res;
+
         cb({
           token: response.auth.accessToken,
           name: 'demo',
@@ -29,11 +31,11 @@ const auth = {
   },
 };
 
-export function useProvideAuth() {
+export const useProvideAuth = () => {
   const [user, setUser] = useState({});
 
-  const signIn = (login, password, cb) => {
-    return auth.signIn(login, password, props => {
+  const signIn = (login, password, cb) =>
+    auth.signIn(login, password, props => {
       if (props.token) {
         setUser({
           name: props.username,
@@ -42,19 +44,18 @@ export function useProvideAuth() {
           token: props.token,
         });
       }
+
       cb(props);
       auth.isLogin = true;
     });
-  };
 
-  const signOut = () => {
-    return auth.signOut(() => {
+  const signOut = () =>
+    auth.signOut(() => {
       setUser({});
       deleteCookieSecurity();
       deleteCookie('current_user');
       auth.isLogin = false;
     });
-  };
 
   return {
     user,
@@ -62,4 +63,4 @@ export function useProvideAuth() {
     signOut,
     // isLogin,
   };
-}
+};

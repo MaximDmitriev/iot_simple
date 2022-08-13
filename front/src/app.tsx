@@ -1,13 +1,12 @@
 import { createContext, useContext } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import dayjsUtils from '@date-io/dayjs';
 import { Container } from '@material-ui/core';
-import { MainPage, LoginPage, NotFoundPage } from './pages';
-import { useProvideAuth } from './services/auth';
+import { makeStyles } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { SnackbarProvider } from 'notistack';
-import dayjsUtils from '@date-io/dayjs';
-
-import { makeStyles } from '@material-ui/core/styles';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { MainPage, LoginPage, NotFoundPage } from './pages';
+import { useProvideAuth } from './services/auth';
 import './App.css';
 import { getCookieSecurity } from './services/common';
 
@@ -23,48 +22,46 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-// @ts-ignore
 const authContext = createContext();
-export function useAuth() {
-  return useContext(authContext);
-}
 
-function ProvideAuth({ children }) {
+export const useAuth = () => useContext(authContext);
+
+const ProvideAuth = ({ children }) => {
   const auth = useProvideAuth();
 
   return <authContext.Provider value={auth}>{children}</authContext.Provider>;
-}
+};
 
-function PrivateRoute({ children, ...rest }) {
+const PrivateRoute = ({ children, ...rest }) => {
   const auth = useAuth();
-  // @ts-ignore
   const token = auth.user?.token || getCookieSecurity();
+
   return (
     <Route {...rest} render={({ location }) => (token ? children : <Redirect to={{ pathname: '/login', state: { from: location } }} />)} />
   );
-}
+};
 
-function App() {
+const App = () => {
   const classes = useStyles();
 
   return (
     <SnackbarProvider
+      preventDuplicate
       anchorOrigin={{
         vertical: 'top',
         horizontal: 'right',
       }}
       maxSnack={5}
-      preventDuplicate
     >
       <MuiPickersUtilsProvider utils={dayjsUtils}>
         <Container maxWidth="lg">
-          <Container maxWidth="lg" className={classes.root}>
+          <Container className={classes.root} maxWidth="lg">
             <ProvideAuth>
               <Switch>
                 <PrivateRoute path="/report">
                   <MainPage />
                 </PrivateRoute>
-                <PrivateRoute path="/" exact>
+                <PrivateRoute exact path="/">
                   <MainPage />
                 </PrivateRoute>
                 <Route path="/login">
@@ -80,6 +77,6 @@ function App() {
       </MuiPickersUtilsProvider>
     </SnackbarProvider>
   );
-}
+};
 
 export default App;
