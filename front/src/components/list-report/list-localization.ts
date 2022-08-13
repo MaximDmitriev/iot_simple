@@ -50,10 +50,7 @@ export const localeText = {
   columnHeaderSortIconLabel: 'Сортировать',
 
   // Rows selected footer text
-  footerRowSelected: count =>
-    count !== 1
-      ? `${count.toLocaleString()} выделенных строк`
-      : `${count.toLocaleString()} выделенная строка`,
+  footerRowSelected: count => (count !== 1 ? `${count.toLocaleString()} выделенных строк` : `${count.toLocaleString()} выделенная строка`),
 
   // Total rows footer text
   footerTotalRows: 'Всего строк:',

@@ -5,4 +5,3 @@ export const roots = [
   { url: 'devices', name: 'Устройства' },
   { url: 'dashboards', name: 'Дашборды' },
 ];
-

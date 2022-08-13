@@ -60,7 +60,7 @@ export const defineMethod = type => {
 export const updateSensors = (enqueueSnackbar, type, tableName, data) => {
   return new Promise<void>(resolve => {
     if (type !== 'delete' && tableName === Names.DevicesTableName && data[Names.SensorsFieldName]) {
-      const ids = data[Names.SensorsFieldName].map(name => (name.split(Constants.PairSeparator)[1]));
+      const ids = data[Names.SensorsFieldName].map(name => name.split(Constants.PairSeparator)[1]);
       fetchService
         .data({ cluster: data[Names.ClusterFieldName], ids })
         .setClusterSensors()

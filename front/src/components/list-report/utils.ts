@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 
-
 const ROW_HEIGHT = 85;
 const NUMBER_COLUMNS = 12;
 
@@ -13,20 +12,22 @@ export function getColumns({ definition }) {
   const columns = definition.columns
     .filter(col => col.visible)
     .reduce((acc, col) => {
-      return acc.concat([{
-        field: col.systemname || col.name,
-        headerName: col.name,
-        width: convertWidth(col.width),
-        hidden: !col.visible,
-        order: col.order,
-        style: col.style || null,
-      }]);
+      return acc.concat([
+        {
+          field: col.systemname || col.name,
+          headerName: col.name,
+          width: convertWidth(col.width),
+          hidden: !col.visible,
+          order: col.order,
+          style: col.style || null,
+        },
+      ]);
     }, [])
     .sort((a, b) => {
       if (a.order < b.order) return -1;
       return 1;
     });
-  columns[columns.length -1]['flex'] = 1;
+  columns[columns.length - 1]['flex'] = 1;
 
   return columns;
 }
@@ -63,13 +64,12 @@ export function getFormDefinition({ definition: { columns } }) {
   const maxRowNumber = Math.max(...Object.keys(rowPositions).map(k => parseInt(k)));
 
   // общая высота сетки
-  const totalHeight = rowPositions[maxRowNumber] > 1
-    ? (maxRowNumber + rowPositions[maxRowNumber]) * ROW_HEIGHT
-    : (maxRowNumber + 1) * ROW_HEIGHT;
+  const totalHeight =
+    rowPositions[maxRowNumber] > 1 ? (maxRowNumber + rowPositions[maxRowNumber]) * ROW_HEIGHT : (maxRowNumber + 1) * ROW_HEIGHT;
 
   // параметры одной ячейки в процентах
-  const colHeight = (100 * ROW_HEIGHT)/totalHeight;
-  const colWidth = 100/NUMBER_COLUMNS;
+  const colHeight = (100 * ROW_HEIGHT) / totalHeight;
+  const colWidth = 100 / NUMBER_COLUMNS;
 
   const definition = columns
     .filter(c => c.show_in_form)

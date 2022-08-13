@@ -7,7 +7,6 @@ import { reportReducer } from '../../reducers';
 
 import { useStyles } from './style';
 
-
 const REPORT_NOT_IMPLEMENTED_MSG = 'Отчет не готов к использованию, выберите другой отчет';
 const initState = {
   loaded: false,
@@ -26,16 +25,14 @@ export const ReportContainer = ({ url }) => {
     dispatch({ type: 'fetchRequest' });
     fetchService
       .getReport(url)
-      .then(
-        res => {
-          if (res) {
-            dispatch({ type: 'fetchSuccess', payload: res });
-          } else {
-            console.log('error', res);
-            dispatch({ type: 'fetchFailure', payload: { error: 'error' } });
-          }
-        },
-      )
+      .then(res => {
+        if (res) {
+          dispatch({ type: 'fetchSuccess', payload: res });
+        } else {
+          console.log('error', res);
+          dispatch({ type: 'fetchFailure', payload: { error: 'error' } });
+        }
+      })
       .catch(err => {
         console.log(err);
         dispatch({ type: 'fetchFailure', payload: { error: err } });
@@ -53,28 +50,23 @@ export const ReportContainer = ({ url }) => {
   if (state.loaded && state.error) {
     return (
       <div className={classes.wrapper}>
-        <ErrorComponent message={REPORT_NOT_IMPLEMENTED_MSG}/>
+        <ErrorComponent message={REPORT_NOT_IMPLEMENTED_MSG} />
       </div>
     );
   }
 
   return (
     <>
-      {state.data
-        ? (
-          <div className={classes.wrapper}>
-            {state.type === 'LIST'
-              ? <ListReport data={state.data} metadata={state.metadata} update={updateReport}/>
-              : null}
-          </div>)
-        : null
-      }
-      {!state.loaded
-        ? (
-          <div className={classes.progressContainer}>
-            <LinearProgress className={classes.progress} />
-          </div>)
-        : null}
+      {state.data ? (
+        <div className={classes.wrapper}>
+          {state.type === 'LIST' ? <ListReport data={state.data} metadata={state.metadata} update={updateReport} /> : null}
+        </div>
+      ) : null}
+      {!state.loaded ? (
+        <div className={classes.progressContainer}>
+          <LinearProgress className={classes.progress} />
+        </div>
+      ) : null}
     </>
   );
 };

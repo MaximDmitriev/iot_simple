@@ -6,7 +6,6 @@ import { DeviceGroup } from './deviceGroup';
 
 import { useStyles } from './style';
 
-
 export const WidgetContainer = ({ definition, data, updateData }) => {
   const classes = useStyles();
 
@@ -17,7 +16,7 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
           classes={{ root: classes.textFieldRoot }}
           defaultValue={data}
           onBlur={e => updateData(e, e.target.value, definition.fieldName, definition.fieldFormat)}
-          variant='outlined'
+          variant="outlined"
           required={definition.required}
           disabled={definition.readonly}
           fullWidth
@@ -29,12 +28,7 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
           className={definition.readonly ? classes.disabled : ''}
           value={data}
           onChange={(e, value) => updateData(e, value, definition.fieldName, definition.fieldFormat)}
-          renderInput={
-            props => <TextField
-              {...props}
-              variant='outlined'
-            />
-          }
+          renderInput={props => <TextField {...props} variant="outlined" />}
           options={definition.pattern}
           // @ts-ignore
           required={definition.required}
@@ -49,9 +43,9 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
           value={data}
           // @ts-ignore
           onChange={(e, value) => updateData(e, value, definition.fieldName, definition.fieldFormat)}
-          format='MM/DD/YYYY HH:mm'
+          format="MM/DD/YYYY HH:mm"
           ampm={false}
-          inputVariant='outlined'
+          inputVariant="outlined"
           required={definition.required}
           readOnly={definition.readonly}
           fullWidth
@@ -66,14 +60,14 @@ export const WidgetContainer = ({ definition, data, updateData }) => {
         />
       );
     case 'image':
-      return (
-        <ImagePicker />
-      );
+      return <ImagePicker />;
     case 'deviceGroup':
-      return <DeviceGroup data={data} updateData={updateData} definition={definition}/>;
+      return <DeviceGroup data={data} updateData={updateData} definition={definition} />;
     default:
       return (
-        <div>{definition.fieldFormat}: {data}</div>
+        <div>
+          {definition.fieldFormat}: {data}
+        </div>
       );
   }
 };

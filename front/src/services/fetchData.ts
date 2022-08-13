@@ -9,7 +9,6 @@ class FetchData {
   #body = {};
   #method = 'GET';
 
-
   data(obj) {
     this.#body = JSON.stringify(obj);
     return this;
@@ -41,7 +40,7 @@ class FetchData {
       .catch(err => {
         console.log(err);
       });
-  }
+  };
 
   logIn() {
     this.#method = 'POST';

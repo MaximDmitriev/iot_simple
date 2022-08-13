@@ -38,27 +38,22 @@ export const SelectGroup = ({ contents, updateData, definition }) => {
   return (
     <div className={classes.wrapper}>
       <Autocomplete
-        renderInput={params => <TextField {...params} label='Элемент' variant='outlined'/>}
+        renderInput={params => <TextField {...params} label="Элемент" variant="outlined" />}
         options={options}
-        clearText='очистить'
-        closeText='закрыть'
-        openText='открыть'
-        noOptionsText='нет доступных элементов'
+        clearText="очистить"
+        closeText="закрыть"
+        openText="открыть"
+        noOptionsText="нет доступных элементов"
         className={classes.select}
         blurOnSelect={true}
         // @ts-ignore
-        getOptionLabel={o => (o.split(Constants.PairSeparator)[0])}
+        getOptionLabel={o => o.split(Constants.PairSeparator)[0]}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
         value={value}
         onChange={(_, v) => setValue(v)}
       />
-      <Button
-        className={classes.button}
-        variant='contained'
-        color='primary'
-        onClick={onClickHandler}
-        disabled={!value}>
+      <Button className={classes.button} variant="contained" color="primary" onClick={onClickHandler} disabled={!value}>
         Добавить
       </Button>
     </div>

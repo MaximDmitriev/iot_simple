@@ -33,7 +33,7 @@ export function useProvideAuth() {
   const [user, setUser] = useState({});
 
   const signIn = (login, password, cb) => {
-    return auth.signIn(login, password, (props) => {
+    return auth.signIn(login, password, props => {
       if (props.token) {
         setUser({
           name: props.username,

@@ -1,18 +1,19 @@
 import dayjs from 'dayjs';
 
 export function getCookie(name) {
-  const matches = document.cookie
-    .match(new RegExp('(?:^|; )'
-      + (name + (document.location.port ? '_' : '')
-      + document.location.port).replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1')
-      + '=([^;]*)'));
+  const matches = document.cookie.match(
+    new RegExp(
+      '(?:^|; )' +
+        (name + (document.location.port ? '_' : '') + document.location.port).replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') +
+        '=([^;]*)'
+    )
+  );
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
 export function getCookieSecurity() {
   return getCookie('security_token');
 }
-
 
 // options.expires время жизни Cookie в миллисекундах
 export function setCookie(name, value, options) {

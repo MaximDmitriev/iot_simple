@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, S
 import { useStyles } from './style';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction='down' ref={ref} {...props} />;
+  return <Slide direction="down" ref={ref} {...props} />;
 });
 
 export const PopupComponent = ({ open, onAccept, onCancel }) => {
@@ -33,10 +33,10 @@ export const PopupComponent = ({ open, onAccept, onCancel }) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} color='primary' variant='outlined'>
+        <Button onClick={onCancel} color="primary" variant="outlined">
           Отмена
         </Button>
-        <Button onClick={onAccept} color='secondary' variant='outlined'>
+        <Button onClick={onAccept} color="secondary" variant="outlined">
           Удалить
         </Button>
       </DialogActions>

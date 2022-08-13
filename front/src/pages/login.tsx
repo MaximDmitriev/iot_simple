@@ -1,16 +1,7 @@
 // @ts-nocheck
 import { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import {
-  Box,
-  Button,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  Paper,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { Box, Button, FormControl, IconButton, InputAdornment, Paper, TextField, Typography } from '@material-ui/core';
 import { AccountCircle, Lock, Visibility, VisibilityOff } from '@material-ui/icons';
 import Navbar from '../components/navbar';
 import { useAuth } from '../App';
@@ -18,7 +9,6 @@ import { useSnackbar } from 'notistack';
 
 import { useStyles } from './style/login-style';
 import { setCookie } from '../services/common';
-
 
 export const LoginPage = () => {
   const classes = useStyles();
@@ -51,15 +41,14 @@ export const LoginPage = () => {
   const login = e => {
     e.preventDefault();
     const { from } = location.state || { from: { pathname: '/report' } };
-    auth.signIn(values.login, values.password,
-      ({ message, token, username, login, role }) => {
-        if (!token && message) enqueueSnackbar(message, { variant: 'error', autoHideDuration: 8000 });
-        if (token) {
-          setCookie('security_token', token);
-          setCookie('current_user', JSON.stringify({ username, login, role }));
-          history.replace(from);
-        }
-      });
+    auth.signIn(values.login, values.password, ({ message, token, username, login, role }) => {
+      if (!token && message) enqueueSnackbar(message, { variant: 'error', autoHideDuration: 8000 });
+      if (token) {
+        setCookie('security_token', token);
+        setCookie('current_user', JSON.stringify({ username, login, role }));
+        history.replace(from);
+      }
+    });
   };
 
   const handleChange = prop => event => {
@@ -73,7 +62,6 @@ export const LoginPage = () => {
   const handleMouseDownPassword = event => {
     event.preventDefault();
   };
-
 
   return (
     <>
@@ -128,7 +116,7 @@ export const LoginPage = () => {
             />
           </FormControl>
           <Box className={classes.btnWrapper}>
-            <Button className={classes.button} color="primary" variant="contained" type='submit'>
+            <Button className={classes.button} color="primary" variant="contained" type="submit">
               {type.newUser ? 'Зарегистрироваться' : 'Войти'}
             </Button>
             <Button className={classes.button} variant="contained" onClick={changeFormType}>

@@ -14,19 +14,17 @@ const StatusText = ({ tableName, state }) => {
   const classes = useStyles();
   return (
     <div className={classes.status}>
-      {tableName === 'relays'
-        ? (
-          <>
-            {state ? <PowerIcon /> : <PowerOffIcon />}
-            <Typography className={classes.statusText}>статус: {state ? 'включен' : 'выключен'}</Typography>
-          </>
-        )
-        : (
-          <>
-            <MemoryIcon />
-            <Typography className={classes.statusText}>статус: {state || 'неактивирован'}</Typography>
-          </>
-        )}
+      {tableName === 'relays' ? (
+        <>
+          {state ? <PowerIcon /> : <PowerOffIcon />}
+          <Typography className={classes.statusText}>статус: {state ? 'включен' : 'выключен'}</Typography>
+        </>
+      ) : (
+        <>
+          <MemoryIcon />
+          <Typography className={classes.statusText}>статус: {state || 'неактивирован'}</Typography>
+        </>
+      )}
     </div>
   );
 };
@@ -45,8 +43,7 @@ export const ModalHeader = props => {
       .data(body)
       .switchRelay()
       .then(res => {
-        const relayKey = Object
-          .keys(res)
+        const relayKey = Object.keys(res)
           .filter(k => k !== 'message')
           .find(k => res[k].sensorId === data.sensorId);
         // @ts-ignore
@@ -60,43 +57,34 @@ export const ModalHeader = props => {
   };
 
   return (
-    <AppBar position='static' className={classes.appbar}>
+    <AppBar position="static" className={classes.appbar}>
       <div className={classes.displayName}>
         <div className={classes.name}>
+          <Typography className={classes.title}>{title}:</Typography>
           <Typography className={classes.title}>
-            {title}:
-          </Typography>
-          <Typography className={classes.title}>
-            {status === 'loading' || status ==='error'
-              ? <Skeleton variant='text' className={classes.titleMock}/>
-              : mode === 'update' ? `${data[titleField]} ${data.sensorId || data.deviceId || ''}` : ''}
+            {status === 'loading' || status === 'error' ? (
+              <Skeleton variant="text" className={classes.titleMock} />
+            ) : mode === 'update' ? (
+              `${data[titleField]} ${data.sensorId || data.deviceId || ''}`
+            ) : (
+              ''
+            )}
           </Typography>
         </div>
-        {['relays', 'sensors'].includes(tableName) && <StatusText tableName={tableName} state={state}/>}
+        {['relays', 'sensors'].includes(tableName) && <StatusText tableName={tableName} state={state} />}
       </div>
       <div className={classes.btnGroup}>
-        {mode === 'update' && tableName === 'relays'
-          ? (
-            <Button variant='contained' color='primary' onClick={switchRelay}>
-              {state ? 'Выключить' : 'Включить'}
-            </Button>
-          )
-          : null}
-        {mode === 'update'
-          ? <Button
-            variant='contained'
-            color='secondary'
-            className={classes.headerBtn}
-            onClick={openPopup}
-          >
+        {mode === 'update' && tableName === 'relays' ? (
+          <Button variant="contained" color="primary" onClick={switchRelay}>
+            {state ? 'Выключить' : 'Включить'}
+          </Button>
+        ) : null}
+        {mode === 'update' ? (
+          <Button variant="contained" color="secondary" className={classes.headerBtn} onClick={openPopup}>
             Удалить запись
           </Button>
-          : null}
-        <Button
-          variant='contained'
-          className={classes.headerBtn}
-          onClick={() => changeRecord(mode)}
-        >
+        ) : null}
+        <Button variant="contained" className={classes.headerBtn} onClick={() => changeRecord(mode)}>
           {mode === 'update' ? 'Сохранить' : 'Создать'}
         </Button>
       </div>

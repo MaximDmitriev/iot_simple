@@ -14,7 +14,6 @@ import { getSuccessMessage, getErrorMessage, createBody, defineMethod, updateSen
 
 import { useStyles } from './style';
 
-
 export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName, id, height, definition }) => {
   const classes = useStyles();
 
@@ -25,9 +24,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
   const { enqueueSnackbar } = useSnackbar();
 
   const formDefinition = useMemo(() => {
-    return mode === 'create'
-      ? definition
-      : definition.filter(c => !c.onlyCreatedMode);
+    return mode === 'create' ? definition : definition.filter(c => !c.onlyCreatedMode);
   }, [mode, definition]);
 
   const openPopup = () => {
@@ -90,7 +87,8 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
       .getOneRecord(tableName, id)
       .then(res => {
         setData(res);
-        setTimeout(() => { // setTimeout для лоадера
+        setTimeout(() => {
+          // setTimeout для лоадера
           setStatus('loaded');
         }, 500);
       })
@@ -106,7 +104,8 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
     updateSensors(enqueueSnackbar, type, tableName, data).then(() => {
       fetchService.data(body);
       // @ts-ignore
-      method.call(fetchService, tableName)
+      method
+        .call(fetchService, tableName)
         .then(res => {
           if (res.errors) {
             getErrorMessage(enqueueSnackbar, type, res.message);
@@ -130,7 +129,6 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
     });
   };
 
-
   return (
     <div>
       <PopupComponent open={popupOpen} onAccept={() => changeRecord('delete')} onCancel={declineHandler} />
@@ -143,7 +141,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
           timeout: 500,
         }}
       >
-        <Slide direction='down' in={show} mountOnEnter unmountOnExit>
+        <Slide direction="down" in={show} mountOnEnter unmountOnExit>
           <div className={classes.container}>
             <ModalHeader
               data={data}
@@ -169,13 +167,11 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
                     }}
                   >
                     <Typography className={classes.label}>{cell.label}</Typography>
-                    {status === 'loading'
-                      ? <Skeleton variant="rect" width='100%' height='40px'/>
-                      : <WidgetContainer
-                        definition={cell}
-                        data={data[cell.fieldName] || null}
-                        updateData={updateWidgetData}
-                      />}
+                    {status === 'loading' ? (
+                      <Skeleton variant="rect" width="100%" height="40px" />
+                    ) : (
+                      <WidgetContainer definition={cell} data={data[cell.fieldName] || null} updateData={updateWidgetData} />
+                    )}
                   </div>
                 );
               })}

@@ -4,7 +4,6 @@ import { Button, Paper, Typography } from '@material-ui/core';
 import Navbar from '../components/navbar';
 import { useStyles } from './style/404-style';
 
-
 export const NotFoundPage = () => {
   const classes = useStyles();
 
@@ -19,7 +18,9 @@ export const NotFoundPage = () => {
           Запрашиваемая страница не существует, проверьте правильность адреса
         </Typography>
         <Link to="/report">
-          <Button className={classes.button} color="primary" variant="contained" >На главную</Button>
+          <Button className={classes.button} color="primary" variant="contained">
+            На главную
+          </Button>
         </Link>
       </Paper>
     </>

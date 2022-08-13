@@ -8,8 +8,8 @@ export const DeviceGroup = ({ data, updateData, definition }) => {
 
   return (
     <div className={classes.wrapper}>
-      <LinkGroup contents={data} updateData={updateData} definition={definition}/>
-      <SelectGroup contents={data} updateData={updateData} definition={definition}/>
+      <LinkGroup contents={data} updateData={updateData} definition={definition} />
+      <SelectGroup contents={data} updateData={updateData} definition={definition} />
     </div>
   );
 };

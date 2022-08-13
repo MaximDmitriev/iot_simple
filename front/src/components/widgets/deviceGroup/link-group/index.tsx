@@ -11,7 +11,7 @@ const LinkElement = ({ el, definition, updateData }) => {
     <div className={classes.element}>
       {el.split(Constants.PairSeparator)[0]}
       <div className={classes.closeButton}>
-        <BackspaceIcon onClick={() => updateData(null, el, definition.fieldName, definition.fieldFormat)}/>
+        <BackspaceIcon onClick={() => updateData(null, el, definition.fieldName, definition.fieldFormat)} />
       </div>
     </div>
   );
@@ -24,13 +24,14 @@ export const LinkGroup = ({ contents, definition, updateData }) => {
   return (
     <div className={classes.wrapper}>
       <ul className={classes.list}>
-        {contents && contents.map(el => {
-          return (
-            <li className={classes.listItem} key={el}>
-              <MemoLinkElement el={el} definition={definition} updateData={updateData}/>
-            </li>
-          );
-        })}
+        {contents &&
+          contents.map(el => {
+            return (
+              <li className={classes.listItem} key={el}>
+                <MemoLinkElement el={el} definition={definition} updateData={updateData} />
+              </li>
+            );
+          })}
       </ul>
     </div>
   );

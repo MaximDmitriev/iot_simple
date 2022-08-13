@@ -9,7 +9,6 @@ import { roots } from '../services/constants';
 
 import { useStyles } from './style/main-style';
 
-
 export const MainPage = () => {
   const classes = useStyles();
   const location = useLocation();
@@ -37,23 +36,18 @@ export const MainPage = () => {
     }
   };
 
-
   return (
     <>
-      <Navbar
-        title={report.name}
-        showBtn
-        onSelectItem={chooseReport}
-        name={user.name || user.username || ''}
-      />
-      {report.type === 'start'
-        ? (
-          <Paper elevation={5} className={classes.paper}>
-            <Typography variant={'body1'} align={'center'}>
-              Выберите в меню нужный отчет
-            </Typography>
-          </Paper>)
-        : <ReportContainer url={report.type}/>}
+      <Navbar title={report.name} showBtn onSelectItem={chooseReport} name={user.name || user.username || ''} />
+      {report.type === 'start' ? (
+        <Paper elevation={5} className={classes.paper}>
+          <Typography variant={'body1'} align={'center'}>
+            Выберите в меню нужный отчет
+          </Typography>
+        </Paper>
+      ) : (
+        <ReportContainer url={report.type} />
+      )}
     </>
   );
 };

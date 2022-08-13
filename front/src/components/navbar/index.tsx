@@ -7,7 +7,6 @@ import { useAuth } from '../../App';
 
 import { useStyles } from './style';
 
-
 const Navbar = ({ title, showBtn, onSelectItem, name }) => {
   const classes = useStyles();
   const auth = useAuth();
@@ -33,15 +32,8 @@ const Navbar = ({ title, showBtn, onSelectItem, name }) => {
   return (
     <AppBar position="static" className={classes.root}>
       <Toolbar>
-        <IconButton
-          className={classes.menuButton}
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-        >
-          {showBtn
-            ? <MenuIcon aria-controls="reports-menu" aria-haspopup="true" onClick={handleClick('reports')}/>
-            : null}
+        <IconButton className={classes.menuButton} edge="start" color="inherit" aria-label="menu">
+          {showBtn ? <MenuIcon aria-controls="reports-menu" aria-haspopup="true" onClick={handleClick('reports')} /> : null}
           <Menu
             id="reports-menu"
             anchorEl={anchorEls.reports}
@@ -53,22 +45,22 @@ const Navbar = ({ title, showBtn, onSelectItem, name }) => {
             {roots.map(item => {
               return (
                 <Link to={`/report/${item.url}`} key={item.url}>
-                  <MenuItem data-type={item.url} onClick={e => handleItem(e, 'reports')}>{item.name}</MenuItem>
+                  <MenuItem data-type={item.url} onClick={e => handleItem(e, 'reports')}>
+                    {item.name}
+                  </MenuItem>
                 </Link>
               );
             })}
-
           </Menu>
         </IconButton>
         <Typography variant="h6" className={classes.title}>
           {title}
         </Typography>
-        {showBtn
-          ? (
-            <Button color="inherit" aria-controls="login-menu" aria-haspopup="true" onClick={handleClick('login')}>
-              {name}
-            </Button>)
-          : null}
+        {showBtn ? (
+          <Button color="inherit" aria-controls="login-menu" aria-haspopup="true" onClick={handleClick('login')}>
+            {name}
+          </Button>
+        ) : null}
         <Menu
           id="login-menu"
           anchorEl={anchorEls.login}
@@ -77,12 +69,16 @@ const Navbar = ({ title, showBtn, onSelectItem, name }) => {
           onClose={handleClose('login')}
           TransitionComponent={Fade}
         >
-          <MenuItem data-type="account" onClick={e => handleItem(e, 'login')}>Аккаунт</MenuItem>
+          <MenuItem data-type="account" onClick={e => handleItem(e, 'login')}>
+            Аккаунт
+          </MenuItem>
           <MenuItem
             data-type="logout"
             // @ts-ignore
             onClick={auth.signOut}
-          >Выйти</MenuItem>
+          >
+            Выйти
+          </MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

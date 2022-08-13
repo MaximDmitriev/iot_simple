@@ -11,7 +11,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
 import { getCookieSecurity } from './services/common';
 
-
 const useStyles = makeStyles(() => ({
   root: {
     backgroundImage: 'url(/img/iot4.png)',
@@ -41,12 +40,7 @@ function PrivateRoute({ children, ...rest }) {
   // @ts-ignore
   const token = auth.user?.token || getCookieSecurity();
   return (
-    <Route
-      {...rest}
-      render={({ location }) => token
-        ? children
-        : <Redirect to={{ pathname: '/login', state: { from: location } }} />}
-    />
+    <Route {...rest} render={({ location }) => (token ? children : <Redirect to={{ pathname: '/login', state: { from: location } }} />)} />
   );
 }
 
@@ -64,7 +58,7 @@ function App() {
     >
       <MuiPickersUtilsProvider utils={dayjsUtils}>
         <Container maxWidth="lg">
-          <Container maxWidth="lg" className={classes.root} >
+          <Container maxWidth="lg" className={classes.root}>
             <ProvideAuth>
               <Switch>
                 <PrivateRoute path="/report">
