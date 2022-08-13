@@ -4,67 +4,36 @@
   "private": true,
   "dependencies": {
     "@date-io/dayjs": "^1.3.13",
-    "@material-ui/core": "^4.11.2",
-    "@material-ui/data-grid": "^4.0.0-alpha.15",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.57",
-    "@material-ui/pickers": "^3.2.10",
-    "dayjs": "^1.10.4",
-    "notistack": "^1.0.3",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/data-grid": "^4.0.0-alpha.37",
+    "@material-ui/icons": "^4.11.3",
+    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@material-ui/pickers": "^3.3.10",
+    "dayjs": "^1.11.5",
+    "notistack": "^1.0.10",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.3.3",
     "react-scripts": "4.0.1",
     "web-vitals": "^0.2.4"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.11.8",
-    "@testing-library/react": "^11.2.2",
-    "@testing-library/user-event": "^12.6.0",
-    "eslint-config-google": "^0.14.0"
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "@types/jest": "^28.1.6",
+    "@types/node": "^18.7.2",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-router-dom": "^5.3.3",
+    "eslint-config-google": "^0.14.0",
+    "typescript": "^4.7.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "google"
-    ],
-    "rules": {
-      "object-curly-spacing": [
-        "error",
-        "always"
-      ],
-      "linebreak-style": "off",
-      "operator-linebreak": "off",
-      "require-jsdoc": "off",
-      "indent": [
-        "error",
-        2,
-        {
-          "SwitchCase": 1
-        }
-      ],
-      "arrow-parens": [
-        "warn",
-        "as-needed"
-      ],
-      "quote-props": [
-        "warn",
-        "consistent-as-needed"
-      ],
-      "max-len": [
-        "error",
-        120
-      ],
-      "no-invalid-this": "off",
-      "no-unused-vars": "warn"
-    }
   },
   "browserslist": {
     "production": [
@@ -77,5 +46,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "tsconfig.json",
+    "tsconfigRootDir": "."
   }
 }

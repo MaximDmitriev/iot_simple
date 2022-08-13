@@ -1,3 +1,4 @@
+/** Базовый конфиг. */
 export const Config = {
   separators: {
     pair: '$>$>$',
