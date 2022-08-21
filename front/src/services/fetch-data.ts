@@ -2,26 +2,26 @@ import { getCookieSecurity } from './common';
 
 class FetchData {
   // #baseurl = 'http://backend.app.localhost:3001/json/';
-  #baseurl = 'http://localhost:3001/json/';
+  baseurl = 'http://localhost:3001/json/';
   // #baseurl = window.settings.host;
-  #url = '';
-  #body = {};
-  #method = 'GET';
+  url = '';
+  body;
+  method = 'GET';
 
   data(obj) {
-    this.#body = JSON.stringify(obj);
+    this.body = JSON.stringify(obj);
 
     return this;
   }
 
-  #_send = () => {
-    const request = {
+  send = () => {
+    const request: RequestInit = {
       cache: 'no-cache',
-      method: this.#method,
-      mode: 'no-cors',
+      method: this.method,
+      // mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
-        ['X-AUTH']: getCookieSecurity(),
+        ['X-AUTH']: getCookieSecurity() || '',
         ['Access-Control-Allow-Origin']: '*',
         ['Access-Control-Allow-Methods']: '*',
         ['Access-Control-Allow-Headers']: '*',
@@ -30,11 +30,11 @@ class FetchData {
       },
     };
 
-    if (this.#method !== 'GET') {
-      request.body = this.#body;
+    if (this.method !== 'GET') {
+      request.body = this.body;
     }
 
-    return fetch(this.#url, request)
+    return fetch(this.url, request)
       .then(res => {
         if (res.ok && res.status === 200) return res.json();
       })
@@ -44,73 +44,73 @@ class FetchData {
   };
 
   logIn() {
-    this.#method = 'POST';
-    this.#url = this.#baseurl + 'login';
+    this.method = 'POST';
+    this.url = this.baseurl + 'login';
 
-    return this.#_send();
+    return this.send();
   }
 
   logOut() {
-    this.#method = 'POST';
-    this.#url = this.#baseurl + 'login/out';
+    this.method = 'POST';
+    this.url = this.baseurl + 'login/out';
 
-    return this.#_send();
+    return this.send();
   }
 
-  getReport(tableName) {
-    this.#method = 'GET';
-    this.#url = this.#baseurl + tableName;
+  getReport(tableName: string) {
+    this.method = 'GET';
+    this.url = this.baseurl + tableName;
 
-    return this.#_send();
+    return this.send();
   }
 
-  getOneRecord(tableName, id) {
-    this.#method = 'GET';
-    this.#url = this.#baseurl + tableName + '/' + id;
+  getOneRecord(tableName: string, id: number) {
+    this.method = 'GET';
+    this.url = this.baseurl + tableName + '/' + id.toString();
 
-    return this.#_send();
+    return this.send();
   }
 
-  createRecord(tableName) {
-    this.#method = 'POST';
-    this.#url = this.#baseurl + tableName + '/create';
+  createRecord(tableName: string) {
+    this.method = 'POST';
+    this.url = this.baseurl + tableName + '/create';
 
-    return this.#_send();
+    return this.send();
   }
 
-  deleteRecord(tableName) {
-    this.#method = 'DELETE';
-    this.#url = this.#baseurl + tableName + '/delete';
+  deleteRecord(tableName: string) {
+    this.method = 'DELETE';
+    this.url = this.baseurl + tableName + '/delete';
 
-    return this.#_send();
+    return this.send();
   }
 
-  updateRecord(tableName) {
-    this.#method = 'PUT';
-    this.#url = this.#baseurl + tableName + '/update';
+  updateRecord(tableName: string) {
+    this.method = 'PUT';
+    this.url = this.baseurl + tableName + '/update';
 
-    return this.#_send();
+    return this.send();
   }
 
   getFreeSensors() {
-    this.#method = 'GET';
-    this.#url = this.#baseurl + 'service/get_free_sensors';
+    this.method = 'GET';
+    this.url = this.baseurl + 'service/get_free_sensors';
 
-    return this.#_send();
+    return this.send();
   }
 
   setClusterSensors() {
-    this.#method = 'POST';
-    this.#url = this.#baseurl + 'service/set_cluster_sensors';
+    this.method = 'POST';
+    this.url = this.baseurl + 'service/set_cluster_sensors';
 
-    return this.#_send();
+    return this.send();
   }
 
   switchRelay() {
-    this.#method = 'POST';
-    this.#url = this.#baseurl + 'service/switch';
+    this.method = 'POST';
+    this.url = this.baseurl + 'service/switch';
 
-    return this.#_send();
+    return this.send();
   }
 }
 

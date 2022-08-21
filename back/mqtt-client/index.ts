@@ -2,8 +2,6 @@ import * as mqtt from 'mqtt';
 import { Config } from '../config/config';
 import { updateSensorData, updateClusterData } from './controllers';
 
-const { separators } = Config;
-
 export const client: mqtt.MqttClient = mqtt.connect('mqtt://127.0.0.1', {
   username: 'server',
   password: '123',
@@ -33,6 +31,8 @@ export const client: mqtt.MqttClient = mqtt.connect('mqtt://127.0.0.1', {
  */
 
 client.on('message', (topic, message) => {
+  const { separators } = Config;
+
   switch (true) {
     case topic.includes('cluster'):
       updateClusterData(topic.split(separators.pair)[1], message.toString());
@@ -72,5 +72,7 @@ client.on('error', error => {
 // }
 
 export const switchRelay = (relayId, state: 0 | 1) => {
+  const { separators } = Config;
+
   client.publish(`switchRelay${separators.pair}${relayId}`, state.toString());
 };

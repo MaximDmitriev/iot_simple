@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-export const getCookie = name => {
+export const getCookie = (name: string) => {
   const matches = document.cookie.match(
     new RegExp(
       '(?:^|; )' +
@@ -15,25 +15,24 @@ export const getCookie = name => {
 export const getCookieSecurity = () => getCookie('security_token');
 
 // options.expires время жизни Cookie в миллисекундах
-export function setCookie(name, value, options) {
-  options = options || {};
+export const setCookie = (name: string, value: string, options: Record<string, string> & { expires?: string } = {}) => {
+  const expires = options.expires || dayjs(new Date()).add(7, 'day').unix().toString();
 
-  let expires = options.expires || dayjs(new Date()).add(7, 'day').unix();
+  let date: Date | undefined;
 
-  if (typeof expires === 'number' && expires) {
+  if (expires) {
     const d = new Date();
 
-    d.setTime(d.getTime() + expires);
-    expires = options.expires = d;
+    date = new Date(d.setTime(d.getTime() + parseInt(expires)));
   }
 
-  if (expires && expires.toUTCString) {
-    options.expires = expires.toUTCString();
+  if (date?.toUTCString) {
+    options.expires = date?.toUTCString();
   }
 
-  value = encodeURIComponent(value);
+  const encodedValue = encodeURIComponent(value);
 
-  let updatedCookie = name + (document.location.port ? '_' : '') + document.location.port + '=' + value;
+  let updatedCookie = name + (document.location.port ? '_' : '') + document.location.port + '=' + encodedValue;
 
   // eslint-disable-next-line guard-for-in
   for (const propName in options) {
@@ -41,17 +40,17 @@ export function setCookie(name, value, options) {
 
     const propValue = options[propName];
 
-    if (propValue !== true) {
+    if (propValue) {
       updatedCookie += '=' + propValue;
     }
   }
 
   document.cookie = updatedCookie;
-}
+};
 
 export const deleteCookie = name => {
   setCookie(name, '', {
-    expires: -1,
+    expires: '-1',
   });
 };
 

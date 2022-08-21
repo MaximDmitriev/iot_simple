@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Button, Menu, MenuItem, Fade } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+import { Menu as MenuIcon } from '@mui/icons-material';
+import { AppBar, Toolbar, IconButton, Typography, Button, Menu, MenuItem, Fade } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../App';
+import { useAuth } from '../../app';
 import { roots } from '../../services/constants';
-import { useStyles } from './style';
 
-const Navbar = ({ title, showBtn, onSelectItem, name }) => {
-  const classes = useStyles();
+interface NavbarProps {
+  title?: string;
+  showBtn?: boolean;
+  screenName?: string;
+  onSelectItem?(type: string): void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ title, showBtn, onSelectItem, screenName }) => {
   const auth = useAuth();
 
   const [anchorEls, setAnchorEls] = useState({
@@ -15,23 +20,23 @@ const Navbar = ({ title, showBtn, onSelectItem, name }) => {
     reports: null,
   });
 
-  const handleClick = name => event => {
+  const handleClick = (name: string) => event => {
     setAnchorEls({ ...anchorEls, [name]: event.currentTarget });
   };
 
-  const handleItem = (event, name) => {
-    onSelectItem(event.target.dataset.type);
-    handleClose(name)();
-  };
-
-  const handleClose = name => () => {
+  const handleClose = (name: string) => () => {
     setAnchorEls({ ...anchorEls, [name]: null });
   };
 
+  const handleItem = (event, name) => {
+    onSelectItem?.(event.target.dataset.type);
+    handleClose(name)();
+  };
+
   return (
-    <AppBar className={classes.root} position="static">
+    <AppBar position="static">
       <Toolbar>
-        <IconButton aria-label="menu" className={classes.menuButton} color="inherit" edge="start">
+        <IconButton aria-label="menu" color="inherit" edge="start">
           {showBtn ? <MenuIcon aria-controls="reports-menu" aria-haspopup="true" onClick={handleClick('reports')} /> : null}
           <Menu
             keepMounted
@@ -50,12 +55,10 @@ const Navbar = ({ title, showBtn, onSelectItem, name }) => {
             ))}
           </Menu>
         </IconButton>
-        <Typography className={classes.title} variant="h6">
-          {title}
-        </Typography>
+        <Typography variant="h6">{title}</Typography>
         {showBtn ? (
           <Button aria-controls="login-menu" aria-haspopup="true" color="inherit" onClick={handleClick('login')}>
-            {name}
+            {screenName}
           </Button>
         ) : null}
         <Menu

@@ -1,15 +1,14 @@
+// @ts-nocheck
 import { useEffect, useState } from 'react';
-import { Paper, Typography } from '@material-ui/core';
+import { Paper, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { useAuth } from '../App';
+import { useAuth } from '../app';
 import Navbar from '../components/navbar';
 import { ReportContainer } from '../components/report-container';
 import { getCookie } from '../services/common';
 import { roots } from '../services/constants';
-import { useStyles } from './style/main-style';
 
 export const MainPage = () => {
-  const classes = useStyles();
   const location = useLocation();
   const auth = useAuth();
   const userCookie = getCookie('current_user');
@@ -40,7 +39,7 @@ export const MainPage = () => {
     <>
       <Navbar showBtn name={user.name || user.username || ''} title={report.name} onSelectItem={chooseReport} />
       {report.type === 'start' ? (
-        <Paper className={classes.paper} elevation={5}>
+        <Paper elevation={5}>
           <Typography align={'center'} variant={'body1'}>
             Выберите в меню нужный отчет
           </Typography>

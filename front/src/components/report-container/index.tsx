@@ -1,10 +1,10 @@
+// @ts-nocheck
 import { useEffect, useReducer } from 'react';
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress } from '@mui/material';
 import { reportReducer } from '../../reducers';
-import { fetchService } from '../../services/fetchData';
+import { fetchService } from '../../services/fetch-data';
 import { ErrorComponent } from '../error';
 import { ListReport } from '../list-report';
-import { useStyles } from './style';
 
 const REPORT_NOT_IMPLEMENTED_MSG = 'Отчет не готов к использованию, выберите другой отчет';
 const initState = {
@@ -16,7 +16,6 @@ const initState = {
 };
 
 export const ReportContainer = ({ url }) => {
-  const classes = useStyles();
   const [state, dispatch] = useReducer(reportReducer, initState);
 
   const getData = () => {
@@ -47,7 +46,7 @@ export const ReportContainer = ({ url }) => {
 
   if (state.loaded && state.error) {
     return (
-      <div className={classes.wrapper}>
+      <div>
         <ErrorComponent message={REPORT_NOT_IMPLEMENTED_MSG} />
       </div>
     );
@@ -56,13 +55,11 @@ export const ReportContainer = ({ url }) => {
   return (
     <>
       {state.data ? (
-        <div className={classes.wrapper}>
-          {state.type === 'LIST' ? <ListReport data={state.data} metadata={state.metadata} update={updateReport} /> : null}
-        </div>
+        <div>{state.type === 'LIST' ? <ListReport data={state.data} metadata={state.metadata} update={updateReport} /> : null}</div>
       ) : null}
       {!state.loaded ? (
-        <div className={classes.progressContainer}>
-          <LinearProgress className={classes.progress} />
+        <div>
+          <LinearProgress />
         </div>
       ) : null}
     </>

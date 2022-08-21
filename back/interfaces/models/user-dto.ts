@@ -10,6 +10,8 @@ export interface UserDto {
   id: number;
   /** Имя. */
   name: string;
+  /** Логин. */
+  login: string;
   /** Пароль в неявном виде. */
   hashedPassword: string;
   /** Токен для продления авторизации. */

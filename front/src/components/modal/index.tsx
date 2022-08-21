@@ -1,21 +1,15 @@
+// @ts-nocheck
 import { useEffect, useMemo, useState } from 'react';
-import Backdrop from '@material-ui/core/Backdrop';
-import Modal from '@material-ui/core/Modal';
-import Slide from '@material-ui/core/Slide';
-import Typography from '@material-ui/core/Typography';
-import Skeleton from '@material-ui/lab/Skeleton';
+import { Backdrop, Modal, Skeleton, Slide, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { useSnackbar } from 'notistack';
-import { fetchService } from '../../services/fetchData';
+import { fetchService } from '../../services/fetch-data';
 import { PopupComponent } from '../popup';
 import { WidgetContainer } from '../widgets';
 import { ModalHeader } from './modal-header';
-import { useStyles } from './style';
 import { getSuccessMessage, getErrorMessage, createBody, defineMethod, updateSensors } from './utils';
 
 export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName, id, height, definition }) => {
-  const classes = useStyles();
-
   const [data, setData] = useState({});
   const [status, setStatus] = useState('loading'); // loaded, error
   const [popupOpen, setPopupOpen] = useState(false);
@@ -145,7 +139,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
         onClose={onCloseHandler}
       >
         <Slide mountOnEnter unmountOnExit direction="down" in={show}>
-          <div className={classes.container}>
+          <div>
             <ModalHeader
               changeRecord={changeRecord}
               data={data}
@@ -156,11 +150,10 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
               title={title}
               titleField={titleField}
             />
-            <div className={classes.grid} style={{ height: height + 'px' }}>
+            <div style={{ height: height + 'px' }}>
               {formDefinition.map((cell, idx) => (
                 <div
                   key={idx}
-                  className={classes.cell}
                   style={{
                     height: cell.height,
                     width: cell.width,
@@ -168,7 +161,7 @@ export const ModalWrapper = ({ show, act, onClose, title, titleField, tableName,
                     left: cell.left,
                   }}
                 >
-                  <Typography className={classes.label}>{cell.label}</Typography>
+                  <Typography> {cell.label}</Typography>
                   {status === 'loading' ? (
                     <Skeleton height="40px" variant="rect" width="100%" />
                   ) : (

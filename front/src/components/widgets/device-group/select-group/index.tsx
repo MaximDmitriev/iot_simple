@@ -1,13 +1,10 @@
+// @ts-nocheck
 import { useEffect, useState } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Autocomplete, Button, TextField } from '@mui/material';
 import { Constants } from '../../../../config';
-import { fetchService } from '../../../../services/fetchData';
-import { useStyles } from './style';
+import { fetchService } from '../../../../services/fetch-data';
 
 export const SelectGroup = ({ contents, updateData, definition }) => {
-  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState(null);
@@ -38,10 +35,9 @@ export const SelectGroup = ({ contents, updateData, definition }) => {
   };
 
   return (
-    <div className={classes.wrapper}>
+    <div>
       <Autocomplete
         blurOnSelect
-        className={classes.select}
         clearText="очистить"
         closeText="закрыть"
         getOptionLabel={o => o.split(Constants.PairSeparator)[0]}
@@ -54,7 +50,7 @@ export const SelectGroup = ({ contents, updateData, definition }) => {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
       />
-      <Button className={classes.button} color="primary" disabled={!value} variant="contained" onClick={onClickHandler}>
+      <Button color="primary" disabled={!value} variant="contained" onClick={onClickHandler}>
         Добавить
       </Button>
     </div>

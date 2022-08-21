@@ -1,5 +1,5 @@
 import { Constants, Names } from '../../config';
-import { fetchService } from '../../services/fetchData';
+import { fetchService } from '../../services/fetch-data';
 
 export const getErrorMessage = (alert, type, msg) => {
   const TIME = 8000;

@@ -1,28 +1,42 @@
 import { useState } from 'react';
+import type { UsedDto } from '../interfaces';
 import { deleteCookie, deleteCookieSecurity } from './common';
-import { fetchService } from './fetchData';
+import { fetchService } from './fetch-data';
+
+/** Сообщения в ответе сервера. */
+interface ResponseMessage {
+  msg: string;
+  type: string;
+}
 
 const auth = {
   isLogin: false,
-  signIn(login, password, cb) {
+  signIn(userLogin: string, password: string, cb: (props: UsedDto & { messages: ResponseMessage[] }) => void) {
     fetchService
-      .data({ login, password })
+      .data({ login: userLogin, password })
       .logIn()
       .then(res => {
-        console.log(res);
+        // @TODO refactor
+        const response: {
+          messages: ResponseMessage[];
+          user: UsedDto;
+          auth: { accessToken: string; refreshToken: string };
+        } = typeof res === 'string' ? JSON.parse(res) : res;
 
-        const response = typeof res === 'string' ? JSON.parse(res) : res;
+        const { user, auth: responseAuth, messages } = response;
+        const { name, login, roles } = user;
 
         cb({
-          token: response.auth.accessToken,
-          name: 'demo',
-          login: 'demo',
-          role: 'admin',
+          token: responseAuth.accessToken,
+          name,
+          login,
+          roles,
+          messages,
         });
       })
       .catch(err => console.error(err));
   },
-  signOut(cb) {
+  signOut(cb: () => void) {
     cb();
     fetchService
       .data({})
@@ -31,16 +45,23 @@ const auth = {
   },
 };
 
-export const useProvideAuth = () => {
-  const [user, setUser] = useState({});
+export interface AuthContext {
+  user?: UsedDto;
+  isLogin?: boolean;
+  signIn?(login: string, password: string, cb: (props: UsedDto & { messages: ResponseMessage[] }) => void): void;
+  signOut?(): void;
+}
 
-  const signIn = (login, password, cb) =>
+export const useProvideAuth = (): AuthContext => {
+  const [user, setUser] = useState<UsedDto | undefined>(undefined);
+
+  const signIn = (login: string, password: string, cb: (props: UsedDto & { messages: ResponseMessage[] }) => void) =>
     auth.signIn(login, password, props => {
       if (props.token) {
         setUser({
-          name: props.username,
+          name: props.name,
           login: props.login,
-          role: props.role,
+          roles: props.roles,
           token: props.token,
         });
       }
@@ -51,7 +72,7 @@ export const useProvideAuth = () => {
 
   const signOut = () =>
     auth.signOut(() => {
-      setUser({});
+      setUser(undefined);
       deleteCookieSecurity();
       deleteCookie('current_user');
       auth.isLogin = false;
@@ -61,6 +82,6 @@ export const useProvideAuth = () => {
     user,
     signIn,
     signOut,
-    // isLogin,
+    isLogin: auth.isLogin,
   };
 };

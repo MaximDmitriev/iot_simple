@@ -1,14 +1,14 @@
-import { Paper, Typography } from '@material-ui/core';
-import { useStyles } from './style';
+import React from 'react';
+import { Paper, Typography } from '@mui/material';
+// import { Paper, Typography } from '@material-ui/core';
 
-export const ErrorComponent = ({ message }) => {
-  const classes = useStyles();
+/** Компонент ошибки. */
+export const ErrorComponent: React.FC<{ message: string }> = ({ message }) => (
+  <Paper elevation={5}>
+    <Typography align={'center'} variant={'body1'}>
+      {message}
+    </Typography>
+  </Paper>
+);
 
-  return (
-    <Paper className={classes.paper} elevation={5}>
-      <Typography align={'center'} variant={'body1'}>
-        {message}
-      </Typography>
-    </Paper>
-  );
-};
+ErrorComponent.displayName = 'ErrorComponent';

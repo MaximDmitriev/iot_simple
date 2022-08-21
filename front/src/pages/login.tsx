@@ -1,32 +1,28 @@
-// @ts-nocheck
+import type { FormEvent } from 'react';
 import { useState } from 'react';
-import { Box, Button, FormControl, IconButton, InputAdornment, Paper, TextField, Typography } from '@material-ui/core';
-import { AccountCircle, Lock, Visibility, VisibilityOff } from '@material-ui/icons';
+import { AccountCircle, Lock, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Box, Button, FormControl, IconButton, InputAdornment, Paper, Slide, Stack, TextField, Typography } from '@mui/material';
+import Grid2 from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useAuth } from '../App';
+import { useAuth } from '../app';
 import Navbar from '../components/navbar';
 import { setCookie } from '../services/common';
-import { useStyles } from './style/login-style';
+
+interface stateType {
+  from: { pathname: string };
+}
 
 export const LoginPage = () => {
-  const classes = useStyles();
   const auth = useAuth();
   const history = useHistory();
-  const location = useLocation();
+  const location = useLocation<stateType>();
   const { enqueueSnackbar } = useSnackbar();
 
   const [values, setValues] = useState({
     login: '',
     password: '',
     showPassword: false,
-  });
-
-  const [errors, setErrors] = useState({
-    login: false,
-    password: false,
-    loginText: '',
-    passwordText: '',
   });
 
   const [type, setType] = useState({
@@ -37,17 +33,19 @@ export const LoginPage = () => {
     setType({ newUser: !type.newUser });
   };
 
-  const login = e => {
-    e.preventDefault();
+  const loginHandler = (event: FormEvent) => {
+    event.preventDefault();
 
     const { from } = location.state || { from: { pathname: '/report' } };
 
-    auth.signIn(values.login, values.password, ({ message, token, username, login, role }) => {
-      if (!token && message) enqueueSnackbar(message, { variant: 'error', autoHideDuration: 8000 });
+    auth.signIn?.(values.login, values.password, props => {
+      const { messages, token, name, login, roles } = props;
+
+      messages?.forEach(message => enqueueSnackbar(message.msg, { variant: 'error', autoHideDuration: 8000 }));
 
       if (token) {
         setCookie('security_token', token);
-        setCookie('current_user', JSON.stringify({ username, login, role }));
+        setCookie('current_user', JSON.stringify({ name, login, roles }));
         history.replace(from);
       }
     });
@@ -61,72 +59,78 @@ export const LoginPage = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
 
-  const handleMouseDownPassword = event => {
+  const handleMouseDownPassword = (event: FormEvent) => {
     event.preventDefault();
   };
 
   return (
     <>
       <Navbar title={'Авторизация'} />
-      <Paper className={classes.paper} elevation={3}>
-        <Typography align={'center'} variant={'h6'}>
-          {type.newUser ? 'Регистрация нового пользователя' : 'Вход в аккаунт'}
-        </Typography>
-        <form onSubmit={login}>
-          <FormControl className={classes.inputWrapper}>
-            <TextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AccountCircle />
-                  </InputAdornment>
-                ),
-              }}
-              error={errors.login}
-              helperText={errors.loginText}
-              id="login"
-              label="Логин"
-              onChange={handleChange('login')}
-            />
-          </FormControl>
-          <FormControl className={classes.inputWrapper}>
-            <TextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              error={errors.password}
-              helperText={errors.passwordText}
-              id="password"
-              label="Пароль"
-              type={values.showPassword ? 'text' : 'password'}
-              onChange={handleChange('password')}
-            />
-          </FormControl>
-          <Box className={classes.btnWrapper}>
-            <Button className={classes.button} color="primary" type="submit" variant="contained">
-              {type.newUser ? 'Зарегистрироваться' : 'Войти'}
-            </Button>
-            <Button className={classes.button} variant="contained" onClick={changeFormType}>
-              {type.newUser ? 'Уже есть аккаунт' : 'Создать аккаунт'}
-            </Button>
-          </Box>
-        </form>
-      </Paper>
+      <Grid2 container mt={8}>
+        <Slide in mountOnEnter unmountOnExit direction={'right'} timeout={500}>
+          <Grid2 xs={4} xsOffset={7}>
+            <Paper elevation={3}>
+              <form onSubmit={loginHandler}>
+                <Box p={2}>
+                  <Typography align={'center'} variant={'h6'}>
+                    {type.newUser ? 'Регистрация нового пользователя' : 'Вход в аккаунт'}
+                  </Typography>
+                  <Stack mt={2} spacing={2}>
+                    <FormControl>
+                      <TextField
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <AccountCircle />
+                            </InputAdornment>
+                          ),
+                        }}
+                        id="login"
+                        label="Логин"
+                        onChange={handleChange('login')}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <TextField
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Lock />
+                            </InputAdornment>
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowPassword}
+                                onMouseDown={handleMouseDownPassword}
+                              >
+                                {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                        id="password"
+                        label="Пароль"
+                        type={values.showPassword ? 'text' : 'password'}
+                        onChange={handleChange('password')}
+                      />
+                    </FormControl>
+                  </Stack>
+                  <Stack mt={4} spacing={1}>
+                    <Button color="primary" type="submit" variant="contained">
+                      {type.newUser ? 'Зарегистрироваться' : 'Войти'}
+                    </Button>
+                    <Button variant="contained" onClick={changeFormType}>
+                      {type.newUser ? 'Уже есть аккаунт' : 'Создать аккаунт'}
+                    </Button>
+                  </Stack>
+                </Box>
+              </form>
+            </Paper>
+          </Grid2>
+        </Slide>
+      </Grid2>
     </>
   );
 };

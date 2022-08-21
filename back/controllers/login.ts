@@ -38,7 +38,7 @@ router.post('/', (req, res) => {
       });
     }
 
-    const user = await User.findOne({ name: req.body.login });
+    const user = await User.findOne({ login: req.body.login });
 
     if (!user) {
       return res.status(401).json({
@@ -56,8 +56,8 @@ router.post('/', (req, res) => {
       const accessToken = generateAccessToken(username);
       const refreshToken = jwt.sign({ name: username }, REFRESH_TOKEN_SECRET);
 
-      loginedUsers[req.body.name] = { accessToken, refreshToken };
-      void User.findOneAndUpdate({ name: req.body.login }, { refreshToken });
+      loginedUsers[username] = { accessToken, refreshToken };
+      void User.findOneAndUpdate({ login: username }, { refreshToken });
       currentUser.name = username;
       res.status(200).json({
         messages: [
@@ -67,6 +67,7 @@ router.post('/', (req, res) => {
           },
         ],
         auth: { accessToken, refreshToken },
+        user,
       });
     } else {
       return res.status(401).json({

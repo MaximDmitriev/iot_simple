@@ -5,9 +5,8 @@ import { SensorData } from '../models';
 class MqttEmitter extends EventEmitter {}
 export const mqttEmitter = new MqttEmitter();
 
-const { separators } = Config;
-
 export const updateClusterData = (clusterId, body: string) => {
+  const { separators } = Config;
   const datetime = Date.now();
   const data = body.split(separators.item).reduce((acc, item) => {
     const [name, value] = item.split(separators.sensorData);
